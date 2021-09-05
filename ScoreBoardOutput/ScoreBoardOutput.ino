@@ -635,7 +635,6 @@ void startTicker()
     DateTime displayedTime = rtc.now();
 
     tft.fillScreen(WHITE);
-    tft.setTextSize(12);
 
     lcd_PrintTimeHours(displayedTime.hour(), false);
     lcd_PrintTimeSeconds();
@@ -676,8 +675,9 @@ void lcd_PrintTimeSeconds()
     {
         tft.setTextColor(WHITE);
     }
+    tft.setTextSize(11);
     tft.getTextBounds(colon, 0, 0, &x, &y, &w, &h);
-    tft.setCursor((320 - w)/2, 120 - h/2);
+    tft.setCursor(20 + (300 - w)/2, 120 - h/2);
     tft.print(colon);
 }
 
@@ -687,6 +687,8 @@ void lcd_PrintTimeHours(uint8_t hours, bool clearPrev)
 
     int16_t  x, y;
     uint16_t w, h;
+
+    tft.setTextSize(11);
 
     if (clearPrev)
     {
@@ -699,7 +701,7 @@ void lcd_PrintTimeHours(uint8_t hours, bool clearPrev)
         hrs += prevValue;
 
         tft.getTextBounds(hrs, 0, 0, &x, &y, &w, &h);
-        tft.setCursor(5 + (150 - w)/2, 120 - h/2);
+        tft.setCursor(25 + (140 - w)/2, 120 - h/2);
         tft.print(hrs);
     }
 
@@ -712,7 +714,7 @@ void lcd_PrintTimeHours(uint8_t hours, bool clearPrev)
     hrs += prevValue;
 
     tft.getTextBounds(hrs, 0, 0, &x, &y, &w, &h);
-    tft.setCursor(5 + (150 - w)/2, 120 - h/2);
+    tft.setCursor(25 + (140 - w)/2, 120 - h/2);
     tft.print(hrs);
 }
 
@@ -722,6 +724,8 @@ void lcd_PrintTimeMinutes(uint8_t minutes, bool clearPrev)
 
     int16_t  x, y;
     uint16_t w, h;
+
+    tft.setTextSize(11);
 
     if (clearPrev)
     {
@@ -734,7 +738,7 @@ void lcd_PrintTimeMinutes(uint8_t minutes, bool clearPrev)
         mins += prevValue;
 
         tft.getTextBounds(mins, 0, 0, &x, &y, &w, &h);
-        tft.setCursor(165 + (150 - w)/2, 120 - h/2);
+        tft.setCursor(175 + (140 - w)/2, 120 - h/2);
         tft.print(mins);
     }
 
@@ -747,7 +751,7 @@ void lcd_PrintTimeMinutes(uint8_t minutes, bool clearPrev)
     mins += prevValue;
 
     tft.getTextBounds(mins, 0, 0, &x, &y, &w, &h);
-    tft.setCursor(165 + (150 - w)/2, 120 - h/2);
+    tft.setCursor(175 + (140 - w)/2, 120 - h/2);
     tft.print(mins);
 }
 
@@ -761,7 +765,7 @@ void lcd_setCursorForCenterValue(uint8_t value)
     else if (value <= 19)
     {
         tft.setTextSize(22);
-        tft.setCursor(45, 45);
+        tft.setCursor(50, 45);
     }
     else if(value <= 99)
     {
@@ -811,19 +815,21 @@ void lcd_DrawScoreBoard()
     int16_t  x, y;
     uint16_t w, h;
 
-    tft.fillRect(0, 0, 160, 240, BLACK);
-    tft.fillRect(160, 0, 160, 240, RED);
+    tft.fillRect(0, 0, 170, 240, BLACK);
+    tft.fillRect(170, 0, 150, 240, RED);
 
     // draw rectangle for player in focus
     if (Board.whoIsActive() == BoardPlayers::PLAYER1)
     {
-        tft.drawRect(0, 0, 160, 240, WHITE);
-        tft.drawRect(3, 3, 154, 234, WHITE);
+        tft.drawRect(20, 0, 150, 240, WHITE);
+        tft.drawRect(23, 3, 144, 234, WHITE);
+        tft.drawRect(25, 5, 140, 230, WHITE);
     }
     else
     {
-        tft.drawRect(160, 0, 160, 240, WHITE);
-        tft.drawRect(163, 3, 154, 234, WHITE);
+        tft.drawRect(170, 0, 150, 240, WHITE);
+        tft.drawRect(173, 3, 144, 234, WHITE);
+        tft.drawRect(175, 5, 140, 230, WHITE);
     }
 
     // draw circle whom is started in 'Frame' mode
@@ -832,11 +838,11 @@ void lcd_DrawScoreBoard()
         // draw rectangle for starting player
         if (Board.whoIsStarted() == BoardPlayers::PLAYER1)
         {
-            tft.fillCircle(80, 210, 15, WHITE);
+            tft.fillCircle(95, 210, 15, WHITE);
         }
         else
         {
-            tft.fillCircle(240, 210, 15, WHITE);
+            tft.fillCircle(245, 210, 15, WHITE);
         }
     }
 
@@ -849,11 +855,11 @@ void lcd_DrawScoreBoard()
     }
     else if (max_score >= 100)
     {
-        tft.setTextSize(8);
+        tft.setTextSize(7);
     }
     else
     {
-        tft.setTextSize(12);
+        tft.setTextSize(11);
     }
 
     // draw scores
@@ -864,13 +870,13 @@ void lcd_DrawScoreBoard()
     player_score = Board.getSnookerMode() ? Board.getPlayerScore(BoardPlayers::PLAYER1) : Board.getPlayerFrames(BoardPlayers::PLAYER1);
 
     tft.getTextBounds(player_score, 0, 0, &x, &y, &w, &h);
-    tft.setCursor(5 + (160 - w) / 2, 120 - h / 2);
+    tft.setCursor(25 + (150 - w) / 2, 120 - h / 2);
     tft.print(player_score);
 
     player_score = Board.getSnookerMode() ? Board.getPlayerScore(BoardPlayers::PLAYER2) : Board.getPlayerFrames(BoardPlayers::PLAYER2);
 
     tft.getTextBounds(player_score, 0, 0, &x, &y, &w, &h);
-    tft.setCursor(165 + (160 - w) / 2, 120 - h / 2);
+    tft.setCursor(175 + (150 - w) / 2, 120 - h / 2);
     tft.print(player_score);
 
     // draw extensions status
@@ -885,12 +891,12 @@ void lcd_DrawScoreBoard()
 
         if (Board.getPlayerExtensionAvailable(BoardPlayers::PLAYER1))
         {
-            tft.setCursor((160 - w) / 2, 10);
+            tft.setCursor(20 + (150 - w) / 2, 10);
             tft.print(player_score);
         }
         if (Board.getPlayerExtensionAvailable(BoardPlayers::PLAYER2))
         {
-            tft.setCursor(160 + (160 - w) / 2, 10);
+            tft.setCursor(170 + (150 - w) / 2, 10);
             tft.print(player_score);
         }
     }
