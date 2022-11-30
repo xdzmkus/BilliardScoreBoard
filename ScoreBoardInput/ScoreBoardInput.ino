@@ -25,6 +25,7 @@
  * white/black  - UP
  */
 
+#include "CROSS_BTN.h"
 
 /* Atmega168 mapping */
 #define BUTTON_PIN1 8 // PB0
@@ -35,9 +36,23 @@
 #define BUTTON_PIN6 3 // PD3
 #define BUTTON_PIN7 2 // PD2
 
-#define SNOOKER_BUTTON_PIN  10  // snooker / frames only
-#define TIMER_BUTTON_PIN    11	// time limit / infinity
+SLEEP_BTN   red_btn(BUTTON_PIN5);
+POWER_BTN   black_btn(BUTTON_PIN6);
+AS_BTN      pink_btn(BUTTON_PIN3);
+MODE_BTN    blue_btn(BUTTON_PIN7);
+CF_BTN      brown_btn(BUTTON_PIN5);
+AL1_BTN     green_btn(BUTTON_PIN4);
+AL2_BTN     yellow_btn(BUTTON_PIN6);
+DOWN_BTN    whiteRed_btn(BUTTON_PIN4);
+UP_BTN      whiteBlack_btn(BUTTON_PIN2);
+
+#define GAME_BUTTON_PIN     10  // snooker / pool 
+#define CONFIG_BUTTON_PIN   11	// config / normal
 #define RESET_BUTTON_PIN    12	// reset / start
+
+ArduinoDebounceButton game_btn(GAME_BUTTON_PIN, BUTTON_CONNECTED::GND, BUTTON_NORMAL::OPEN);
+ArduinoDebounceButton config_btn(CONFIG_BUTTON_PIN, BUTTON_CONNECTED::GND, BUTTON_NORMAL::OPEN);
+ArduinoDebounceButton reset_btn(RESET_BUTTON_PIN, BUTTON_CONNECTED::GND, BUTTON_NORMAL::OPEN);
 
 #include "ScoreBoardConnection.h"
 
@@ -50,10 +65,6 @@ void setup()
     pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
     digitalWrite(LED_BUILTIN, LOW);   // Turn off
 
-    pinMode(SNOOKER_BUTTON_PIN, INPUT_PULLUP);
-    pinMode(TIMER_BUTTON_PIN, INPUT_PULLUP);
-    pinMode(RESET_BUTTON_PIN, INPUT_PULLUP);
-
     pinMode(BUTTON_PIN1, INPUT_PULLUP);
     pinMode(BUTTON_PIN2, INPUT_PULLUP);
     pinMode(BUTTON_PIN3, INPUT_PULLUP);
@@ -62,12 +73,58 @@ void setup()
     pinMode(BUTTON_PIN6, INPUT_PULLUP);
     pinMode(BUTTON_PIN7, INPUT_PULLUP);
 
+    game_btn.initPin();
+    config_btn.initPin();
+    reset_btn.initPin();
+
     Serial.begin(SERIAL_BAUD);
+
+    waitUntilDebounced();
+}
+
+void waitUntilDebounced()
+{
+    reset_btn.check();
+    config_btn.check();
+    game_btn.check();
+    blue_btn.check();
+    black_btn.check();
+    pink_btn.check();
+    brown_btn.check();
+    red_btn.check();
+    green_btn.check();
+    yellow_btn.check();
+    whiteBlack_btn.check();
+    whiteRed_btn.check();
+
+    delay(CROSS_BTN::delayDebounce + 1);
 }
 
 void loop()
 {
-     buttonProcess();
+    if (!connACK) return;
+
+    BOARD_STATE boardState = { CRC };
+
+    boardState.btnState.reset = reset_btn.check();
+    boardState.btnState.config = config_btn.check();
+    boardState.btnState.game = game_btn.check();
+    boardState.btnState.btnBlue = blue_btn.check();
+    boardState.btnState.btnBlack = black_btn.check();
+    boardState.btnState.btnPink = pink_btn.check();
+    boardState.btnState.btnBrown = brown_btn.check();
+    boardState.btnState.btnRed = red_btn.check();
+    boardState.btnState.btnGreen = green_btn.check();
+    boardState.btnState.btnYellow = yellow_btn.check();
+    boardState.btnState.btnWhiteBlack = whiteBlack_btn.check();
+    boardState.btnState.btnWhiteRed = whiteRed_btn.check();
+
+    if (lastBoardState.overallState != boardState.overallState)
+    {
+        lastBoardState = boardState;
+        sendCurrentState();
+        connACK = false;
+    }
 }
 
 /*
@@ -79,7 +136,6 @@ void serialEvent()
 {
     String ack = Serial.readStringUntil('\n');
     ack.trim();
-
     if (ack.equals(BOARD_MESSAGE_ACK))
     {
         Serial.flush();
@@ -98,215 +154,3 @@ void sendCurrentState()
     Serial.println(BOARD_MESSAGE + lastBoardState.overallState);
 }
 
-void buttonProcess()
-{
-    if (!connACK) return;
-
-    BOARD_STATE boardState = { CRC };
-
-    boardState.btnState.reset = isResetState();
-    boardState.btnState.timer = isTimerState();
-    boardState.btnState.snooker = isSnookerState();
-    boardState.btnState.btnBlue = isBtnPressed_MODE();
-    boardState.btnState.btnBlack = isBtnPressed_POWER();
-    boardState.btnState.btnPink = isBtnPressed_AS();
-    boardState.btnState.btnBrown = isBtnPressed_CF();
-    boardState.btnState.btnRed = isBtnPressed_SLEEP();
-    boardState.btnState.btnGreen = isBtnPressed_AL1();
-    boardState.btnState.btnYellow = isBtnPressed_AL2();
-    boardState.btnState.btnWhiteBlack = isBtnPressed_UP();
-    boardState.btnState.btnWhiteRed = isBtnPressed_DOWN();
-
-    if (lastBoardState.overallState != boardState.overallState)
-    {
-        lastBoardState = boardState;
-        sendCurrentState();
-        connACK = false;
-    }
-}
-
-boolean isSnookerState()
-{
-    return digitalRead(SNOOKER_BUTTON_PIN);
-}
-
-boolean isTimerState()
-{
-    return digitalRead(TIMER_BUTTON_PIN);
-}
-
-boolean isResetState()
-{
-    return digitalRead(RESET_BUTTON_PIN);
-}
-
-boolean isBtnPressed_MODE()
-{
-    // PIN7 - PIN6 connected
-
-    // PIND = 111100xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN7, OUTPUT);
-    digitalWrite(BUTTON_PIN7, LOW);
-
-    if (((PIND & B11111100) == B11110000) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN7, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_POWER()
-{
-    // PIN6 - PIN5 connected
-
-    // PIND = 111001xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN6, OUTPUT);
-    digitalWrite(BUTTON_PIN6, LOW);
-
-    if (((PIND & B11111100) == B11100100) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN6, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_AL2()
-{
-    // PIN6 - PIN2 connected
-
-    // PIND = 011101xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN6, OUTPUT);
-    digitalWrite(BUTTON_PIN6, LOW);
-
-    if (((PIND & B11111100) == B01110100) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN6, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_CF()
-{
-    // PIN5 - PIN3 connected
-
-    // PIND = 101011xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN5, OUTPUT);
-    digitalWrite(BUTTON_PIN5, LOW);
-
-    if (((PIND & B11111100) == B10101100) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN5, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_SLEEP()
-{
-    // PIN5 - PIN1 connected
-
-    // PIND = 111011xx
-    // PINB = xxxxxxx0
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN5, OUTPUT);
-    digitalWrite(BUTTON_PIN5, LOW);
-
-    if (((PIND & B11111100) == B11101100) && (bitRead(PINB, 0) == 0))
-        pressed = true;
-
-    pinMode(BUTTON_PIN5, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_AL1()
-{
-    // PIN4 - PIN3 connected
-
-    // PIND = 100111xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN4, OUTPUT);
-    digitalWrite(BUTTON_PIN4, LOW);
-
-    if (((PIND & B11111100) == B10011100) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN4, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_DOWN()
-{
-    // PIN4 - PIN1 connected
-
-    // PIND = 110111xx
-    // PINB = xxxxxxx0
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN4, OUTPUT);
-    digitalWrite(BUTTON_PIN4, LOW);
-
-    if (((PIND & B11111100) == B11011100) && (bitRead(PINB, 0) == 0))
-        pressed = true;
-
-    pinMode(BUTTON_PIN4, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_AS()
-{
-    // PIN3 - PIN2 connected
-
-    // PIND = 001111xx
-    // PINB = xxxxxxx1
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN3, OUTPUT);
-    digitalWrite(BUTTON_PIN3, LOW);
-
-    if (((PIND & B11111100) == B00111100) && (bitRead(PINB, 0) == 1))
-        pressed = true;
-
-    pinMode(BUTTON_PIN3, INPUT_PULLUP);
-    return pressed;
-}
-
-boolean isBtnPressed_UP()
-{
-    // PIN2 - PIN1 connected
-
-    // PIND = 011111xx
-    // PINB = xxxxxxx0
-
-    boolean pressed = false;
-
-    pinMode(BUTTON_PIN2, OUTPUT);
-    digitalWrite(BUTTON_PIN2, LOW);
-
-    if (((PIND & B11111100) == B01111100) && (bitRead(PINB, 0) == 0))
-        pressed = true;
-
-    pinMode(BUTTON_PIN2, INPUT_PULLUP);
-    return pressed;
-}

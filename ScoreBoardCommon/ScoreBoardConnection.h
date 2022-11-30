@@ -9,8 +9,8 @@ union BOARD_STATE
     {
         uint8_t crc : 4;
         bool reset : 1;
-        bool timer : 1;
-        bool snooker : 1;
+        bool config : 1;
+        bool game : 1;
         bool btnRed : 1;
         bool btnBlack : 1;
         bool btnPink : 1;
