@@ -1,0 +1,14 @@
+{
+  "codename": "Ubuntu80Digits",
+  "ttf_path": "\\assets\\Ubuntu-M.ttf",
+  "bin_path": "\\assets\\ui_font_Ubuntu80Digits.bin",
+  "c_path": "\\assets\\ui_font_Ubuntu80Digits.c",
+  "cfg_path": "\\assets\\ui_font_Ubuntu80Digits.fcfg",
+  "size": 80,
+  "bpp": 1,
+  "letters": 0,
+  "ranges": [],
+  "symbols": ":+-0123456789",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}
