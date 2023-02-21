@@ -4,3 +4,6 @@
 
 ![Screenshot](stm32_billiardscoreboard/PETKA.jpg)
 
+## ARDUINO board with 2.4 LCD
+
+![Screenshot](arduino_billiardscoreboard/FEDOR.jpg)
