@@ -36,7 +36,7 @@
 #define LV_USE_BUILTIN_MALLOC 1
 #if LV_USE_BUILTIN_MALLOC
     /*Size of the memory available for `lv_malloc()` in bytes (>= 2kB)*/
-    #define LV_MEM_SIZE (11U * 1024U)          /*[bytes]*/
+    #define LV_MEM_SIZE (12U * 1024U)          /*[bytes]*/
 
     /*Size of the memory expand for `lv_malloc()` in bytes*/
     #define LV_MEM_POOL_EXPAND_SIZE 0
@@ -99,7 +99,7 @@
  *Required to draw shadow, rounded corners, circles, arc, skew lines, or any other masks*/
 #define LV_USE_DRAW_MASKS 1
 
-#define LV_USE_DRAW_SW  1
+#define LV_USE_DRAW_SW 1
 #if LV_USE_DRAW_SW
 
     /*Enable complex draw engine.
