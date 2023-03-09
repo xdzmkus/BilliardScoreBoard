@@ -15,6 +15,8 @@
 #include "../../lvgl/lvgl.h"
 #include "../ui/ui.h"
 
+#include <stdlib.h>
+
 #define DISP_HOR_RES 240
 #define DISP_VER_RES 320
 
@@ -192,7 +194,8 @@ static void msg_init()
 	lv_obj_add_event_cb(ui_Time, time_event_cb, LV_EVENT_ALL, NULL);
 	lv_msg_subscribe_obj(MSG_TIME_CHANGED, ui_Time, NULL);
 
-	lv_obj_add_event_cb(ui_Switch, switch_event_cb, LV_EVENT_MSG_RECEIVED, NULL);
+	lv_obj_add_event_cb(ui_Switch, switch_event_cb, LV_EVENT_MSG_RECEIVED,
+			NULL);
 	lv_msg_subscribe_obj(MSG_SWITCH_CHANGED, ui_Switch, NULL);
 
 	lv_obj_add_event_cb(ui_Label1, label_event_cb, LV_EVENT_MSG_RECEIVED, NULL);
@@ -232,47 +235,53 @@ void handleRandomBall(lv_event_t *e)
 
 	if (target == ui_PanelRand)
 	{
-		uint8_t rBall = HAL_GetTick() % 6;
+		srand(HAL_GetTick());
+
+		uint8_t rBall = 0;
 
 		uint8_t x;
-		for (x = 0; x < 6; ++x)
+		for (x = 0; x < 100; ++x)
 		{
-			if(rBall == 0 && !lv_obj_has_state(ui_ball1, LV_STATE_CHECKED))
+			rBall = rand() % 6;
+
+			if (rBall == 0 && !lv_obj_has_state(ui_ball1, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball1, LV_STATE_CHECKED);
 				break;
 			}
-			if(rBall == 1 && !lv_obj_has_state(ui_ball2, LV_STATE_CHECKED))
+			if (rBall == 1 && !lv_obj_has_state(ui_ball2, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball2, LV_STATE_CHECKED);
 				break;
 			}
-			if(rBall == 2 && !lv_obj_has_state(ui_ball3, LV_STATE_CHECKED))
+			if (rBall == 2 && !lv_obj_has_state(ui_ball3, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball3, LV_STATE_CHECKED);
 				break;
 			}
-			if(rBall == 3 && !lv_obj_has_state(ui_ball4, LV_STATE_CHECKED))
+			if (rBall == 3 && !lv_obj_has_state(ui_ball4, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball4, LV_STATE_CHECKED);
 				break;
 			}
-			if(rBall == 4 && !lv_obj_has_state(ui_ball5, LV_STATE_CHECKED))
+			if (rBall == 4 && !lv_obj_has_state(ui_ball5, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball5, LV_STATE_CHECKED);
 				break;
 			}
-			if(rBall == 5 && !lv_obj_has_state(ui_ball6, LV_STATE_CHECKED))
+			if (rBall == 5 && !lv_obj_has_state(ui_ball6, LV_STATE_CHECKED))
 			{
 				lv_obj_add_state(ui_ball6, LV_STATE_CHECKED);
 				break;
 			}
-
-			if (++rBall == 6)
-				rBall = 0;
 		}
 
-		if (x == 6)	return;
+		if (x == 100)
+		{
+			lv_label_set_text(ui_LabelRandom, "");
+
+			return;
+		}
 
 		lv_label_set_text_fmt(ui_LabelRandom, "%1d", rBall + 1);
 	}
