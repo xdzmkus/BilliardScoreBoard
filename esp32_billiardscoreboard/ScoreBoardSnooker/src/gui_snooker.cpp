@@ -31,6 +31,7 @@ lv_obj_t* ui_NPlyLabelMaxScore2;
 lv_obj_t* ui_NPlyLabelMax2;
 lv_obj_t* ui_NButtonCancel;
 lv_obj_t* ui_NLabelCancel;
+
 lv_obj_t* ui_NNameKeyboard;
 
 static lv_timer_t* telegramTimer;
@@ -390,16 +391,14 @@ static void calculateScores()
 static void ui_event_ScreenSnooker(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    //    lv_obj_t* target = lv_event_get_target(e);
+
     if (event_code == LV_EVENT_SCREEN_LOADED)
     {
+        lv_timer_resume(telegramTimer);
+
         calculateScores();
     }
-    if (event_code == LV_EVENT_SCREEN_LOAD_START)
-    {
-        lv_timer_resume(telegramTimer);
-    }
-    else if (event_code == LV_EVENT_SCREEN_UNLOAD_START)
+    else if (event_code == LV_EVENT_SCREEN_UNLOADED)
     {
         lv_timer_pause(telegramTimer);
     }
@@ -408,6 +407,7 @@ static void ui_event_ScreenSnooker(lv_event_t* e)
 static void ui_event_onLabelHome(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
+
     if (event_code == LV_EVENT_CLICKED)
     {
         _ui_screen_change(ui_ScreenMain, LV_SCR_LOAD_ANIM_NONE, 0, 0);
@@ -417,6 +417,7 @@ static void ui_event_onLabelHome(lv_event_t* e)
 static void ui_event_onLabelRefresh(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
+
     if (event_code == LV_EVENT_CLICKED)
     {
         numberActions = 0;
@@ -429,6 +430,7 @@ static void ui_event_onLabelRefresh(lv_event_t* e)
 static void ui_event_onLabelCancel(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
+
     if (event_code == LV_EVENT_CLICKED)
     {
         if (numberActions > 0)
@@ -479,22 +481,24 @@ void ui_ScreenSnooker_screen_init(void)
     lv_obj_set_style_text_font(ui_ScreenSnooker, &ui_font_UbuntuCyrillic25, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_NLabelHome = lv_label_create(ui_ScreenSnooker);
-    lv_obj_set_width(ui_NLabelHome, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NLabelHome, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_width(ui_NLabelHome, 60);
+    lv_obj_set_height(ui_NLabelHome, 50);
     lv_obj_set_x(ui_NLabelHome, -200);
-    lv_obj_set_y(ui_NLabelHome, 115);
+    lv_obj_set_y(ui_NLabelHome, 125);
     lv_obj_set_align(ui_NLabelHome, LV_ALIGN_CENTER);
     lv_label_set_text(ui_NLabelHome, LV_SYMBOL_HOME);
     lv_obj_add_flag(ui_NLabelHome, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_align(ui_NLabelHome, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_NLabelRefresh = lv_label_create(ui_ScreenSnooker);
-    lv_obj_set_width(ui_NLabelRefresh, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NLabelRefresh, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_width(ui_NLabelRefresh, 60);
+    lv_obj_set_height(ui_NLabelRefresh, 50);
     lv_obj_set_x(ui_NLabelRefresh, 200);
-    lv_obj_set_y(ui_NLabelRefresh, 115);
+    lv_obj_set_y(ui_NLabelRefresh, 125);
     lv_obj_set_align(ui_NLabelRefresh, LV_ALIGN_CENTER);
     lv_label_set_text(ui_NLabelRefresh, LV_SYMBOL_REFRESH);
     lv_obj_add_flag(ui_NLabelRefresh, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_align(ui_NLabelRefresh, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_NRestYellow = lv_obj_create(ui_ScreenSnooker);
     lv_obj_set_width(ui_NRestYellow, 30);
@@ -732,7 +736,7 @@ void ui_ScreenSnooker_screen_init(void)
     ui_NNameKeyboard = ui_NameKeyboard_create(ui_ScreenSnooker);
     lv_obj_set_x(ui_NNameKeyboard, 0);
     lv_obj_set_y(ui_NNameKeyboard, 0);
-    lv_obj_add_flag(ui_NNameKeyboard, LV_OBJ_FLAG_HIDDEN);     /// Flags
+    lv_obj_add_flag(ui_NNameKeyboard, LV_OBJ_FLAG_HIDDEN);
 
 }
 
@@ -741,10 +745,13 @@ void gui_snooker_init()
     ui_ScreenSnooker_screen_init();
 
     lv_obj_add_event_cb(ui_ScreenSnooker, ui_event_ScreenSnooker, LV_EVENT_ALL, NULL);
+
     lv_obj_add_event_cb(ui_NLabelHome, ui_event_onLabelHome, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_NLabelRefresh, ui_event_onLabelRefresh, LV_EVENT_ALL, NULL);
+
     lv_obj_add_event_cb(ui_NPanelPly1, ui_event_onPlayerPanel, LV_EVENT_ALL, ui_NPlyLabelName1);
     lv_obj_add_event_cb(ui_NPanelPly2, ui_event_onPlayerPanel, LV_EVENT_ALL, ui_NPlyLabelName2);
+
     lv_obj_add_event_cb(ui_NButtonCancel, ui_event_onLabelCancel, LV_EVENT_ALL, NULL);
 
     telegramTimer = lv_timer_create(sendScore, 5000, NULL);

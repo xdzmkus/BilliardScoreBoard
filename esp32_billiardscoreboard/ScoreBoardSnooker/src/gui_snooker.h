@@ -44,6 +44,7 @@ extern lv_obj_t* ui_NPlyLabelMaxScore2;
 extern lv_obj_t* ui_NPlyLabelMax2;
 extern lv_obj_t* ui_NButtonCancel;
 extern lv_obj_t* ui_NLabelCancel;
+
 extern lv_obj_t* ui_NNameKeyboard;
 
 typedef	enum
@@ -91,7 +92,10 @@ typedef	enum
     P2_FOUL_6,
     P2_FOUL_7,
     P_FLUKE_RED
-} SNOOKER_ACTION;
+}
+SNOOKER_ACTION;
+
+void gui_snooker_init();
 
 SNOOKER_PLAYER gui_snooker_get_activePlayer();
 
@@ -109,8 +113,6 @@ bool gui_snooker_isYellowBallPossible();
 void gui_snooker_setHandicapP1(uint16_t handicap);
 void gui_snooker_setHandicapP2(uint16_t handicap);
 void gui_snooker_set6Red(bool is6Red);
-
-void gui_snooker_init();
 
 #endif
 

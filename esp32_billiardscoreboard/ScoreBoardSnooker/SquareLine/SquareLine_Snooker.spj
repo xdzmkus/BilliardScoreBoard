@@ -47,17 +47,17 @@
                 "strtype": "OBJECT/Position",
                 "intarray": [
                   -200,
-                  115
+                  125
                 ],
                 "InheritedType": 7
               },
               {
                 "nid": 1402030995,
-                "flags": 51,
+                "flags": 17,
                 "strtype": "OBJECT/Size",
                 "intarray": [
-                  1,
-                  1
+                  60,
+                  50
                 ],
                 "InheritedType": 7
               },
@@ -265,7 +265,22 @@
               },
               {
                 "part": "lv.PART.MAIN",
-                "childs": [],
+                "childs": [
+                  {
+                    "nid": 29262148,
+                    "strtype": "_style/StyleState",
+                    "strval": "DEFAULT",
+                    "childs": [
+                      {
+                        "nid": 282318482,
+                        "strtype": "_style/Text_Align",
+                        "strval": "CENTER",
+                        "InheritedType": 3
+                      }
+                    ],
+                    "InheritedType": 1
+                  }
+                ],
                 "nid": 1158031332,
                 "strtype": "LABEL/Style_main",
                 "strval": "lv.PART.MAIN, Text, Rectangle, Pad",
@@ -320,17 +335,17 @@
                 "strtype": "OBJECT/Position",
                 "intarray": [
                   200,
-                  115
+                  125
                 ],
                 "InheritedType": 7
               },
               {
                 "nid": -1456940896,
-                "flags": 51,
+                "flags": 17,
                 "strtype": "OBJECT/Size",
                 "intarray": [
-                  1,
-                  1
+                  60,
+                  50
                 ],
                 "InheritedType": 7
               },
@@ -538,7 +553,22 @@
               },
               {
                 "part": "lv.PART.MAIN",
-                "childs": [],
+                "childs": [
+                  {
+                    "nid": 1265425189,
+                    "strtype": "_style/StyleState",
+                    "strval": "DEFAULT",
+                    "childs": [
+                      {
+                        "nid": 257940115,
+                        "strtype": "_style/Text_Align",
+                        "strval": "CENTER",
+                        "InheritedType": 3
+                      }
+                    ],
+                    "InheritedType": 1
+                  }
+                ],
                 "nid": -1754741918,
                 "strtype": "LABEL/Style_main",
                 "strval": "lv.PART.MAIN, Text, Rectangle, Pad",
@@ -56166,7 +56196,7 @@
     "theme_color2": 0,
     "exportFolderPath": "C:\\Users\\xdzmk\\Temp",
     "projectExportFolderPath": "",
-    "backup_cnt": 47,
+    "backup_cnt": 48,
     "autosave_cnt": 0,
     "lvgl_version": "8.2.0",
     "callfuncsexport": "C_FILE",

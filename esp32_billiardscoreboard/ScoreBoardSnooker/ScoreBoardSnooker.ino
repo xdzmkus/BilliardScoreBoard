@@ -22,7 +22,7 @@ static char greeting[97] = GREETING;
 #define WLAN_HOSTNAME "GENKA"
 
 #include "Insights.h"
-const char insights_auth_key[] = "eyJhbG...pQzsQ";
+const char insights_auth_key[] PROGMEM = "https://dashboard.insights.espressif.com/home/insights";
 
 #include <WiFiManager.h>
 WiFiManager wm;
@@ -36,7 +36,7 @@ WiFiManagerParameter custom_bot_channel;
 #include <FastBot.h>
 FastBot bot;
 
-#define SQW 5
+#define SQW 2
 
 #include <RTClib.h>
 
@@ -63,8 +63,8 @@ volatile bool touched = false;
 #define TFT_MISO 19  // (leave TFT SDO disconnected if other SPI devices share MISO)
 #define TFT_MOSI 23
 #define TFT_SCLK 18
-#define TFT_CS   15  // Chip select control pin
-#define TFT_DC   2   // Data Command control pin
+#define TFT_CS   5   // Chip select control pin
+#define TFT_DC   4   // Data Command control pin
 #define TFT_RST  GFX_NOT_DEFINED // Reset pin (could connect to RST pin)
 
 const uint8_t rotation = 1;
@@ -151,7 +151,7 @@ void setup_RTC()
         return;
     }
 
-    pinMode(SQW, INPUT_PULLUP);
+    pinMode(SQW, INPUT_PULLDOWN);
 
     attachInterrupt(digitalPinToInterrupt(SQW), isr_rtc_tick, FALLING);
 
@@ -263,11 +263,13 @@ void loop()
 
     if (rtc_tick)
     {
+        rtc_tick = false;
+
         if (gui_rtc_save == true)
         {
-            rtc.adjust(DateTime(gui_date_year, gui_date_month, gui_date_day, gui_time_hours, gui_time_minutes));
-
             gui_rtc_save = false;
+
+            rtc.adjust(DateTime(gui_date_year, gui_date_month, gui_date_day, gui_time_hours, gui_time_minutes));
         }
 
         DateTime now = rtc.now();
@@ -275,13 +277,13 @@ void loop()
         gui_date_day = now.day();
         gui_date_month = now.month();
         gui_date_year = now.year();
-
         gui_time_hours = now.hour();
         gui_time_minutes = now.minute();
 
-        gui_update_date();
+        char currentDateTime[] = "DD/MM/YYYY hh:mm:ss";
+        SerialDebug::log(LOG_LEVEL::DEBUG, now.toString(currentDateTime));
 
-        rtc_tick = false;
+        gui_update_date();
     }
 
 

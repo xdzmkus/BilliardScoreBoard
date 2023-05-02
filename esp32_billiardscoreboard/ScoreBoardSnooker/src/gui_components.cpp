@@ -4,7 +4,7 @@
 #include "ui/ui.h"
 #include "ui/ui_helpers.h"
 
-static const char ply_names[] = "Дима\nПаша\nИгорь\nСергей\nВова\nВиталик\nСаша\nДенис\nСтарички\nМастера\nЧемпьЁны\nВыскочки";
+static const char ply_names[] = "Дима\nПаша\nИгорь\nСергей\nВова\nВиталик\nСаша\nДенис\nКристина\nНаташа\nЖеня\nВитя\nИлья";
 
 uint32_t LV_EVENT_GET_COMP_CHILD;
 uint32_t LV_EVENT_SET_COMP_CHILD;

@@ -76,7 +76,10 @@ extern lv_obj_t* ui_SButtonSaveGreeting;
 extern lv_obj_t* ui_SLabelSaveGreeting;
 extern lv_obj_t* ui_SLabelHome;
 extern lv_obj_t* ui_SLabelRefresh;
+
 extern lv_obj_t* ui_SNameKeyboard;
+extern lv_obj_t* ui_SCalendar;
+extern lv_obj_t* ui_SKeyboard;
 
 void gui_settings_init();
 

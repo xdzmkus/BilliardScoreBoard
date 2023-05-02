@@ -71,7 +71,10 @@ lv_obj_t* ui_SButtonSaveGreeting;
 lv_obj_t* ui_SLabelSaveGreeting;
 lv_obj_t* ui_SLabelHome;
 lv_obj_t* ui_SLabelRefresh;
+
 lv_obj_t* ui_SNameKeyboard;
+lv_obj_t* ui_SCalendar;
+lv_obj_t* ui_SKeyboard;
 
 
 static lv_calendar_date_t gui_date;
@@ -92,7 +95,7 @@ static void ui_refresh_DateTime()
     lv_roller_set_selected(ui_SRollerMinutes, gui_time_minutes, LV_ANIM_OFF);
 }
 
-static void ui_event_onDateUpdate(lv_event_t* e)
+static void ui_event_onDateChanged(lv_event_t* e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t* ta = static_cast<lv_obj_t*>(lv_event_get_user_data(e));
@@ -106,31 +109,18 @@ static void ui_event_onDateUpdate(lv_event_t* e)
         lv_snprintf(str_date, sizeof(str_date), "%02d.%02d.%d", gui_date.day, gui_date.month, gui_date.year);
         lv_textarea_set_text(ta, str_date);
 
-        lv_obj_del(obj);
-        lv_obj_clear_flag(lv_layer_top(), LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_set_style_bg_opa(lv_layer_top(), LV_OPA_TRANSP, 0);
+        lv_obj_add_flag(ui_SCalendar, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
-static void ui_event_onDateChange(lv_event_t* e)
+static void ui_event_onDateClick(lv_event_t* e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t* ta = lv_event_get_target(e);
 
     if (code == LV_EVENT_FOCUSED)
     {
-        lv_obj_add_flag(lv_layer_top(), LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_t* ui_SCalendar = lv_calendar_create(lv_layer_top());
-        lv_obj_set_style_bg_opa(lv_layer_top(), LV_OPA_50, 0);
-        lv_obj_set_style_bg_color(lv_layer_top(), lv_palette_main(LV_PALETTE_GREY), 0);
-        lv_calendar_set_today_date(ui_SCalendar, gui_date.year, gui_date.month, gui_date.day);
-        lv_calendar_set_showed_date(ui_SCalendar, gui_date.year, gui_date.month);
-        lv_calendar_header_arrow_create(ui_SCalendar);
-        lv_obj_set_width(ui_SCalendar, lv_pct(93));
-        lv_obj_set_height(ui_SCalendar, lv_pct(93));
-        lv_obj_set_align(ui_SCalendar, LV_ALIGN_CENTER);
-        lv_obj_add_event_cb(ui_SCalendar, ui_event_onDateUpdate, LV_EVENT_ALL, ta);
-        lv_calendar_header_dropdown_create(ui_SCalendar);
+        lv_obj_clear_flag(ui_SCalendar, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
@@ -154,29 +144,26 @@ static void ui_event_onHandicapUpdate(lv_event_t* e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t* ta = lv_event_get_target(e);
-    lv_obj_t* kb = static_cast<lv_obj_t *>(lv_event_get_user_data(e));
 
     if (code == LV_EVENT_FOCUSED)
     {
-        lv_keyboard_set_textarea(kb, ta);
-        lv_obj_set_style_max_height(kb, LV_HOR_RES * 2 / 3, 0);
+        lv_keyboard_set_textarea(ui_SKeyboard, ta);
+        lv_obj_set_style_max_height(ui_SKeyboard, LV_HOR_RES * 2 / 3, 0);
         lv_obj_update_layout(ui_SPanelSettings);   /*Be sure the sizes are recalculated*/
         lv_obj_set_height(ui_SPanelSettings, lv_pct(50));
-        lv_obj_clear_flag(kb, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(ui_SKeyboard, LV_OBJ_FLAG_HIDDEN);
         lv_obj_scroll_to_view_recursive(ta, LV_ANIM_OFF);
     }
     else if (code == LV_EVENT_DEFOCUSED)
     {
-        lv_keyboard_set_textarea(kb, NULL);
+        lv_keyboard_set_textarea(ui_SKeyboard, NULL);
         lv_obj_set_height(ui_SPanelSettings, lv_pct(70));
-        lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
- //       lv_indev_reset(NULL, ta);
+        lv_obj_add_flag(ui_SKeyboard, LV_OBJ_FLAG_HIDDEN);
     }
     else if (code == LV_EVENT_READY || code == LV_EVENT_CANCEL)
     {
         lv_obj_set_height(ui_SPanelSettings, lv_pct(70));
-        lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
- //       lv_indev_reset(NULL, ta);   /*To forget the last clicked object to make it focusable again*/
+        lv_obj_add_flag(ui_SKeyboard, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
@@ -195,15 +182,6 @@ static void ui_event_onSnookerSave(lv_event_t* e)
         gui_snooker_setHandicapP2(handicap);
 
         gui_snooker_set6Red(LV_STATE_CHECKED == lv_obj_get_state(ui_SSwitch6Red));
-    }
-}
-
-static void ui_event_ScreenSettings(lv_event_t* e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    if (event_code == LV_EVENT_SCREEN_LOAD_START)
-    {
-        ui_refresh_DateTime();
     }
 }
 
@@ -322,6 +300,46 @@ static void ui_event_onGreetingSave(lv_event_t* e)
     }
 }
 
+static void ui_event_ScreenSettings(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_SCREEN_LOADED)
+    {
+        lv_obj_scroll_to_y(ui_SPanelSettings, 0, LV_ANIM_ON);
+
+        ui_refresh_DateTime();
+
+        // Create name's keyboard
+        ui_SNameKeyboard = ui_NameKeyboard_create(ui_ScreenSettings);
+        lv_obj_set_x(ui_SNameKeyboard, 0);
+        lv_obj_set_y(ui_SNameKeyboard, 0);
+        lv_obj_add_flag(ui_SNameKeyboard, LV_OBJ_FLAG_HIDDEN);
+
+        // Create calendar
+        ui_SCalendar = lv_calendar_create(ui_ScreenSettings);
+        lv_calendar_set_today_date(ui_SCalendar, gui_date.year, gui_date.month, gui_date.day);
+        lv_calendar_set_showed_date(ui_SCalendar, gui_date.year, gui_date.month);
+        lv_calendar_header_dropdown_create(ui_SCalendar);
+        lv_obj_set_width(ui_SCalendar, lv_pct(93));
+        lv_obj_set_height(ui_SCalendar, lv_pct(93));
+        lv_obj_set_align(ui_SCalendar, LV_ALIGN_CENTER);
+        lv_obj_add_event_cb(ui_SCalendar, ui_event_onDateChanged, LV_EVENT_ALL, ui_STextAreaDate);
+        lv_obj_add_flag(ui_SCalendar, LV_OBJ_FLAG_HIDDEN);
+
+        // Create numeric keyboard
+        ui_SKeyboard = lv_keyboard_create(ui_ScreenSettings);
+        lv_keyboard_set_mode(ui_SKeyboard, LV_KEYBOARD_MODE_NUMBER);
+        lv_obj_add_flag(ui_SKeyboard, LV_OBJ_FLAG_HIDDEN);
+    }
+    if (event_code == LV_EVENT_SCREEN_UNLOADED)
+    {
+        lv_obj_del(ui_SNameKeyboard);
+        lv_obj_del(ui_SCalendar);
+        lv_obj_del(ui_SKeyboard);
+    }
+}
+
 ///////////////////// SCREENS ////////////////////
 void ui_ScreenSettings_screen_init(void)
 {
@@ -329,6 +347,30 @@ void ui_ScreenSettings_screen_init(void)
     lv_obj_clear_flag(ui_ScreenSettings, LV_OBJ_FLAG_SCROLLABLE);    /// Flags
     lv_obj_set_style_bg_img_src(ui_ScreenSettings, &ui_img_snooker_table_480x320_png, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_ScreenSettings, &ui_font_UbuntuCyrillic25, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_SLabelHome = lv_label_create(ui_ScreenSettings);
+    lv_obj_set_width(ui_SLabelHome, 60);
+    lv_obj_set_height(ui_SLabelHome, 50);
+    lv_obj_set_x(ui_SLabelHome, -200);
+    lv_obj_set_y(ui_SLabelHome, 125);
+    lv_obj_set_align(ui_SLabelHome, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_SLabelHome, LV_SYMBOL_HOME);
+    lv_obj_add_flag(ui_SLabelHome, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_SLabelHome, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_SLabelHome, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_SLabelHome, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_SLabelRefresh = lv_label_create(ui_ScreenSettings);
+    lv_obj_set_width(ui_SLabelRefresh, 60);
+    lv_obj_set_height(ui_SLabelRefresh, 50);
+    lv_obj_set_x(ui_SLabelRefresh, 200);
+    lv_obj_set_y(ui_SLabelRefresh, 125);
+    lv_obj_set_align(ui_SLabelRefresh, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_SLabelRefresh, LV_SYMBOL_REFRESH);
+    lv_obj_add_flag(ui_SLabelRefresh, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_SLabelRefresh, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_SLabelRefresh, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_SLabelRefresh, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SPanelSettings = lv_obj_create(ui_ScreenSettings);
     lv_obj_set_width(ui_SPanelSettings, lv_pct(90));
@@ -600,7 +642,7 @@ void ui_ScreenSettings_screen_init(void)
     lv_obj_set_height(ui_SLabelHandicap1, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_x(ui_SLabelHandicap1, 0);
     lv_obj_set_y(ui_SLabelHandicap1, 90);
-    lv_label_set_text(ui_SLabelHandicap1, "Фора(левый)");
+    lv_label_set_text(ui_SLabelHandicap1, "Фора(1-ый)");
 
     ui_STextAreaHandicap1 = lv_textarea_create(ui_SPanelSnooker);
     lv_obj_set_width(ui_STextAreaHandicap1, 100);
@@ -619,7 +661,7 @@ void ui_ScreenSettings_screen_init(void)
     lv_obj_set_height(ui_SLabelHandicap2, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_x(ui_SLabelHandicap2, 0);
     lv_obj_set_y(ui_SLabelHandicap2, 150);
-    lv_label_set_text(ui_SLabelHandicap2, "Фора(правый)");
+    lv_label_set_text(ui_SLabelHandicap2, "Фора(2-ой)");
 
     ui_STextAreaHandicap2 = lv_textarea_create(ui_SPanelSnooker);
     lv_obj_set_width(ui_STextAreaHandicap2, 100);
@@ -779,44 +821,20 @@ void ui_ScreenSettings_screen_init(void)
     lv_obj_set_align(ui_SLabelSaveGreeting, LV_ALIGN_CENTER);
     lv_label_set_text(ui_SLabelSaveGreeting, LV_SYMBOL_SAVE " Сохранить");
 
-    ui_SLabelHome = lv_label_create(ui_ScreenSettings);
-    lv_obj_set_width(ui_SLabelHome, LV_SIZE_CONTENT);  /// 1
-    lv_obj_set_height(ui_SLabelHome, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_x(ui_SLabelHome, -200);
-    lv_obj_set_y(ui_SLabelHome, 115);
-    lv_obj_set_align(ui_SLabelHome, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_SLabelHome, LV_SYMBOL_HOME);
-    lv_obj_add_flag(ui_SLabelHome, LV_OBJ_FLAG_CLICKABLE);   /// Flags
-    lv_obj_set_style_text_color(ui_SLabelHome, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_SLabelHome, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_SLabelRefresh = lv_label_create(ui_ScreenSettings);
-    lv_obj_set_width(ui_SLabelRefresh, LV_SIZE_CONTENT);  /// 50
-    lv_obj_set_height(ui_SLabelRefresh, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_x(ui_SLabelRefresh, 200);
-    lv_obj_set_y(ui_SLabelRefresh, 115);
-    lv_obj_set_align(ui_SLabelRefresh, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_SLabelRefresh, LV_SYMBOL_REFRESH);
-    lv_obj_add_flag(ui_SLabelRefresh, LV_OBJ_FLAG_CLICKABLE);   /// Flags
-    lv_obj_set_style_text_color(ui_SLabelRefresh, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_SLabelRefresh, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_SNameKeyboard = ui_NameKeyboard_create(ui_ScreenSettings);
-    lv_obj_set_x(ui_SNameKeyboard, 0);
-    lv_obj_set_y(ui_SNameKeyboard, 0);
-    lv_obj_add_flag(ui_SNameKeyboard, LV_OBJ_FLAG_HIDDEN);   /// Flags
 }
 
 void gui_settings_init()
 {
     ui_ScreenSettings_screen_init();
 
+    // Load/Unload screen
     lv_obj_add_event_cb(ui_ScreenSettings, ui_event_ScreenSettings, LV_EVENT_ALL, NULL);
+
     lv_obj_add_event_cb(ui_SLabelHome, ui_event_onLabelHome, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SLabelRefresh, ui_event_onLabelRefresh, LV_EVENT_ALL, NULL);
 
     // Change date and time
-    lv_obj_add_event_cb(ui_STextAreaDate, ui_event_onDateChange, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_STextAreaDate, ui_event_onDateClick, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SButtonTimeSave, ui_event_onDateTimeSave, LV_EVENT_ALL, NULL);
 
     // Edit player names
@@ -827,14 +845,9 @@ void gui_settings_init()
     // Save player names
     lv_obj_add_event_cb(ui_SButtonPlayerSave, ui_event_onPlayersSave, LV_EVENT_ALL, NULL);
 
-    // Create default keyboard
-    lv_obj_t* ui_SKeyboard = lv_keyboard_create(ui_ScreenSettings);
-    lv_keyboard_set_mode(ui_SKeyboard, LV_KEYBOARD_MODE_NUMBER);
-    lv_obj_add_flag(ui_SKeyboard, LV_OBJ_FLAG_HIDDEN);
-    
     // Snooker
-    lv_obj_add_event_cb(ui_STextAreaHandicap1, ui_event_onHandicapUpdate, LV_EVENT_ALL, ui_SKeyboard);
-    lv_obj_add_event_cb(ui_STextAreaHandicap2, ui_event_onHandicapUpdate, LV_EVENT_ALL, ui_SKeyboard);
+    lv_obj_add_event_cb(ui_STextAreaHandicap1, ui_event_onHandicapUpdate, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_STextAreaHandicap2, ui_event_onHandicapUpdate, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SButtonSnookerSave, ui_event_onSnookerSave, LV_EVENT_ALL, NULL);
 
     // start/stop AP
@@ -843,6 +856,7 @@ void gui_settings_init()
     // start/stop Diagnostics
     lv_obj_add_event_cb(ui_SSwitchInsight, ui_event_onSwitchDiagnostic, LV_EVENT_ALL, NULL);
 
+    // Edit greeting message
     lv_obj_add_event_cb(ui_SButtonEditGreeting, ui_event_onLabelEdit, LV_EVENT_ALL, ui_SLabelGreeting);
     lv_obj_add_event_cb(ui_SButtonSaveGreeting, ui_event_onGreetingSave, LV_EVENT_ALL, ui_SLabelGreeting);
 

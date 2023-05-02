@@ -20,6 +20,7 @@ lv_obj_t* ui_PPanelPool3;
 lv_obj_t* ui_PanelPool3Ply1;
 lv_obj_t* ui_PanelPool3Ply2;
 lv_obj_t* ui_PanelPool3Ply3;
+
 lv_obj_t* ui_PNameKeyboard;
 
 static lv_timer_t* telegramTimer;
@@ -139,22 +140,31 @@ static void sendScore(lv_timer_t* timer)
 static void ui_event_ScreenPool(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    //    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_SCREEN_LOAD_START)
+
+    if (event_code == LV_EVENT_SCREEN_LOADED)
     {
         lv_timer_resume(telegramTimer);
+
+        ui_PNameKeyboard = ui_NameKeyboard_create(ui_ScreenPool);
+        lv_obj_set_x(ui_PNameKeyboard, 0);
+        lv_obj_set_y(ui_PNameKeyboard, 0);
+        lv_obj_add_flag(ui_PNameKeyboard, LV_OBJ_FLAG_HIDDEN);   /// Flags
+
     }
-    else if (event_code == LV_EVENT_SCREEN_UNLOAD_START)
+    else if (event_code == LV_EVENT_SCREEN_UNLOADED)
     {
         lv_timer_pause(telegramTimer);
+
+        lv_obj_del(ui_PNameKeyboard);
     }
 }
 
 static void ui_event_onLabelHome(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         _ui_screen_change(ui_ScreenMain, LV_SCR_LOAD_ANIM_NONE, 0, 0);
     }
 }
@@ -162,8 +172,9 @@ static void ui_event_onLabelHome(lv_event_t* e)
 static void ui_event_onLabelRefresh(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         clearScore(e);
     }
 }
@@ -172,11 +183,14 @@ static void ui_event_PSwitchPlyCount(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_VALUE_CHANGED && !lv_obj_has_state(target, LV_STATE_CHECKED)) {
+
+    if (event_code == LV_EVENT_VALUE_CHANGED && !lv_obj_has_state(target, LV_STATE_CHECKED))
+    {
         _ui_flag_modify(ui_PPanelPool2, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
         _ui_flag_modify(ui_PPanelPool3, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     }
-    if (event_code == LV_EVENT_VALUE_CHANGED && lv_obj_has_state(target, LV_STATE_CHECKED)) {
+    if (event_code == LV_EVENT_VALUE_CHANGED && lv_obj_has_state(target, LV_STATE_CHECKED))
+    {
         _ui_flag_modify(ui_PPanelPool2, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_flag_modify(ui_PPanelPool3, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
     }
@@ -185,8 +199,9 @@ static void ui_event_PSwitchPlyCount(lv_event_t* e)
 static void ui_event_PImageBreak(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         switchBreak(e);
     }
 }
@@ -203,22 +218,24 @@ void ui_ScreenPool_screen_init(void)
     lv_obj_set_style_text_font(ui_ScreenPool, &ui_font_UbuntuCyrillic25, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PLabelHome = lv_label_create(ui_ScreenPool);
-    lv_obj_set_width(ui_PLabelHome, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_PLabelHome, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_width(ui_PLabelHome, 60);
+    lv_obj_set_height(ui_PLabelHome, 50);
     lv_obj_set_x(ui_PLabelHome, -200);
-    lv_obj_set_y(ui_PLabelHome, 115);
+    lv_obj_set_y(ui_PLabelHome, 125);
     lv_obj_set_align(ui_PLabelHome, LV_ALIGN_CENTER);
     lv_label_set_text(ui_PLabelHome, LV_SYMBOL_HOME);
     lv_obj_add_flag(ui_PLabelHome, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_align(ui_PLabelHome, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PLabelRefresh = lv_label_create(ui_ScreenPool);
-    lv_obj_set_width(ui_PLabelRefresh, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_PLabelRefresh, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_width(ui_PLabelRefresh, 60);
+    lv_obj_set_height(ui_PLabelRefresh, 50);
     lv_obj_set_x(ui_PLabelRefresh, 200);
-    lv_obj_set_y(ui_PLabelRefresh, 115);
+    lv_obj_set_y(ui_PLabelRefresh, 125);
     lv_obj_set_align(ui_PLabelRefresh, LV_ALIGN_CENTER);
     lv_label_set_text(ui_PLabelRefresh, LV_SYMBOL_REFRESH);
     lv_obj_add_flag(ui_PLabelRefresh, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_align(ui_PLabelRefresh, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PSwitchPlyCount = lv_switch_create(ui_ScreenPool);
     lv_obj_set_width(ui_PSwitchPlyCount, 64);
@@ -316,12 +333,6 @@ void ui_ScreenPool_screen_init(void)
     lv_obj_set_x(ui_PanelPool3Ply3, 145);
     lv_obj_set_y(ui_PanelPool3Ply3, 0);
     lv_label_set_text(ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME), "Игрок 3");
-
-    ui_PNameKeyboard = ui_NameKeyboard_create(ui_ScreenPool);
-    lv_obj_set_x(ui_PNameKeyboard, 0);
-    lv_obj_set_y(ui_PNameKeyboard, 0);
-    lv_obj_add_flag(ui_PNameKeyboard, LV_OBJ_FLAG_HIDDEN);   /// Flags
-
 }
 
 void gui_pool_init()

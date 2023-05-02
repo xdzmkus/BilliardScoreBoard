@@ -33,17 +33,15 @@ extern lv_obj_t* ui_PPanelPool3;
 extern lv_obj_t* ui_PanelPool3Ply1;
 extern lv_obj_t* ui_PanelPool3Ply2;
 extern lv_obj_t* ui_PanelPool3Ply3;
+
 extern lv_obj_t* ui_PNameKeyboard;
 
-void changeScore(lv_event_t* e);
-
-void changeScorePlus(lv_event_t* e);
-
-void changeScoreMinus(lv_event_t* e);
-
-void changePlayerName(lv_event_t* e);
-
 void gui_pool_init();
+
+void changeScore(lv_event_t* e);
+void changeScorePlus(lv_event_t* e);
+void changeScoreMinus(lv_event_t* e);
+void changePlayerName(lv_event_t* e);
 
 #endif
 

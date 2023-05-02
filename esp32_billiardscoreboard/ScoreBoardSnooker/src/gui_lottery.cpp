@@ -32,6 +32,7 @@ static void saveLot(lv_timer_t* timer)
     {
         lv_label_ins_text(ui_LLabelListLots, 0, "\n");
         lv_label_ins_text(ui_LLabelListLots, 0, lot);
+        lv_obj_scroll_to_y(ui_LLabelListLots, 0, LV_ANIM_OFF);
     }
 }
 
@@ -77,38 +78,43 @@ static void pullLottery(lv_event_t* e)
     lv_label_set_text(ui_LLabelLot, "");
 }
 
-
-
 ///////////////////// FUNCTIONS ////////////////////
 static void ui_event_RollerLots(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_VALUE_CHANGED) {
+
+    if (event_code == LV_EVENT_VALUE_CHANGED)
+    {
         clearLottery(e);
     }
 }
+
 static void ui_event_PanelLottery(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         pullLottery(e);
     }
 }
+
 static void ui_event_onLabelHome(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         _ui_screen_change(ui_ScreenMain, LV_SCR_LOAD_ANIM_NONE, 0, 0);
     }
 }
+
 static void ui_event_onLabelRefresh(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED) {
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
         clearLottery(e);
     }
 }
@@ -125,6 +131,25 @@ void ui_ScreenLottery_screen_init(void)
     lv_obj_set_style_text_opa(ui_ScreenLottery, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(ui_ScreenLottery, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_ScreenLottery, &ui_font_UbuntuCyrillic25, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_LLabelHome = lv_label_create(ui_ScreenLottery);
+    lv_obj_set_width(ui_LLabelHome, 60);
+    lv_obj_set_height(ui_LLabelHome, 50);
+    lv_obj_set_x(ui_LLabelHome, -200);
+    lv_obj_set_y(ui_LLabelHome, 125);
+    lv_obj_set_align(ui_LLabelHome, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_LLabelHome, LV_SYMBOL_HOME);
+    lv_obj_add_flag(ui_LLabelHome, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_align(ui_LLabelHome, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_LLabelRefresh = lv_label_create(ui_ScreenLottery);
+    lv_obj_set_width(ui_LLabelRefresh, 60);
+    lv_obj_set_height(ui_LLabelRefresh, 50);
+    lv_obj_set_x(ui_LLabelRefresh, 200);
+    lv_obj_set_y(ui_LLabelRefresh, 125);
+    lv_obj_set_align(ui_LLabelRefresh, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_LLabelRefresh, LV_SYMBOL_REFRESH);
+    lv_obj_add_flag(ui_LLabelRefresh, LV_OBJ_FLAG_CLICKABLE);     /// Flags
 
     ui_LRollerLots = lv_roller_create(ui_ScreenLottery);
     lv_roller_set_options(ui_LRollerLots,
@@ -204,24 +229,6 @@ void ui_ScreenLottery_screen_init(void)
     lv_obj_set_align(ui_LLabelListLots, LV_ALIGN_TOP_MID);
     lv_label_set_text(ui_LLabelListLots, "");
     lv_obj_add_flag(ui_LLabelListLots, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-
-    ui_LLabelHome = lv_label_create(ui_ScreenLottery);
-    lv_obj_set_width(ui_LLabelHome, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_LLabelHome, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_LLabelHome, -200);
-    lv_obj_set_y(ui_LLabelHome, 115);
-    lv_obj_set_align(ui_LLabelHome, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_LLabelHome, LV_SYMBOL_HOME);
-    lv_obj_add_flag(ui_LLabelHome, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-
-    ui_LLabelRefresh = lv_label_create(ui_ScreenLottery);
-    lv_obj_set_width(ui_LLabelRefresh, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_LLabelRefresh, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_LLabelRefresh, 200);
-    lv_obj_set_y(ui_LLabelRefresh, 115);
-    lv_obj_set_align(ui_LLabelRefresh, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_LLabelRefresh, LV_SYMBOL_REFRESH);
-    lv_obj_add_flag(ui_LLabelRefresh, LV_OBJ_FLAG_CLICKABLE);     /// Flags
 
 }
 
