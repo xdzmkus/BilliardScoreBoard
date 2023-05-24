@@ -258,6 +258,7 @@ static void ui_event_comp_NameKeyboard_NameTextArea(lv_event_t* e)
         if (comp_KeyboardPanel[UI_COMP_NAMEKEYBOARD_NAMELABEL] != NULL)
         {
             lv_label_set_text(comp_KeyboardPanel[UI_COMP_NAMEKEYBOARD_NAMELABEL], lv_textarea_get_text(comp_KeyboardPanel[UI_COMP_NAMEKEYBOARD_NAMETEXTAREA]));
+            lv_event_send(comp_KeyboardPanel[UI_COMP_NAMEKEYBOARD_NAMELABEL], LV_EVENT_VALUE_CHANGED, NULL);
         }
 
         ui_hide_component(comp_KeyboardPanel);

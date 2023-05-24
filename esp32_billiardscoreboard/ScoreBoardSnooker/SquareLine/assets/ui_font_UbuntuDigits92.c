@@ -4,7 +4,7 @@
  * Opts: --bpp 1 --size 92 --font C:\Users\xdzmk\source\repos\BilliardScoreBoard\ScoreBoardSnooker\SquareLine\assets\Ubuntu-M.ttf -o C:\Users\xdzmk\source\repos\BilliardScoreBoard\ScoreBoardSnooker\SquareLine\assets\ui_font_UbuntuDigits92.c --format lvgl -r 0x30-0x39 --symbols 0123456789-+ --no-prefilter
  ******************************************************************************/
 
-#include "ui.h"
+#include "../ui.h"
 
 #ifndef UI_FONT_UBUNTUDIGITS92
 #define UI_FONT_UBUNTUDIGITS92 1

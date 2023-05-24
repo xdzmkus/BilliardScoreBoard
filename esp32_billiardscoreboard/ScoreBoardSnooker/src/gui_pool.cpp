@@ -23,11 +23,8 @@ lv_obj_t* ui_PanelPool3Ply3;
 
 lv_obj_t* ui_PNameKeyboard;
 
-static lv_timer_t* telegramTimer;
-
-static bool publishScore = false;
-
-extern int32_t sendMessageToChannel(String& msg, int32_t msgId = -1);
+extern volatile uint8_t publishPoolScore;
+extern volatile bool publishHistory;
 
 static lv_timer_t* scoreTimer;
 
@@ -53,98 +50,12 @@ static void hideScorePlusMinus(lv_timer_t* timer)
     _ui_flag_modify((lv_obj_t*)timer->user_data, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
 
-static void clearScore(lv_event_t* e)
-{
-    pool2Ply1Score = 0;
-    pool2Ply2Score = 0;
-
-    pool3Ply1Score = 0;
-    pool3Ply2Score = 0;
-    pool3Ply3Score = 0;
-
-    lv_obj_t* scoreLabel;
-
-    scoreLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-    lv_label_set_text(scoreLabel, "0");
-
-    scoreLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-    lv_label_set_text(scoreLabel, "0");
-
-    scoreLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-    lv_label_set_text(scoreLabel, "0");
-
-    scoreLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-    lv_label_set_text(scoreLabel, "0");
-
-    scoreLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-    lv_label_set_text(scoreLabel, "0");
-
-    publishScore = true;
-}
-
-static void sendScore(lv_timer_t* timer)
-{
-    if (publishScore)
-    {
-        publishScore = false;
-
-        String msg = F("МАТЧ:\n");
-
-        lv_obj_t* plyLabel;
-
-        if (lv_obj_has_flag(ui_PPanelPool2, LV_OBJ_FLAG_HIDDEN))
-        {
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-            msg += lv_label_get_text(plyLabel);
-            msg += F(" - ");
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
-            msg += lv_label_get_text(plyLabel);
-
-            msg += F("\n");
-
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-            msg += lv_label_get_text(plyLabel);
-            msg += F(" - ");
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
-            msg += lv_label_get_text(plyLabel);
-            
-            msg += F("\n");
-
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-            msg += lv_label_get_text(plyLabel);
-            msg += F(" - ");
-            plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
-            msg += lv_label_get_text(plyLabel);
-        }
-        else
-        {
-            plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-            msg += lv_label_get_text(plyLabel);
-            msg += F(" - ");
-            plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
-            msg += lv_label_get_text(plyLabel);
-
-            msg += F("\n");
-
-            plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
-            msg += lv_label_get_text(plyLabel);
-            msg += F(" - ");
-            plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
-            msg += lv_label_get_text(plyLabel);
-        }
-
-        sendMessageToChannel(msg);
-    }
-}
-
 static void ui_event_ScreenPool(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if (event_code == LV_EVENT_SCREEN_LOADED)
     {
-        lv_timer_resume(telegramTimer);
-
         ui_PNameKeyboard = ui_NameKeyboard_create(ui_ScreenPool);
         lv_obj_set_x(ui_PNameKeyboard, 0);
         lv_obj_set_y(ui_PNameKeyboard, 0);
@@ -153,8 +64,6 @@ static void ui_event_ScreenPool(lv_event_t* e)
     }
     else if (event_code == LV_EVENT_SCREEN_UNLOADED)
     {
-        lv_timer_pause(telegramTimer);
-
         lv_obj_del(ui_PNameKeyboard);
     }
 }
@@ -175,7 +84,32 @@ static void ui_event_onLabelRefresh(lv_event_t* e)
 
     if (event_code == LV_EVENT_CLICKED)
     {
-        clearScore(e);
+        pool2Ply1Score = 0;
+        pool2Ply2Score = 0;
+
+        pool3Ply1Score = 0;
+        pool3Ply2Score = 0;
+        pool3Ply3Score = 0;
+
+        lv_obj_t* scoreLabel;
+
+        scoreLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        lv_label_set_text(scoreLabel, "0");
+
+        scoreLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        lv_label_set_text(scoreLabel, "0");
+
+        scoreLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        lv_label_set_text(scoreLabel, "0");
+
+        scoreLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        lv_label_set_text(scoreLabel, "0");
+
+        scoreLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        lv_label_set_text(scoreLabel, "0");
+
+        publishPoolScore = 1;
+        publishHistory = true;
     }
 }
 
@@ -344,9 +278,158 @@ void gui_pool_init()
     lv_obj_add_event_cb(ui_PLabelRefresh, ui_event_onLabelRefresh, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_PSwitchPlyCount, ui_event_PSwitchPlyCount, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_PImageBreak, ui_event_PImageBreak, LV_EVENT_ALL, NULL);
+}
 
-    telegramTimer = lv_timer_create(sendScore, 5000, NULL);
-    lv_timer_pause(telegramTimer);
+String gui_pool_score()
+{
+    String msg = F("МАТЧ:\n");
+
+    lv_obj_t* plyLabel;
+
+    if (lv_obj_has_flag(ui_PPanelPool2, LV_OBJ_FLAG_HIDDEN))
+    {
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        msg += lv_label_get_text(plyLabel);
+        msg += F(" - ");
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+
+        msg += F("\n");
+
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        msg += lv_label_get_text(plyLabel);
+        msg += F(" - ");
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+
+        msg += F("\n");
+
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        msg += lv_label_get_text(plyLabel);
+        msg += F(" - ");
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+    }
+    else
+    {
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        msg += lv_label_get_text(plyLabel);
+        msg += F(" - ");
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+
+        msg += F("\n");
+
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+        msg += lv_label_get_text(plyLabel);
+        msg += F(" - ");
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+    }
+
+    return msg;
+}
+
+String gui_pool_getHistory()
+{
+    String msg;
+
+    const char delimiter[] = "\n";
+
+    lv_obj_t* plyLabel;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE);
+    msg += lv_label_get_text(plyLabel);
+    msg += delimiter;
+
+    return msg;
+}
+
+void gui_pool_restoreHistory(String& value, uint8_t idx)
+{
+    lv_obj_t* plyLabel;
+
+    switch (idx)
+    {
+    case 0:
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        lv_label_set_text(plyLabel, value.c_str());
+        break;
+    case 1:
+        pool2Ply1Score = value.toInt();
+        lv_label_set_text_fmt(ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE), "%d", pool2Ply1Score);
+        break;
+    case 2:
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        lv_label_set_text(plyLabel, value.c_str());
+        break;
+    case 3:
+        pool2Ply2Score = value.toInt();
+        lv_label_set_text_fmt(ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE), "%d", pool2Ply2Score);
+        break;
+    case 4:
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        lv_label_set_text(plyLabel, value.c_str());
+        break;
+    case 5:
+        pool3Ply1Score = value.toInt();
+        lv_label_set_text_fmt(ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE), "%d", pool3Ply1Score);
+        break;
+    case 6:
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        lv_label_set_text(plyLabel, value.c_str());
+        break;
+    case 7:
+        pool3Ply2Score = value.toInt();
+        lv_label_set_text_fmt(ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE), "%d", pool3Ply2Score);
+        break;
+    case 8:
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        lv_label_set_text(plyLabel, value.c_str());
+        break;
+    case 9:
+        pool3Ply3Score = value.toInt();
+        lv_label_set_text_fmt(ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE), "%d", pool3Ply3Score);
+        break;
+    default:
+        break;
+    }
 }
 
 void changeScore(lv_event_t* e)
@@ -391,7 +474,8 @@ void changeScorePlus(lv_event_t* e)
 
     switchBreak(e);
 
-    publishScore = true;
+    publishPoolScore = 1;
+    publishHistory = true;
 }
 
 void changeScoreMinus(lv_event_t* e)
@@ -425,7 +509,8 @@ void changeScoreMinus(lv_event_t* e)
 
     switchBreak(e);
 
-    publishScore = true;
+    publishPoolScore = 1;
+    publishHistory = true;
 }
 
 void changePlayerName(lv_event_t* e)

@@ -34,12 +34,8 @@ lv_obj_t* ui_NLabelCancel;
 
 lv_obj_t* ui_NNameKeyboard;
 
-static lv_timer_t* telegramTimer;
-
-static bool publishScore = false;
-static int32_t lastMsgId = -1;
-
-extern int32_t sendMessageToChannel(String& msg, int32_t msgId = -1);
+extern volatile uint8_t publishSnookerScore; // 0 - don't publish; 1 - replace last message; 2 - new message
+extern volatile bool publishHistory;
 
 #define COLOR_RED "F20000"
 #define COLOR_BLACK "000000"
@@ -74,28 +70,6 @@ uint16_t _handicapP2 = 0;
 bool _is6Red = false;
 
 ///////////////////// FUNCTIONS ////////////////////
-
-static void sendScore(lv_timer_t* timer)
-{
-    if (publishScore)
-    {
-        publishScore = false;
-
-        String msg = F("СНУКЕР:\n");
-
-        msg += lv_label_get_text(ui_NPlyLabelScore1);
-        msg += F(" - ");
-        msg += lv_label_get_text(ui_NPlyLabelName1);
-
-        msg += F("\n");
-
-        msg += lv_label_get_text(ui_NPlyLabelScore2);
-        msg += F(" - ");
-        msg += lv_label_get_text(ui_NPlyLabelName2);
-
-        lastMsgId = sendMessageToChannel(msg, lastMsgId);
-    }
-}
 
 static void calculateScores()
 {
@@ -394,13 +368,7 @@ static void ui_event_ScreenSnooker(lv_event_t* e)
 
     if (event_code == LV_EVENT_SCREEN_LOADED)
     {
-        lv_timer_resume(telegramTimer);
-
         calculateScores();
-    }
-    else if (event_code == LV_EVENT_SCREEN_UNLOADED)
-    {
-        lv_timer_pause(telegramTimer);
     }
 }
 
@@ -422,8 +390,8 @@ static void ui_event_onLabelRefresh(lv_event_t* e)
     {
         numberActions = 0;
         calculateScores();
-        publishScore = true;
-        lastMsgId = -1; // publish as a new message
+        publishSnookerScore = 2; // publish as a new message
+        publishHistory = true;
     }
 }
 
@@ -436,8 +404,10 @@ static void ui_event_onLabelCancel(lv_event_t* e)
         if (numberActions > 0)
         {
             if (historyActions[numberActions - 1] != P1_MISS && historyActions[numberActions - 1] != P2_MISS && historyActions[numberActions - 1] != P_FLUKE_RED)
-                publishScore = true;
-
+            {
+                publishSnookerScore = 1;
+                publishHistory = true;
+            }
             numberActions--;
             calculateScores();
         }
@@ -753,9 +723,65 @@ void gui_snooker_init()
     lv_obj_add_event_cb(ui_NPanelPly2, ui_event_onPlayerPanel, LV_EVENT_ALL, ui_NPlyLabelName2);
 
     lv_obj_add_event_cb(ui_NButtonCancel, ui_event_onLabelCancel, LV_EVENT_ALL, NULL);
+}
 
-    telegramTimer = lv_timer_create(sendScore, 5000, NULL);
-    lv_timer_pause(telegramTimer);
+String gui_snooker_score()
+{
+    String msg = F("СНУКЕР:\n");
+
+    msg += lv_label_get_text(ui_NPlyLabelScore1);
+    msg += F(" - ");
+    msg += lv_label_get_text(ui_NPlyLabelName1);
+
+    msg += F("\n");
+
+    msg += lv_label_get_text(ui_NPlyLabelScore2);
+    msg += F(" - ");
+    msg += lv_label_get_text(ui_NPlyLabelName2);
+
+    return msg;
+}
+
+String gui_snooker_getHistory()
+{
+    String msg;
+
+    const char delimiter[] = "\n";
+
+    lv_obj_t* plyLabel;
+
+    msg += lv_label_get_text(ui_NPlyLabelName1);
+    msg += delimiter;
+    msg += lv_label_get_text(ui_NPlyLabelName2);
+    msg += delimiter;
+
+    for (uint8_t idx = 0; idx < numberActions; idx++)
+    {
+        msg += historyActions[idx];
+        msg += delimiter;
+    }
+
+    return msg;
+}
+
+void gui_snooker_restoreHistory(String& value, uint8_t idx)
+{
+    if (idx < 10) return;
+
+    lv_obj_t* plyLabel;
+
+    switch (idx)
+    {
+    case 10:
+        lv_label_set_text(ui_NPlyLabelName1, value.c_str());
+        break;
+    case 11:
+        lv_label_set_text(ui_NPlyLabelName2, value.c_str());
+        break;
+    default:
+        historyActions[numberActions++] = static_cast<SNOOKER_ACTION>(value.toInt());
+        break;
+    }
 }
 
 SNOOKER_PLAYER gui_snooker_get_activePlayer()
@@ -769,7 +795,10 @@ void gui_snooker_pushAction(SNOOKER_ACTION sAction)
     historyActions[numberActions++] = sAction;
 
     if (sAction != P1_MISS && sAction != P2_MISS && sAction != P_FLUKE_RED)
-        publishScore = true;
+    {
+        publishSnookerScore = 1;
+        publishHistory = true;
+    }
 }
 
 bool gui_snooker_isFreeBallPossible()
@@ -952,7 +981,8 @@ void gui_snooker_set6Red(bool is6Red)
 {
     numberActions = 0;
 
-    lastMsgId = -1; // publish as a new message
+    publishSnookerScore = 2;
+    publishHistory = true;
 
     _is6Red = is6Red;
 }

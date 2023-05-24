@@ -4,7 +4,7 @@
  * Opts: 
  ******************************************************************************/
 
-#include "ui.h"
+#include "../ui.h"
 
 #ifndef UI_FONT_UBUNTUCYRILLIC25
 #define UI_FONT_UBUNTUCYRILLIC25 1

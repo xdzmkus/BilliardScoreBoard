@@ -21,20 +21,6 @@ uint16_t gui_date_year = 2023;
 uint8_t	gui_time_hours = 0;
 uint8_t	gui_time_minutes = 0;
 
-bool gui_get_telegram_send()
-{
-    return lv_obj_has_state(ui_SSwitchTelega, LV_STATE_CHECKED);
-}
-
-void gui_update_date()
-{
-    char date[] = "DD/MM hh:mm";
-
-    lv_snprintf(date, sizeof(date), "%02d/%02d %02d:%02d", gui_date_day, gui_date_month, gui_time_hours, gui_time_minutes);
-
-    gui_main_updateTime(date);
-}
-
 void gui_init()
 {
     lv_disp_t* dispp = lv_disp_get_default();

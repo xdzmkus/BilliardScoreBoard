@@ -27,6 +27,18 @@ LV_IMG_DECLARE(ui_img_break_png);    // assets\break.png
 LV_FONT_DECLARE(ui_font_UbuntuCyrillic25);
 LV_FONT_DECLARE(ui_font_UbuntuDigits92);
 
+#if !defined LV_SYMBOL_TELEGRAM
+#define LV_SYMBOL_TELEGRAM  "\xEF\x8B\x86" /*0xF2C6*/
+#endif
+
+#if !defined LV_SYMBOL_AP
+#define LV_SYMBOL_AP        "\xEF\x94\x99" /*0xF519*/
+#endif
+
+#if !defined LV_SYMBOL_MEDICAL
+#define LV_SYMBOL_MEDICAL   "\xEF\x83\xB9" /*0xF0F9*/
+#endif
+
 
 void ui_init(void);
 

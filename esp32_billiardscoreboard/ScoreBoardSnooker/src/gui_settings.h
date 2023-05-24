@@ -20,15 +20,9 @@
 #endif
 
 extern lv_obj_t* ui_ScreenSettings;
+extern lv_obj_t* ui_SLabelHome;
+extern lv_obj_t* ui_SLabelRefresh;
 extern lv_obj_t* ui_SPanelSettings;
-extern lv_obj_t* ui_SPanelConnect;
-extern lv_obj_t* ui_SLabelConnect;
-extern lv_obj_t* ui_SLabelTelega;
-extern lv_obj_t* ui_SSwitchTelega;
-extern lv_obj_t* ui_SLabelAP;
-extern lv_obj_t* ui_SSwitchAP;
-extern lv_obj_t* ui_SLabelInsight;
-extern lv_obj_t* ui_SSwitchInsight;
 extern lv_obj_t* ui_SPanelPoolPlayers;
 extern lv_obj_t* ui_SLabelPlayers;
 extern lv_obj_t* ui_SPanelPly1;
@@ -46,8 +40,6 @@ extern lv_obj_t* ui_SLabelNumberPly3;
 extern lv_obj_t* ui_SLabelNamePly3;
 extern lv_obj_t* ui_SButtonEditPly3;
 extern lv_obj_t* ui_SLabelEditPly3;
-extern lv_obj_t* ui_SButtonPlayerSave;
-extern lv_obj_t* ui_SLabelPlayerSave;
 extern lv_obj_t* ui_SPanelSnooker;
 extern lv_obj_t* ui_SLabelSnooker;
 extern lv_obj_t* ui_SLabel6Red;
@@ -74,8 +66,6 @@ extern lv_obj_t* ui_SButtonEditGreeting;
 extern lv_obj_t* ui_SLabelEditGreeting;
 extern lv_obj_t* ui_SButtonSaveGreeting;
 extern lv_obj_t* ui_SLabelSaveGreeting;
-extern lv_obj_t* ui_SLabelHome;
-extern lv_obj_t* ui_SLabelRefresh;
 
 extern lv_obj_t* ui_SNameKeyboard;
 extern lv_obj_t* ui_SCalendar;

@@ -97,6 +97,11 @@ SNOOKER_ACTION;
 
 void gui_snooker_init();
 
+String gui_snooker_score();
+
+String gui_snooker_getHistory();
+void gui_snooker_restoreHistory(String& value, uint8_t idx);
+
 SNOOKER_PLAYER gui_snooker_get_activePlayer();
 
 void gui_snooker_pushAction(SNOOKER_ACTION sAction);
