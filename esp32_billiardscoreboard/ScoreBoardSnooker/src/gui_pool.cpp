@@ -6,6 +6,7 @@
 #include "ui/ui_helpers.h"
 
 ///////////////////// VARIABLES ////////////////////
+
 lv_obj_t* ui_ScreenPool;
 lv_obj_t* ui_PLabelHome;
 lv_obj_t* ui_PLabelRefresh;
@@ -25,6 +26,7 @@ lv_obj_t* ui_PNameKeyboard;
 
 extern volatile uint8_t publishPoolScore;
 extern volatile bool publishHistory;
+extern volatile bool publishPoll;
 
 static lv_timer_t* scoreTimer;
 
@@ -36,7 +38,7 @@ static int16_t pool3Ply3Score = 0;
 
 ///////////////////// FUNCTIONS ////////////////////
 
-static void switchBreak(lv_event_t* e)
+static void ui_switchBreak(lv_event_t* e)
 {
     static uint16_t angle = 0;
 
@@ -45,7 +47,7 @@ static void switchBreak(lv_event_t* e)
     lv_img_set_angle(ui_PImageBreak, angle);
 }
 
-static void hideScorePlusMinus(lv_timer_t* timer)
+static void ui_hideScorePlusMinus(lv_timer_t* timer)
 {
     _ui_flag_modify((lv_obj_t*)timer->user_data, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
@@ -110,6 +112,7 @@ static void ui_event_onLabelRefresh(lv_event_t* e)
 
         publishPoolScore = 1;
         publishHistory = true;
+        publishPoll = true;
     }
 }
 
@@ -136,12 +139,13 @@ static void ui_event_PImageBreak(lv_event_t* e)
 
     if (event_code == LV_EVENT_CLICKED)
     {
-        switchBreak(e);
+        ui_switchBreak(e);
     }
 }
 
 ///////////////////// SCREENS ////////////////////
-void ui_ScreenPool_screen_init(void)
+
+static void ui_ScreenPool_screen_init(void)
 {
     ui_ScreenPool = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_ScreenPool, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -269,6 +273,8 @@ void ui_ScreenPool_screen_init(void)
     lv_label_set_text(ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME), "Игрок 3");
 }
 
+///////////////////// EXPORT ////////////////////
+
 void gui_pool_init()
 {
     ui_ScreenPool_screen_init();
@@ -280,7 +286,49 @@ void gui_pool_init()
     lv_obj_add_event_cb(ui_PImageBreak, ui_event_PImageBreak, LV_EVENT_ALL, NULL);
 }
 
-String gui_pool_score()
+String gui_pool_getPollQuestion()
+{
+    const char escp[] = "\"";
+    const char comma = ',';
+
+    String msg;
+
+    lv_obj_t* plyLabel;
+
+    if (lv_obj_has_flag(ui_PPanelPool2, LV_OBJ_FLAG_HIDDEN))
+    {
+        msg += escp;
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+        msg += escp;
+        msg += comma;
+        msg += escp;
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+        msg += escp;
+        msg += comma;
+        msg += escp;
+        plyLabel = ui_comp_get_child(ui_PanelPool3Ply3, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+        msg += escp;
+    }
+    else
+    {
+        msg += escp;
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply1, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+        msg += escp;
+        msg += comma;
+        msg += escp;
+        plyLabel = ui_comp_get_child(ui_PanelPool2Ply2, UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYNAME);
+        msg += lv_label_get_text(plyLabel);
+        msg += escp;
+    }
+
+    return msg;
+}
+
+String gui_pool_getScore()
 {
     String msg = F("МАТЧ:\n");
 
@@ -438,7 +486,7 @@ void changeScore(lv_event_t* e)
 
     _ui_flag_modify(comp_PanelPoolPlayer[UI_COMP_PANELPOOLPLAYER_PANELPOOLPLYSCORE], LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
 
-    scoreTimer = lv_timer_create(hideScorePlusMinus, 3000, comp_PanelPoolPlayer[UI_COMP_PANELPOOLPLAYER_PANELPOOLPLYSCORE]);
+    scoreTimer = lv_timer_create(ui_hideScorePlusMinus, 3000, comp_PanelPoolPlayer[UI_COMP_PANELPOOLPLAYER_PANELPOOLPLYSCORE]);
 
     lv_timer_set_repeat_count(scoreTimer, 1);
 }
@@ -472,7 +520,7 @@ void changeScorePlus(lv_event_t* e)
         lv_label_set_text_fmt(comp_PanelPoolPlayer[UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE], "%d", ++pool3Ply3Score);
     }
 
-    switchBreak(e);
+    ui_switchBreak(e);
 
     publishPoolScore = 1;
     publishHistory = true;
@@ -507,7 +555,7 @@ void changeScoreMinus(lv_event_t* e)
         lv_label_set_text_fmt(comp_PanelPoolPlayer[UI_COMP_PANELPOOLPLAYER_LABELPOOLPLYSCORE], "%d", --pool3Ply3Score);
     }
 
-    switchBreak(e);
+    ui_switchBreak(e);
 
     publishPoolScore = 1;
     publishHistory = true;

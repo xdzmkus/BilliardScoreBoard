@@ -123,7 +123,7 @@ lv_obj_t * ui_PanelPoolPlayer_create(lv_obj_t * comp_parent)
     lv_obj_set_height(cui_LabelPoolPlyScore, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(cui_LabelPoolPlyScore, LV_ALIGN_CENTER);
     lv_label_set_long_mode(cui_LabelPoolPlyScore, LV_LABEL_LONG_SCROLL);
-    lv_label_set_text(cui_LabelPoolPlyScore, "0");
+    lv_label_set_text(cui_LabelPoolPlyScore, "");
     lv_obj_set_style_text_color(cui_LabelPoolPlyScore, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(cui_LabelPoolPlyScore, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(cui_LabelPoolPlyScore, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);

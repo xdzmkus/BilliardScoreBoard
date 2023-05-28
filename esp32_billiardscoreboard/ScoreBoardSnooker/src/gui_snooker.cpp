@@ -6,6 +6,8 @@
 #include "ui/ui.h"
 #include "ui/ui_helpers.h"
 
+///////////////////// VARIABLES ////////////////////
+
 lv_obj_t* ui_ScreenSnooker;
 lv_obj_t* ui_NLabelHome;
 lv_obj_t* ui_NLabelRefresh;
@@ -17,21 +19,21 @@ lv_obj_t* ui_NRestPink;
 lv_obj_t* ui_NRestBlack;
 lv_obj_t* ui_NRestRed;
 lv_obj_t* ui_NLabelRestRed;
+lv_obj_t* ui_NLabelRestScore;
 lv_obj_t* ui_NPanelPly1;
 lv_obj_t* ui_NPlyLabelName1;
 lv_obj_t* ui_NPlyLabelScore1;
 lv_obj_t* ui_NPlyLabelMaxScore1;
-lv_obj_t* ui_NPlyLabelMax1;
+lv_obj_t* ui_NPlyLabelDiff1;
 lv_obj_t* ui_NPanelPlyBreak;
 lv_obj_t* ui_NLabelPlyBreak;
 lv_obj_t* ui_NPanelPly2;
 lv_obj_t* ui_NPlyLabelName2;
 lv_obj_t* ui_NPlyLabelScore2;
 lv_obj_t* ui_NPlyLabelMaxScore2;
-lv_obj_t* ui_NPlyLabelMax2;
+lv_obj_t* ui_NPlyLabelDiff2;
 lv_obj_t* ui_NButtonCancel;
 lv_obj_t* ui_NLabelCancel;
-
 lv_obj_t* ui_NNameKeyboard;
 
 extern volatile uint8_t publishSnookerScore; // 0 - don't publish; 1 - replace last message; 2 - new message
@@ -47,13 +49,13 @@ extern volatile bool publishHistory;
 
 #define MAX_ACTIONS 1024						// maximum amount of actions
 
-SNOOKER_ACTION historyActions[MAX_ACTIONS];		// list of actions
+static SNOOKER_ACTION historyActions[MAX_ACTIONS];		// list of actions
 
-uint16_t numberActions = 0;						// number of executed actions
+static uint16_t numberActions = 0;						// number of executed actions
 
-SNOOKER_PLAYER activePlayer;					// player who made last action
+static SNOOKER_PLAYER activePlayer;					// player who made last action
 
-struct BALLS
+static struct BALLS
 {
     uint8_t red;
     uint8_t black;
@@ -62,16 +64,16 @@ struct BALLS
     uint8_t brown;
     uint8_t green;
     uint8_t yellow;
-}
-ballsTable;
+} ballsTable;
 
-uint16_t _handicapP1 = 0;
-uint16_t _handicapP2 = 0;
-bool _is6Red = false;
+static bool _is6Red = false;
+
+static uint16_t _handicapP1 = 0;
+static uint16_t _handicapP2 = 0;
 
 ///////////////////// FUNCTIONS ////////////////////
 
-static void calculateScores()
+static void ui_calculateScores()
 {
     String plySeries = "=  =\n";
 
@@ -105,7 +107,7 @@ static void calculateScores()
         };
     }
     
-    // Calculate scores
+    // Calculate player's scores
     for (uint16_t i = 0; i < numberActions; i++)
     {
         switch (historyActions[i])
@@ -280,9 +282,15 @@ static void calculateScores()
     lv_label_set_text_fmt(ui_NPlyLabelScore1, "%d", ply1Scores);
     lv_label_set_text_fmt(ui_NPlyLabelScore2, "%d", ply2Scores);
 
-    // Calculate max series
+    // Calculate open scores
     uint8_t scoresOnTable = 8 * ballsTable.red + 7 * ballsTable.black + 6 * ballsTable.pink + 5 * ballsTable.blue + 4 * ballsTable.brown + 3 * ballsTable.green + 2 * ballsTable.yellow;
+    lv_label_set_text_fmt(ui_NLabelRestScore, "%d", scoresOnTable);
 
+    // Calculate differencies
+    lv_label_set_text_fmt(ui_NPlyLabelDiff1, "%+d", ply1Scores - ply2Scores);
+    lv_label_set_text_fmt(ui_NPlyLabelDiff2, "%+d", ply2Scores - ply1Scores);
+
+    // Calculate max series
     uint16_t ply1Max = ply1Scores + scoresOnTable;
     uint16_t ply2Max = ply2Scores + scoresOnTable;
 
@@ -368,7 +376,7 @@ static void ui_event_ScreenSnooker(lv_event_t* e)
 
     if (event_code == LV_EVENT_SCREEN_LOADED)
     {
-        calculateScores();
+        ui_calculateScores();
     }
 }
 
@@ -389,7 +397,7 @@ static void ui_event_onLabelRefresh(lv_event_t* e)
     if (event_code == LV_EVENT_CLICKED)
     {
         numberActions = 0;
-        calculateScores();
+        ui_calculateScores();
         publishSnookerScore = 2; // publish as a new message
         publishHistory = true;
     }
@@ -409,7 +417,7 @@ static void ui_event_onLabelCancel(lv_event_t* e)
                 publishHistory = true;
             }
             numberActions--;
-            calculateScores();
+            ui_calculateScores();
         }
     }
 }
@@ -441,7 +449,7 @@ static void ui_event_onPlayerPanel(lv_event_t* e)
 
 ///////////////////// SCREENS ////////////////////
 
-void ui_ScreenSnooker_screen_init(void)
+static void ui_ScreenSnooker_screen_init(void)
 {
     ui_ScreenSnooker = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_ScreenSnooker, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -555,6 +563,14 @@ void ui_ScreenSnooker_screen_init(void)
     lv_obj_set_align(ui_NLabelRestRed, LV_ALIGN_CENTER);
     lv_label_set_text(ui_NLabelRestRed, "15");
 
+    ui_NLabelRestScore = lv_label_create(ui_ScreenSnooker);
+    lv_obj_set_width(ui_NLabelRestScore, 45);
+    lv_obj_set_height(ui_NLabelRestScore, 30);
+    lv_obj_set_x(ui_NLabelRestScore, 150);
+    lv_obj_set_y(ui_NLabelRestScore, 115);
+    lv_obj_set_align(ui_NLabelRestScore, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_NLabelRestScore, "147");
+
     ui_NPanelPly1 = lv_obj_create(ui_ScreenSnooker);
     lv_obj_set_width(ui_NPanelPly1, 175);
     lv_obj_set_height(ui_NPanelPly1, 230);
@@ -596,16 +612,16 @@ void ui_ScreenSnooker_screen_init(void)
     lv_obj_set_height(ui_NPlyLabelMaxScore1, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_NPlyLabelMaxScore1, 0);
     lv_obj_set_y(ui_NPlyLabelMaxScore1, 10);
-    lv_obj_set_align(ui_NPlyLabelMaxScore1, LV_ALIGN_BOTTOM_RIGHT);
+    lv_obj_set_align(ui_NPlyLabelMaxScore1, LV_ALIGN_BOTTOM_LEFT);
     lv_label_set_text(ui_NPlyLabelMaxScore1, "147");
 
-    ui_NPlyLabelMax1 = lv_label_create(ui_NPanelPly1);
-    lv_obj_set_width(ui_NPlyLabelMax1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NPlyLabelMax1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_NPlyLabelMax1, 0);
-    lv_obj_set_y(ui_NPlyLabelMax1, 10);
-    lv_obj_set_align(ui_NPlyLabelMax1, LV_ALIGN_BOTTOM_LEFT);
-    lv_label_set_text(ui_NPlyLabelMax1, "max >");
+    ui_NPlyLabelDiff1 = lv_label_create(ui_NPanelPly1);
+    lv_obj_set_width(ui_NPlyLabelDiff1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_NPlyLabelDiff1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_NPlyLabelDiff1, 0);
+    lv_obj_set_y(ui_NPlyLabelDiff1, 10);
+    lv_obj_set_align(ui_NPlyLabelDiff1, LV_ALIGN_BOTTOM_RIGHT);
+    lv_label_set_text(ui_NPlyLabelDiff1, "0");
 
     ui_NPanelPlyBreak = lv_obj_create(ui_ScreenSnooker);
     lv_obj_set_width(ui_NPanelPlyBreak, 76);
@@ -627,7 +643,7 @@ void ui_ScreenSnooker_screen_init(void)
     lv_obj_set_height(ui_NLabelPlyBreak, LV_SIZE_CONTENT);    /// 100
     lv_obj_set_x(ui_NLabelPlyBreak, 0);
     lv_obj_set_y(ui_NLabelPlyBreak, -20);
-    lv_label_set_text(ui_NLabelPlyBreak, "=  =\n");
+    lv_label_set_text(ui_NLabelPlyBreak, "=  =");
     lv_label_set_recolor(ui_NLabelPlyBreak, "true");
 
     ui_NPanelPly2 = lv_obj_create(ui_ScreenSnooker);
@@ -671,16 +687,16 @@ void ui_ScreenSnooker_screen_init(void)
     lv_obj_set_height(ui_NPlyLabelMaxScore2, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_NPlyLabelMaxScore2, 0);
     lv_obj_set_y(ui_NPlyLabelMaxScore2, 10);
-    lv_obj_set_align(ui_NPlyLabelMaxScore2, LV_ALIGN_BOTTOM_LEFT);
+    lv_obj_set_align(ui_NPlyLabelMaxScore2, LV_ALIGN_BOTTOM_RIGHT);
     lv_label_set_text(ui_NPlyLabelMaxScore2, "147");
 
-    ui_NPlyLabelMax2 = lv_label_create(ui_NPanelPly2);
-    lv_obj_set_width(ui_NPlyLabelMax2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NPlyLabelMax2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_NPlyLabelMax2, 0);
-    lv_obj_set_y(ui_NPlyLabelMax2, 10);
-    lv_obj_set_align(ui_NPlyLabelMax2, LV_ALIGN_BOTTOM_RIGHT);
-    lv_label_set_text(ui_NPlyLabelMax2, "< max");
+    ui_NPlyLabelDiff2 = lv_label_create(ui_NPanelPly2);
+    lv_obj_set_width(ui_NPlyLabelDiff2, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_NPlyLabelDiff2, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_NPlyLabelDiff2, 0);
+    lv_obj_set_y(ui_NPlyLabelDiff2, 10);
+    lv_obj_set_align(ui_NPlyLabelDiff2, LV_ALIGN_BOTTOM_LEFT);
+    lv_label_set_text(ui_NPlyLabelDiff2, "0");
 
     ui_NButtonCancel = lv_btn_create(ui_ScreenSnooker);
     lv_obj_set_width(ui_NButtonCancel, 76);
@@ -706,9 +722,11 @@ void ui_ScreenSnooker_screen_init(void)
     ui_NNameKeyboard = ui_NameKeyboard_create(ui_ScreenSnooker);
     lv_obj_set_x(ui_NNameKeyboard, 0);
     lv_obj_set_y(ui_NNameKeyboard, 0);
-    lv_obj_add_flag(ui_NNameKeyboard, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(ui_NNameKeyboard, LV_OBJ_FLAG_HIDDEN);     /// Flags
 
 }
+
+///////////////////// EXPORT ////////////////////
 
 void gui_snooker_init()
 {
@@ -725,7 +743,7 @@ void gui_snooker_init()
     lv_obj_add_event_cb(ui_NButtonCancel, ui_event_onLabelCancel, LV_EVENT_ALL, NULL);
 }
 
-String gui_snooker_score()
+String gui_snooker_getScore()
 {
     String msg = F("СНУКЕР:\n");
 
@@ -748,11 +766,15 @@ String gui_snooker_getHistory()
 
     const char delimiter[] = "\n";
 
-    lv_obj_t* plyLabel;
-
     msg += lv_label_get_text(ui_NPlyLabelName1);
     msg += delimiter;
     msg += lv_label_get_text(ui_NPlyLabelName2);
+    msg += delimiter;
+    msg += _is6Red;
+    msg += delimiter;
+    msg += _handicapP1;
+    msg += delimiter;
+    msg += _handicapP2;
     msg += delimiter;
 
     for (uint8_t idx = 0; idx < numberActions; idx++)
@@ -768,8 +790,6 @@ void gui_snooker_restoreHistory(String& value, uint8_t idx)
 {
     if (idx < 10) return;
 
-    lv_obj_t* plyLabel;
-
     switch (idx)
     {
     case 10:
@@ -777,6 +797,15 @@ void gui_snooker_restoreHistory(String& value, uint8_t idx)
         break;
     case 11:
         lv_label_set_text(ui_NPlyLabelName2, value.c_str());
+        break;
+    case 12:
+        _is6Red = value.toInt();
+        break;
+    case 13:
+        _handicapP1 = value.toInt();
+        break;
+    case 14:
+        _handicapP2 = value.toInt();
         break;
     default:
         historyActions[numberActions++] = static_cast<SNOOKER_ACTION>(value.toInt());
@@ -979,10 +1008,7 @@ void gui_snooker_setHandicapP2(uint16_t handicap)
 
 void gui_snooker_set6Red(bool is6Red)
 {
-    numberActions = 0;
-
-    publishSnookerScore = 2;
-    publishHistory = true;
-
     _is6Red = is6Red;
+
+    numberActions = 0;
 }

@@ -30,21 +30,21 @@ extern lv_obj_t* ui_NRestPink;
 extern lv_obj_t* ui_NRestBlack;
 extern lv_obj_t* ui_NRestRed;
 extern lv_obj_t* ui_NLabelRestRed;
+extern lv_obj_t* ui_NLabelRestScore;
 extern lv_obj_t* ui_NPanelPly1;
 extern lv_obj_t* ui_NPlyLabelName1;
 extern lv_obj_t* ui_NPlyLabelScore1;
 extern lv_obj_t* ui_NPlyLabelMaxScore1;
-extern lv_obj_t* ui_NPlyLabelMax1;
+extern lv_obj_t* ui_NPlyLabelDiff1;
 extern lv_obj_t* ui_NPanelPlyBreak;
 extern lv_obj_t* ui_NLabelPlyBreak;
 extern lv_obj_t* ui_NPanelPly2;
 extern lv_obj_t* ui_NPlyLabelName2;
 extern lv_obj_t* ui_NPlyLabelScore2;
 extern lv_obj_t* ui_NPlyLabelMaxScore2;
-extern lv_obj_t* ui_NPlyLabelMax2;
+extern lv_obj_t* ui_NPlyLabelDiff2;
 extern lv_obj_t* ui_NButtonCancel;
 extern lv_obj_t* ui_NLabelCancel;
-
 extern lv_obj_t* ui_NNameKeyboard;
 
 typedef	enum
@@ -97,7 +97,7 @@ SNOOKER_ACTION;
 
 void gui_snooker_init();
 
-String gui_snooker_score();
+String gui_snooker_getScore();
 
 String gui_snooker_getHistory();
 void gui_snooker_restoreHistory(String& value, uint8_t idx);

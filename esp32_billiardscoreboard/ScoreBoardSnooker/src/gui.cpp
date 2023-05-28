@@ -10,17 +10,6 @@
 #include "ui/ui.h"
 #include "ui/ui_helpers.h"
 
-extern const char* getGreetingMsg();
-
-bool gui_rtc_save = false;
-
-uint8_t	gui_date_day = 1;
-uint8_t	gui_date_month = 1;
-uint16_t gui_date_year = 2023;
-
-uint8_t	gui_time_hours = 0;
-uint8_t	gui_time_minutes = 0;
-
 void gui_init()
 {
     lv_disp_t* dispp = lv_disp_get_default();
@@ -42,9 +31,6 @@ void gui_init()
 
     gui_settings_init();
     
-    lv_label_set_text(ui_MLabelLogo, getGreetingMsg());
-    lv_label_set_text(ui_SLabelGreeting, getGreetingMsg());
-
     lv_disp_load_scr(ui_ScreenMain);
 }
 

@@ -1,4 +1,6 @@
-﻿#define SERIAL_DEBUG
+﻿//#define INIT_EEPROM
+
+//#define SERIAL_DEBUG
 #include <SerialDebug.h>
 
 extern const unsigned char dk_image[] PROGMEM;
@@ -44,12 +46,12 @@ const char* const MQTT_TOPIC = "bolek/status";
 #define FB_NO_OTA
 #include <FastBot.h>
 
-#define SQW 2
+#include <ClockTimer.hpp>
+MillisTimer wifiTimer(300000); // 5 minutes
 
 #include <RTClib.h>
-
+#define SQW 2
 RTC_DS3231 rtc;
-
 volatile bool rtc_tick = false;
 
 #include <CTouch_GT911.h>
@@ -61,7 +63,7 @@ volatile bool rtc_tick = false;
 
 GT911 ts = GT911(C_SDA, C_SCL, C_INT, C_RST);
 
-volatile bool is_touch_detected = false;
+static bool is_touch_detected = false;
 static Touch_Point lastTouchPoint;
 
 #include <Arduino_GFX_Library.h>
@@ -73,6 +75,9 @@ static Touch_Point lastTouchPoint;
 #define TFT_DC   4   // Data Command control pin
 #define TFT_RST  GFX_NOT_DEFINED // Reset pin (could connect to RST pin)
 
+static const uint16_t screenWidth = 480;
+static const uint16_t screenHeight = 320;
+
 const uint8_t rotation = 1;
 
 /* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
@@ -80,9 +85,6 @@ Arduino_DataBus* bus = new Arduino_ESP32SPI(TFT_DC /* DC */, TFT_CS /* CS */, TF
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 Arduino_GFX* gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, rotation /* rotation */, false /* IPS */);
-
-static const uint16_t screenWidth = 480;
-static const uint16_t screenHeight = 320;
 
 #include <lvgl.h>
 
@@ -96,8 +98,10 @@ static lv_color_t* disp_draw_buf;
 
 volatile uint8_t publishPoolScore = 0;      // 0 - don't publish; 1 - new message
 volatile uint8_t publishSnookerScore = 0;   // 0 - don't publish; 1 - replace last message; 2 - new message
+volatile bool publishPoll = false;
 volatile bool publishHistory = false;
-volatile bool sendMedicalRequest = false;
+volatile bool subscribeHistory = false;
+volatile bool waitingHistory = false;
 
 #if CONFIG_FREERTOS_UNICORE
 #define ARDUINO_RUNNING_CORE 0
@@ -119,6 +123,12 @@ IRAM_ATTR
 void isr_On_Touched()
 {
     is_touch_detected = true; // The panel was touched, the interrupt was performed.
+}
+
+/* Save touch point */
+void touch_cb(const Touch_Point& tp)
+{
+    lastTouchPoint = tp;
 }
 
 /*Read the touchpad*/
@@ -155,6 +165,177 @@ void lcd_disp_flush(lv_disp_drv_t* disp, const lv_area_t* area, lv_color_t* colo
 #endif
 
     lv_disp_flush_ready(disp);
+}
+
+void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int length)
+{
+    SerialDebug::log(LOG_LEVEL::DEBUG, String(F("MQTT Message arrived to ")) + topic);
+
+    uint8_t tockenIdx = 0;
+
+    String payloadTocken;
+
+    if (waitingHistory)
+    {
+        for (uint8_t i = 0; i < length; i++)
+        {
+            char payloadChar = payload[i];
+
+            if (payloadChar == '\n')
+            {
+                SerialDebug::log(LOG_LEVEL::DEBUG, payloadTocken);
+
+                if (tockenIdx <= 9)
+                {
+                    gui_pool_restoreHistory(payloadTocken, tockenIdx);
+                }
+                else
+                {
+                    gui_snooker_restoreHistory(payloadTocken, tockenIdx);
+                }
+                ++tockenIdx;
+                payloadTocken.clear();
+            }
+            else
+            {
+                payloadTocken.concat(payloadChar);
+            }
+        }
+
+        waitingHistory = false;
+    }
+
+    mqtt.unsubscribe(MQTT_TOPIC);
+}
+
+void handleNET(void* pvParameters)
+{
+    const TickType_t xDelay = 3000 / portTICK_PERIOD_MS;
+
+    FastBot bot(bot_token);
+
+    mqtt.setClient(client);
+    mqtt.setKeepAlive(60);
+    mqtt.setBufferSize(256);
+    mqtt.setServer(mqtt_host, atoi(mqtt_port));
+    mqtt.setCallback(receiveMQTTmesssage);
+
+    for (;;)
+    {
+        if (WiFi.isConnected())
+        {
+            wifiTimer.reset();
+
+            if (!mqtt.connected())
+            {
+                mqtt.connect(WLAN_HOSTNAME, mqtt_user, mqtt_pass);
+            }
+
+            if (subscribeHistory && mqtt.connected())
+            {
+                mqtt.subscribe(MQTT_TOPIC);
+
+                subscribeHistory = false;
+
+                SerialDebug::log(LOG_LEVEL::DEBUG, String(F("Sent medical request")));
+            }
+
+            if (publishHistory && mqtt.connected())
+            {
+                String history = gui_pool_getHistory() + gui_snooker_getHistory();
+
+                if (mqtt.beginPublish(MQTT_TOPIC, history.length(), true))
+                {
+                    mqtt.print(history);
+
+                    if (mqtt.endPublish())
+                        publishHistory = false;
+                }
+
+                SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent history")));
+            }
+
+            mqtt.loop();
+
+            if (gui_main_isTelegram())
+            {
+                if (publishPoolScore > 0)
+                {
+                    String scoreMsg = gui_pool_getScore();
+
+                    SerialDebug::log(LOG_LEVEL::INFO, scoreMsg);
+
+                    if (bot.sendMessage(scoreMsg, bot_channel))
+                    {
+                        publishPoolScore = 0;
+
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent!")));
+                    }
+                    else
+                    {
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sending failure")));
+                    }
+                }
+
+                if (publishPoll)
+                {
+                    publishPoll = false;
+
+                    String poll = F("/sendPoll?question=И кто же победит?");
+                    poll += F("&options=[");
+                    poll += gui_pool_getPollQuestion();
+                    poll += F("]");
+
+                    if (bot.sendCommand(poll, bot_channel))
+                    {
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent Poll!")));
+                    }
+                    else
+                    {
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sending Poll failure")));
+                    }
+                }
+
+                if (publishSnookerScore > 0)
+                {
+                    static int32_t lastSnookerMsgId = 0;
+
+                    if (publishSnookerScore == 1 && lastSnookerMsgId != 0)
+                    {
+                        bot.deleteMessage(lastSnookerMsgId, bot_channel);
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Deleted msg: \n")) + lastSnookerMsgId);
+                    }
+
+                    String scoreMsg = gui_snooker_getScore();
+                    SerialDebug::log(LOG_LEVEL::INFO, scoreMsg);
+
+                    if (bot.sendMessage(scoreMsg, bot_channel))
+                    {
+                        publishSnookerScore = 0;
+
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent!")));
+
+                        lastSnookerMsgId = bot.lastBotMsg();
+                    }
+                    else
+                    {
+                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sending failure")));
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (wifiTimer.isReady())
+            {
+                startWiFi();
+            }
+        }
+        
+        //        SerialDebug::log(LOG_LEVEL::INFO, String(F("NET Stack water mark: ")) + uxTaskGetStackHighWaterMark(NULL));
+
+        vTaskDelay(xDelay);
+    }
 }
 
 void setup_RTC()
@@ -215,7 +396,7 @@ void setup_TOUCH()
 {
     ts.init(isr_On_Touched);
     ts.setRotation(rotation);
-    ts.setCallback_1_PointTouched([](const Touch_Point& tp) { lastTouchPoint = tp; });
+    ts.setCallback_1_PointTouched(touch_cb);
 
     /*Initialize the (dummy) input device driver*/
     static lv_indev_drv_t indev_drv;
@@ -264,19 +445,23 @@ void setup()
 {
     SerialDebug::begin(115200);
 
+#ifdef INIT_EEPROM
+    initEEPROM();
+#endif
+
     loadEEPROM();
 
-    setup_RTC();
+    setup_WiFi();
 
     setup_LCD();
 
     setup_TOUCH();
 
-    gui_init();
-
-    setup_WiFi();
+    setup_RTC();
 
     delay(2000);
+
+    gui_init();
 
     xTaskCreatePinnedToCore(
         handleNET
@@ -296,167 +481,7 @@ void loop()
         wm.process();
     }
 
-    if (rtc_tick)
-    {
-        rtc_tick = false;
-
-        if (gui_rtc_save == true)
-        {
-            gui_rtc_save = false;
-
-            rtc.adjust(DateTime(gui_date_year, gui_date_month, gui_date_day, gui_time_hours, gui_time_minutes));
-        }
-
-        DateTime now = rtc.now();
-
-        gui_date_day = now.day();
-        gui_date_month = now.month();
-        gui_date_year = now.year();
-        gui_time_hours = now.hour();
-        gui_time_minutes = now.minute();
-
-        gui_main_updateTime();
-    }
-
     lv_timer_handler(); /* let the GUI do its work */
-}
-
-void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int length)
-{
-    SerialDebug::log(LOG_LEVEL::DEBUG, String(F("MQTT Message arrived to ")) + topic);
-
-    uint8_t tockenIdx = 0;
-
-    String payloadTocken;
-    
-    for (uint8_t i = 0; i < length; i++)
-    {
-        char payloadChar = payload[i];
-
-        if (payloadChar == '\n')
-        {
-            SerialDebug::log(LOG_LEVEL::DEBUG, payloadTocken);
-
-            if (tockenIdx <= 9)
-            {
-                gui_pool_restoreHistory(payloadTocken, tockenIdx);
-            }
-            else
-            {
-                gui_snooker_restoreHistory(payloadTocken, tockenIdx);
-            }
-            ++tockenIdx;
-            payloadTocken.clear();
-        }
-        else
-        {
-            payloadTocken.concat(payloadChar);
-        }
-    }
-
-    mqtt.unsubscribe(MQTT_TOPIC);
-}
-
-void handleNET(void* pvParameters)
-{
-    const TickType_t xDelay = 3000 / portTICK_PERIOD_MS;
-
-    FastBot bot(bot_token);
-
-    mqtt.setClient(client);
-    mqtt.setKeepAlive(60);
-    mqtt.setBufferSize(256);
-    mqtt.setServer(mqtt_host, atoi(mqtt_port));
-    mqtt.setCallback(receiveMQTTmesssage);
-
-    for (;;)
-    {
-        if (WiFi.isConnected())
-        {
-            if (!mqtt.connected())
-            {
-                mqtt.connect(WLAN_HOSTNAME, mqtt_user, mqtt_pass);
-            }
-
-            if (sendMedicalRequest && mqtt.connected())
-            {
-                mqtt.subscribe(MQTT_TOPIC);
-
-                sendMedicalRequest = false;
-
-                SerialDebug::log(LOG_LEVEL::DEBUG, String(F("Sent medical request")));
-            }
-
-            if (publishHistory && mqtt.connected())
-            {
-                String history = gui_pool_getHistory() + gui_snooker_getHistory();
-
-                if (mqtt.beginPublish(MQTT_TOPIC, history.length(), true))
-                {
-                    mqtt.print(history);
-
-                    if (mqtt.endPublish())
-                        publishHistory = false;
-                }
-
-                SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent history")));
-            }
-
-            mqtt.loop();
-
-            if (gui_main_isTelegram())
-            {
-                if (publishPoolScore > 0)
-                {
-                    String scoreMsg = gui_pool_score();
-
-                    SerialDebug::log(LOG_LEVEL::INFO, scoreMsg);
-
-                    if (bot.sendMessage(scoreMsg, bot_channel))
-                    {
-                        publishPoolScore = 0;
-
-                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent!")));
-                    }
-                    else
-                    {
-                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sending failure")));
-                    }
-                }
-
-                if (publishSnookerScore > 0)
-                {
-                    static int32_t lastSnookerMsgId = 0;
-
-                    if (publishSnookerScore == 1 && lastSnookerMsgId != 0)
-                    {
-                        bot.deleteMessage(lastSnookerMsgId, bot_channel);
-                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Deleted msg: \n")) + lastSnookerMsgId);
-                    }
-
-                    String scoreMsg = gui_snooker_score();
-                    SerialDebug::log(LOG_LEVEL::INFO, scoreMsg);
-
-                    if (bot.sendMessage(scoreMsg, bot_channel))
-                    {
-                        publishSnookerScore = 0;
-
-                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sent!")));
-
-                        lastSnookerMsgId = bot.lastBotMsg();
-                    }
-                    else
-                    {
-                        SerialDebug::log(LOG_LEVEL::INFO, String(F("Sending failure")));
-                    }
-                }
-            }
-        }
-
-        SerialDebug::log(LOG_LEVEL::INFO, String(F("Stack water mark: ")) + uxTaskGetStackHighWaterMark(NULL));
-
-        vTaskDelay(xDelay);
-    }
 }
 
 void WiFiEvent(WiFiEvent_t event)
@@ -479,11 +504,9 @@ void WiFiEvent(WiFiEvent_t event)
         break;
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "Connected to access point");
-        gui_main_updateWiFi(true);
         break;
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "Disconnected from WiFi access point");
-        gui_main_updateWiFi(false);
         break;
     case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "Authentication mode of access point has changed");
@@ -500,11 +523,9 @@ void WiFiEvent(WiFiEvent_t event)
         break;
     case ARDUINO_EVENT_WIFI_AP_START:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi access point started");
-        gui_main_updateAP(true);
         break;
     case ARDUINO_EVENT_WIFI_AP_STOP:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi access point  stopped");
-        gui_main_updateAP(false);
         break;
     case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
         SerialDebug::log(LOG_LEVEL::DEBUG, wifiEvent + "Client connected");
@@ -527,22 +548,36 @@ void WiFiEvent(WiFiEvent_t event)
     }
 }
 
+bool isWifiConnected()
+{
+    return WiFi.isConnected();
+}
+
 void startWiFi()
 {
     SerialDebug::log(LOG_LEVEL::DEBUG, "Start Wifi");
 
-    WiFi.disconnect();
-    
+    WiFi.disconnect(true);
+
     SerialDebug::log(LOG_LEVEL::DEBUG, String("Connect to SSID: ") + sta_ssid + " with password: " + sta_pass);
 
     WiFi.begin(sta_ssid, sta_pass);
+
+    wifiTimer.start();
 }
 
 void stopWiFi()
 {
     SerialDebug::log(LOG_LEVEL::DEBUG, "Stop Wifi");
 
-    WiFi.disconnect();
+    WiFi.disconnect(true);
+
+    wifiTimer.stop();
+}
+
+bool isConfigPortalStarted()
+{
+    return wm.getConfigPortalActive();
 }
 
 void startConfigPortal()
@@ -563,6 +598,23 @@ void stopConfigPortal()
 
         SerialDebug::log(LOG_LEVEL::INFO, F("Config Portal stopped."));
     }
+}
+
+bool isWaitMedicalResponse()
+{
+    return waitingHistory;
+}
+
+void sendMedicalRequest()
+{
+    subscribeHistory = true;
+    waitingHistory = true;
+}
+
+void revokeMedicalRequest()
+{
+    subscribeHistory = false;
+    waitingHistory = false;
 }
 
 const char* getGreetingMsg()
@@ -632,3 +684,27 @@ static void loadEEPROM()
     EEPROMHelper::readEEPROM(421, 32).toCharArray(mqtt_pass, 32);   // 421-452
 
 }
+
+#ifdef INIT_EEPROM
+static void initEEPROM()
+{
+    SerialDebug::log(LOG_LEVEL::INFO, F("EEPROM init"));
+
+    EEPROMHelper::begin(453);
+
+    EEPROMHelper::writeEEPROM(0, 32, "AP");                 // 0-31
+    EEPROMHelper::writeEEPROM(32, 32, "APpass");            // 32-63
+    EEPROMHelper::writeEEPROM(64, 64, "bot:token");         // 64-127
+    EEPROMHelper::writeEEPROM(128, 32, "@channel");         // 128-159
+    EEPROMHelper::writeEEPROM(160, 96, "https://t.me/channel"); // 160-255
+    EEPROMHelper::writeEEPROM(256, 32, "SSID");             // 256-287
+    EEPROMHelper::writeEEPROM(288, 32, "SSIDpass");         // 288-319
+    EEPROMHelper::writeEEPROM(320, 64, "mqtt");             // 320-383
+    EEPROMHelper::writeEEPROM(384, 5, "1883");              // 384-388
+    EEPROMHelper::writeEEPROM(389, 32, "user");             // 389-420
+    EEPROMHelper::writeEEPROM(421, 32, "pass");             // 421-452
+
+    EEPROMHelper::commit();
+}
+#endif // INIT_EEPROM
+

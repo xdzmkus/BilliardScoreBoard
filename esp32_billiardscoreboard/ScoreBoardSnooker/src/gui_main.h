@@ -29,10 +29,6 @@ extern lv_obj_t* ui_MBtnLabelLottery;
 extern lv_obj_t* ui_MBtnSettings;
 extern lv_obj_t* ui_MBtnLabelSettings;
 extern lv_obj_t* ui_MLabelLogo;
-extern lv_obj_t* ui_MLabelDate;
-extern lv_obj_t* ui_MLabelTime;
-extern lv_obj_t* ui_MButtonTimeReset;
-extern lv_obj_t* ui_MLabelTimeReset;
 extern lv_obj_t* ui_MButtonAP;
 extern lv_obj_t* ui_MLabelAP;
 extern lv_obj_t* ui_MButtonWifi;
@@ -43,12 +39,6 @@ extern lv_obj_t* ui_MButtonMedical;
 extern lv_obj_t* ui_MLabelMedical;
 
 void gui_main_init(void);
-
-void gui_main_updateTime();
-
-void gui_main_updateAP(bool);
-
-void gui_main_updateWiFi(bool);
 
 bool gui_main_isTelegram();
 

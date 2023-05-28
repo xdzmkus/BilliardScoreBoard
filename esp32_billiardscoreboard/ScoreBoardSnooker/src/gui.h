@@ -19,15 +19,6 @@
 #include "lvgl.h"
 #endif
 
-extern bool gui_rtc_save;
-
-extern uint8_t	gui_date_day;
-extern uint8_t	gui_date_month;
-extern uint16_t gui_date_year;
-
-extern uint8_t	gui_time_hours;
-extern uint8_t	gui_time_minutes;
-
 void gui_init();
 
 #endif

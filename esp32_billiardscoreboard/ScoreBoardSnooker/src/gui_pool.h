@@ -38,7 +38,8 @@ extern lv_obj_t* ui_PNameKeyboard;
 
 void gui_pool_init();
 
-String gui_pool_score();
+String gui_pool_getPollQuestion();
+String gui_pool_getScore();
 String gui_pool_getHistory();
 void gui_pool_restoreHistory(String& value, uint8_t idx);
 

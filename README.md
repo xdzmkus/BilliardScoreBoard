@@ -2,9 +2,9 @@
 
 ## ESP32 board with 3.5 LCD and touch
 
-![Screenshot](esp32_billiardscoreboard/genka_main.jpg)
-![Screenshot](esp32_billiardscoreboard/genka_pool.jpg)
-![Screenshot](esp32_billiardscoreboard/genka_snooker.jpg)
+![Screenshot](esp32_billiardscoreboard/board_main.jpg)
+![Screenshot](esp32_billiardscoreboard/board_pool.jpg)
+![Screenshot](esp32_billiardscoreboard/board_snooker.jpg)
 
 ## STM32F103 board with 2.8 LCD and touch
 
