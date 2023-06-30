@@ -3607,7 +3607,6 @@
                   },
                   {
                     "nid": -636910239,
-                    "flags": 1048576,
                     "strtype": "OBJECT/States",
                     "InheritedType": 1
                   },
@@ -3706,6 +3705,25 @@
                             "strtype": "_style/Text_Font",
                             "strval": "UbuntuDigits92",
                             "InheritedType": 3
+                          }
+                        ],
+                        "InheritedType": 1
+                      },
+                      {
+                        "nid": -159490953,
+                        "strtype": "_style/StyleState",
+                        "strval": "USER_1",
+                        "childs": [
+                          {
+                            "nid": 1735922711,
+                            "strtype": "_style/Text_Color",
+                            "intarray": [
+                              255,
+                              0,
+                              0,
+                              255
+                            ],
+                            "InheritedType": 7
                           }
                         ],
                         "InheritedType": 1
@@ -4577,8 +4595,7 @@
                 "InheritedType": 11
               }
             ],
-            "saved_objtypeKey": "PANEL",
-            "tree_closed": true
+            "saved_objtypeKey": "PANEL"
           },
           {
             "guid": "GUID47455329-434629S4022100",
@@ -5160,8 +5177,7 @@
                 "InheritedType": 11
               }
             ],
-            "saved_objtypeKey": "PANEL",
-            "tree_closed": true
+            "saved_objtypeKey": "PANEL"
           },
           {
             "guid": "GUID33882194-362198S5082114",
@@ -5644,7 +5660,6 @@
                   },
                   {
                     "nid": 1046264907,
-                    "flags": 1048576,
                     "strtype": "OBJECT/States",
                     "InheritedType": 1
                   },
@@ -5743,6 +5758,25 @@
                             "strtype": "_style/Text_Font",
                             "strval": "UbuntuDigits92",
                             "InheritedType": 3
+                          }
+                        ],
+                        "InheritedType": 1
+                      },
+                      {
+                        "nid": -1569060277,
+                        "strtype": "_style/StyleState",
+                        "strval": "USER_1",
+                        "childs": [
+                          {
+                            "nid": 1970912427,
+                            "strtype": "_style/Text_Color",
+                            "intarray": [
+                              255,
+                              0,
+                              0,
+                              255
+                            ],
+                            "InheritedType": 7
                           }
                         ],
                         "InheritedType": 1
@@ -6614,8 +6648,7 @@
                 "InheritedType": 11
               }
             ],
-            "saved_objtypeKey": "PANEL",
-            "tree_closed": true
+            "saved_objtypeKey": "PANEL"
           },
           {
             "guid": "GUID4370749-413136S5342100",
@@ -56457,7 +56490,7 @@
     "offset_x": 0,
     "offset_y": 0,
     "shape": "RECTANGLE",
-    "multilang": null,
+    "multilang": "DISABLE",
     "description": "",
     "board": "Arduino with TFT_eSPI",
     "board_version": "v1.0.0",
@@ -56469,7 +56502,7 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "exportFolderPath": "C:\\Users\\xdzmk\\Temp",
+    "exportFolderPath": "C:\\Users\\xdzmk\\Temp\\SquareLine",
     "projectExportFolderPath": "",
     "backup_cnt": 51,
     "autosave_cnt": 0,
