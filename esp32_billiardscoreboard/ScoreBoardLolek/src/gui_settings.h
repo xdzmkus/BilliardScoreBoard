@@ -24,7 +24,6 @@ extern lv_obj_t* ui_SLabelHome;
 extern lv_obj_t* ui_SLabelRefresh;
 extern lv_obj_t* ui_SPanelSettings;
 extern lv_obj_t* ui_SPanelPlayers;
-extern lv_obj_t* ui_SLabelPlayers;
 extern lv_obj_t* ui_SPanelPly1;
 extern lv_obj_t* ui_SLabelNumberPly1;
 extern lv_obj_t* ui_SLabelNamePly1;
@@ -40,6 +39,7 @@ extern lv_obj_t* ui_SLabelNumberPly3;
 extern lv_obj_t* ui_SLabelNamePly3;
 extern lv_obj_t* ui_SButtonEditPly3;
 extern lv_obj_t* ui_SLabelEditPly3;
+extern lv_obj_t* ui_SLabelSettings;
 extern lv_obj_t* ui_SPanelSnooker;
 extern lv_obj_t* ui_SLabelSnooker;
 extern lv_obj_t* ui_SLabelControl;
@@ -61,7 +61,7 @@ extern lv_obj_t* ui_SLabelSaveGreeting;
 extern lv_obj_t* ui_SNameKeyboard;
 extern lv_obj_t* ui_SKeyboard;
 
-void gui_settings_init();
+void gui_settings_create();
 
 #endif
 

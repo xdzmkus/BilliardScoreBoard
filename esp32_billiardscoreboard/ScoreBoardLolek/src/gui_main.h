@@ -19,13 +19,13 @@
 #include "lvgl.h"
 #endif
 
-extern char greeting[97];
-
 extern lv_obj_t* ui_ScreenMain;
 extern lv_obj_t* ui_MBtnPool;
 extern lv_obj_t* ui_MBtnLabelPool;
 extern lv_obj_t* ui_MBtnSnooker;
 extern lv_obj_t* ui_MBtnLabelSnooker;
+extern lv_obj_t* ui_MBtnDarts;
+extern lv_obj_t* ui_MBtnLabelDarts;
 extern lv_obj_t* ui_MBtnLottery;
 extern lv_obj_t* ui_MBtnLabelLottery;
 extern lv_obj_t* ui_MBtnSettings;
@@ -42,7 +42,7 @@ extern lv_obj_t* ui_MLabelMedical;
 extern lv_obj_t* ui_MButtonAudio;
 extern lv_obj_t* ui_MLabelAudio;
 
-void gui_main_init(void);
+void gui_main_create(void);
 
 #endif
 

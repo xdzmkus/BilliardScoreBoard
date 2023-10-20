@@ -30,7 +30,8 @@
     extern lv_obj_t* ui_LLabelHome;
     extern lv_obj_t* ui_LLabelRefresh;
 
-    void gui_lottery_init();
+    void gui_lottery_create();
+    void gui_lottery_delete();
 
 #endif
 

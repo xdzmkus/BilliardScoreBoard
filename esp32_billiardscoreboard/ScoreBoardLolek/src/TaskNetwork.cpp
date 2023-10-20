@@ -1,19 +1,16 @@
 ﻿#include "TaskNetwork.h"
 #include "SerialDebug.h"
 #include "EEPROMHelper.h"
-
-#include "gui_pool.h"
-#include "gui_snooker.h"
+#include "gui.h"
 
 #define WLAN_HOSTNAME "LOLEK"
+const char* const MQTT_TOPIC = "diamond/lolek/history";
 
 #include <WiFi.h>
 WiFiClient client;
 
 #include <PubSubClient.h>
 PubSubClient mqtt;
-
-const char* const MQTT_TOPIC = "diamond/lolek/history";
 
 #define FB_NO_OTA
 #include <FastBot.h>
@@ -50,7 +47,6 @@ typedef struct
 volatile bool publishHistory = false;
 volatile bool subscribeHistory = false;
 volatile bool waitingHistory = false;
-
 volatile bool isTelegram = false;
 
 static void WiFiEvent(WiFiEvent_t event)
@@ -127,29 +123,30 @@ static void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int leng
 
 	if (waitingHistory)
 	{
-		for (uint8_t i = 0; i < length; i++)
+		// Try to take the mutex
+		if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
 		{
-			char payloadChar = payload[i];
-
-			if (payloadChar == '~')
+			for (uint8_t i = 0; i < length; i++)
 			{
-				SerialDebug.log(LOG_LEVEL::DEBUG, payloadTocken);
+				char payloadChar = payload[i];
 
-				if (tockenIdx <= 9)
+				if (payloadChar == '~')
 				{
-					gui_pool_restoreHistory(payloadTocken, tockenIdx);
+					SerialDebug.log(LOG_LEVEL::DEBUG, payloadTocken);
+
+					gui_restoreState(payloadTocken, tockenIdx);
+
+					++tockenIdx;
+
+					payloadTocken.clear();
 				}
 				else
 				{
-					gui_snooker_restoreHistory(payloadTocken, tockenIdx);
+					payloadTocken.concat(payloadChar);
 				}
-				++tockenIdx;
-				payloadTocken.clear();
 			}
-			else
-			{
-				payloadTocken.concat(payloadChar);
-			}
+
+			xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
 		}
 
 		waitingHistory = false;
@@ -185,7 +182,16 @@ static void handleNET(void* pvParameters)
 
 			if (publishHistory && mqtt.connected())
 			{
-				String history = gui_pool_getHistory() + gui_snooker_getHistory();
+				String history;
+				
+				// Try to take the mutex
+				if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
+				{
+
+					history = gui_getState();
+
+					xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
+				}
 
 				if (mqtt.beginPublish(MQTT_TOPIC, history.length(), true))
 				{
@@ -270,7 +276,7 @@ static void handleNET(void* pvParameters)
 
 			xSemaphoreGive(wm_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
 		}
-		
+
 		vTaskDelay(1);
 
 		if (waterMarkTimer.isReady())
@@ -308,11 +314,14 @@ void setup_Network()
 {
 	SerialDebug.log(LOG_LEVEL::INFO, F("Setup Network Task"));
 
-	WiFi.mode(WIFI_OFF);
+	WiFi.mode(WIFI_STA);
 	WiFi.setHostname(WLAN_HOSTNAME);
 	WiFi.setAutoConnect(true);
 	WiFi.setAutoReconnect(true);
 	WiFi.onEvent(WiFiEvent);
+	WiFi.setTxPower(WIFI_POWER_19_5dBm);    // Set WiFi RF power output to highest level
+
+	startWiFi();
 
 	new (&custom_wifi_ssid) WiFiManagerParameter("ssid", "WiFi AP SSID", ap_ssid, 32);
 	new (&custom_wifi_pass) WiFiManagerParameter("pass", "WiFi AP Password", ap_pass, 32, " maxlength=32 type='password'");
@@ -433,9 +442,7 @@ void startWiFi()
 {
 	SerialDebug.log(LOG_LEVEL::DEBUG, "Start Wifi");
 
-	WiFi.mode(WIFI_STA);
-
-	WiFi.disconnect(true);
+	WiFi.disconnect(true, true);
 
 	SerialDebug.log(LOG_LEVEL::DEBUG, String("Connect to SSID: ") + sta_ssid + " with password: " + sta_pass);
 
@@ -449,8 +456,6 @@ void stopWiFi()
 	SerialDebug.log(LOG_LEVEL::DEBUG, "Stop Wifi");
 
 	WiFi.disconnect(true);
-
-	WiFi.mode(WIFI_OFF);
 
 	wifiTimer.stop();
 }
@@ -492,7 +497,7 @@ void sendTelegaMessage(telegramMsgType_t type, String msg)
 		scoreMessage_t message;
 
 		message.type = type;
-		
+
 		strncpy(message.line, msg.c_str(), msgSize);
 		message.line[msgSize] = '\0';
 
@@ -512,4 +517,3 @@ void sendTelegaMessage(telegramMsgType_t type, String msg)
 		}
 	}
 }
-

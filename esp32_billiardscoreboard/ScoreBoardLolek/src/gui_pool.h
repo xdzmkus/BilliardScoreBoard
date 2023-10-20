@@ -34,8 +34,6 @@ extern lv_obj_t* ui_PanelPool3Ply1;
 extern lv_obj_t* ui_PanelPool3Ply2;
 extern lv_obj_t* ui_PanelPool3Ply3;
 
-extern lv_obj_t* ui_PNameKeyboard;
-
 extern lv_obj_t* ui_MBPanelPool;
 extern lv_obj_t* ui_MBLabelPoolResetQ;
 extern lv_obj_t* ui_MBBtnPoolResetYes;
@@ -44,12 +42,18 @@ extern lv_obj_t* ui_MBBtnPoolResetNo;
 extern lv_obj_t* ui_MBLabelPoolResetNo;
 
 
-void gui_pool_init();
+extern int16_t pool2Ply1Score;
+extern int16_t pool2Ply2Score;
+extern int16_t pool3Ply1Score;
+extern int16_t pool3Ply2Score;
+extern int16_t pool3Ply3Score;
+
+
+void gui_pool_create();
+void gui_pool_delete();
 
 String gui_pool_getPollQuestion();
 String gui_pool_getScore();
-String gui_pool_getHistory();
-void gui_pool_restoreHistory(String& value, uint8_t idx);
 
 void changeScore(lv_event_t* e);
 void changeScorePlus(lv_event_t* e);

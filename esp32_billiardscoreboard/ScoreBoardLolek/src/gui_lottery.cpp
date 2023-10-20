@@ -16,34 +16,55 @@ lv_obj_t* ui_LLabelListLots;
 lv_obj_t* ui_LLabelHome;
 lv_obj_t* ui_LLabelRefresh;
 
+static lv_timer_t* lotTimer;
+
 ///////////////////// ACTIONS ////////////////////
 #define MAX_LOTS 32
+
 static uint8_t lotCount = 2;
-static bool lots[MAX_LOTS];
+static uint8_t lots[MAX_LOTS] = { 0 };
+static bool lotMask[MAX_LOTS] = { false };
+
+static void showLotsList()
+{
+    String listLots;
+
+    for (uint8_t i = 0; i < MAX_LOTS; i++)
+    {
+        if (lots[i] == 0) break;
+        listLots += lots[i];
+        listLots += "\n";
+    }
+
+    _ui_label_set_property(ui_LLabelListLots, _UI_LABEL_PROPERTY_TEXT, listLots.c_str());
+
+    lv_obj_scroll_to_y(ui_LPanelListLots, lv_obj_get_height(ui_LLabelListLots), LV_ANIM_OFF);
+}
 
 static void saveLot(lv_timer_t* timer)
 {
     _ui_flag_modify(ui_LPanelLottery, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
     _ui_flag_modify(ui_LPanelLot, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 
-    const char* lot = lv_label_get_text(ui_LLabelLot);
+    showLotsList();
 
-    if (lot != NULL && strlen(lot) > 0)
-    {
-        lv_label_ins_text(ui_LLabelListLots, 0, "\n");
-        lv_label_ins_text(ui_LLabelListLots, 0, lot);
-        lv_obj_scroll_to_y(ui_LLabelListLots, 0, LV_ANIM_OFF);
-    }
+    lv_timer_del(lotTimer);
+    lotTimer = NULL;
 }
 
 static void clearLottery(lv_event_t* e)
 {
-    for (uint8_t i = 0; i < MAX_LOTS; i++)
+    if (lotTimer != NULL)
     {
-        lots[i] = false;
+        lv_timer_del(lotTimer);
+        lotTimer = NULL;
     }
 
-    lotCount = lv_roller_get_selected(ui_LRollerLots) + 2;
+    for (uint8_t i = 0; i < MAX_LOTS; i++)
+    {
+        lotMask[i] = false;
+        lots[i] = 0;
+    }
 
     _ui_flag_modify(ui_LPanelLot, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     _ui_flag_modify(ui_LPanelLottery, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
@@ -63,19 +84,31 @@ static void pullLottery(lv_event_t* e)
     {
         uint8_t rLot = rand() % lotCount;
 
-        if (lots[rLot] == true)	continue;
+        if (lotMask[rLot] == true)	continue;
 
-        lots[rLot] = true;
+        lotMask[rLot] = true;
 
-        lv_label_set_text_fmt(ui_LLabelLot, "%1d", rLot + 1);
+        ++rLot; // human visible value
 
-        lv_timer_t* lotTimer = lv_timer_create(saveLot, 2000, NULL);
-        lv_timer_set_repeat_count(lotTimer, 1);
+        // save pulled lot in vector
+        for (uint8_t i = 0; i < MAX_LOTS; i++)
+        {
+            if (lots[i] == 0)
+            {
+                lots[i] = rLot;
+                break;
+            }
+        }
+
+        // show pulled lot
+        lv_label_set_text_fmt(ui_LLabelLot, "%1d", rLot);
+
+        lotTimer = lv_timer_create(saveLot, 2000, NULL);
 
         return;
     }
 
-    lv_label_set_text(ui_LLabelLot, "");
+    lv_label_set_text(ui_LLabelLot, "-");
 }
 
 ///////////////////// FUNCTIONS ////////////////////
@@ -85,6 +118,8 @@ static void ui_event_RollerLots(lv_event_t* e)
 
     if (event_code == LV_EVENT_VALUE_CHANGED)
     {
+        lotCount = lv_roller_get_selected(ui_LRollerLots) + 2;
+
         clearLottery(e);
     }
 }
@@ -232,18 +267,31 @@ void ui_ScreenLottery_screen_init(void)
 
 }
 
-void gui_lottery_init()
+void gui_lottery_create()
 {
-    for (uint8_t i = 0; i < MAX_LOTS; i++)
-    {
-        lots[i] = false;
-    }
-
     ui_ScreenLottery_screen_init();
+
+    lv_roller_set_selected(ui_LRollerLots, lotCount - 2, LV_ANIM_OFF);
+
+    showLotsList();
 
     lv_obj_add_event_cb(ui_LRollerLots, ui_event_RollerLots, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_LPanelLottery, ui_event_PanelLottery, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_LLabelHome, ui_event_onLabelHome, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_LLabelRefresh, ui_event_onLabelRefresh, LV_EVENT_ALL, NULL);
 
+}
+
+void gui_lottery_delete()
+{
+    if (ui_ScreenLottery == NULL) return;
+
+    if (lotTimer != NULL)
+    {
+        lv_timer_del(lotTimer);
+        lotTimer = NULL;
+    }
+
+    lv_obj_del(ui_ScreenLottery);
+    ui_ScreenLottery = NULL;
 }

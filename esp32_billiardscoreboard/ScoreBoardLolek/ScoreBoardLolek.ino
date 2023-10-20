@@ -1,9 +1,9 @@
-﻿#include <lvgl.h>
+﻿extern const unsigned char dk_image[] PROGMEM;
+
+#include <lvgl.h>
 
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t* disp_draw_buf;
-
-extern const unsigned char dk_image[] PROGMEM;
 
 #include <Arduino_GFX_Library.h>
 
@@ -34,7 +34,6 @@ MillisTimer waterMarkTimer(60000);
 #include "src/SerialDebug.h"
 #include "src/EEPROMHelper.h"
 #include "src/TaskTouch.h"
-#include "src/TaskAudio.h"
 #include "src/TaskNetwork.h"
 #include "src/gui.h"
 
@@ -115,13 +114,18 @@ void setup()
 
 	gui_init();
 
+	gui_mutex = xSemaphoreCreateMutex(); // Create the mutex
+
+	if (gui_mutex == NULL)
+	{
+		SerialDebug.log(LOG_LEVEL::ERROR, String(F("Cannot create Mutex")));
+
+		ESP.restart();
+	}
+
 	setup_Touch(rotation);
 
 	setup_Network();
-
-//	setup_SDCARD();
-
-//	setup_Audio();
 
 	waterMarkTimer.start();
 }
@@ -131,8 +135,15 @@ void loop()
 	if (waterMarkTimer.isReady())
 		SerialDebug.log(LOG_LEVEL::INFO, String(F("GUI Stack water mark: ")) + uxTaskGetStackHighWaterMark(NULL));
 
-	lv_timer_handler(); /* let the GUI do its work */
-	delay(5);
+	// Try to take the mutex
+	if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
+	{
+		lv_timer_handler(); /* let the GUI do its work */
+
+		xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
+	}
+
+	vTaskDelay(5);
 }
 
 

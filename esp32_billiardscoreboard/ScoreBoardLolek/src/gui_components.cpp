@@ -1,8 +1,12 @@
 ﻿#include "gui_components.h"
-#include "gui_pool.h"
 
 #include "ui/ui.h"
 #include "ui/ui_helpers.h"
+
+extern void changeScore(lv_event_t* e);
+extern void changeScorePlus(lv_event_t* e);
+extern void changeScoreMinus(lv_event_t* e);
+extern void changePlayerName(lv_event_t* e);
 
 static const char ply_names[] = "Александр\nАлексей\nАндрей\nВадим\nВиктор\nВиталий\nВладимир\nДенис\nДмитрий\nЕвгений\nИгорь\nИлья\nКонстантин\nКристина\nНаталья\nПавел\nРенат\nРоман\nСергей\nТатьяна\nЮрий\n";
 
@@ -58,21 +62,13 @@ void del_component_child_event_cb(lv_event_t * e)
 static void ui_event_comp_PanelPoolPlayer_PanelPoolPlayer(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    //    lv_obj_t* target = lv_event_get_target(e);
-    //    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
-    if (event_code == LV_EVENT_CLICKED)
+//    lv_obj_t* target = lv_event_get_target(e);
+//    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
+    if (event_code == LV_EVENT_SHORT_CLICKED)
     {
         changeScore(e);
     }
-}
-
-void ui_event_comp_PanelPoolPlayer_LabelPoolPlyName(lv_event_t* e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
-//    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
-
-    if (event_code == LV_EVENT_LONG_PRESSED)
+    else if (event_code == LV_EVENT_LONG_PRESSED)
     {
         changePlayerName(e);
     }
@@ -81,8 +77,8 @@ void ui_event_comp_PanelPoolPlayer_LabelPoolPlyName(lv_event_t* e)
 static void ui_event_comp_PanelPoolPlayer_LabelPlus(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    //    lv_obj_t* target = lv_event_get_target(e);
-    //    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
+//    lv_obj_t* target = lv_event_get_target(e);
+//    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
     if (event_code == LV_EVENT_CLICKED)
     {
         changeScorePlus(e);
@@ -92,8 +88,8 @@ static void ui_event_comp_PanelPoolPlayer_LabelPlus(lv_event_t* e)
 static void ui_event_comp_PanelPoolPlayer_LabelMinus(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    //    lv_obj_t* target = lv_event_get_target(e);
-    //    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
+//    lv_obj_t* target = lv_event_get_target(e);
+//    lv_obj_t** comp_PanelPoolPlayer = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
     if (event_code == LV_EVENT_CLICKED)
     {
         changeScoreMinus(e);
@@ -123,7 +119,7 @@ lv_obj_t * ui_PanelPoolPlayer_create(lv_obj_t * comp_parent)
     lv_obj_set_height(cui_LabelPoolPlyScore, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(cui_LabelPoolPlyScore, LV_ALIGN_CENTER);
     lv_label_set_long_mode(cui_LabelPoolPlyScore, LV_LABEL_LONG_SCROLL);
-    lv_label_set_text(cui_LabelPoolPlyScore, "");
+    lv_label_set_text(cui_LabelPoolPlyScore, "0");
     lv_obj_set_style_text_color(cui_LabelPoolPlyScore, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(cui_LabelPoolPlyScore, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(cui_LabelPoolPlyScore, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -144,7 +140,6 @@ lv_obj_t * ui_PanelPoolPlayer_create(lv_obj_t * comp_parent)
     lv_label_set_long_mode(cui_LabelPoolPlyName, LV_LABEL_LONG_SCROLL_CIRCULAR);
     lv_label_set_text(cui_LabelPoolPlyName, "Игрок");
     lv_obj_set_style_text_align(cui_LabelPoolPlyName, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_add_flag(cui_LabelPoolPlyName, LV_OBJ_FLAG_CLICKABLE);   /// Flags
 
     lv_obj_t * cui_PanelPoolPlyScore;
     cui_PanelPoolPlyScore = lv_obj_create(cui_PanelPoolPlayer);
@@ -187,7 +182,6 @@ lv_obj_t * ui_PanelPoolPlayer_create(lv_obj_t * comp_parent)
     children[UI_COMP_PANELPOOLPLAYER_PANELPOOLPLYSCORE_LABELMINUS] = cui_LabelMinus;
     lv_obj_add_event_cb(cui_PanelPoolPlayer, get_component_child_event_cb, static_cast<lv_event_code_t>(LV_EVENT_GET_COMP_CHILD), children);
     lv_obj_add_event_cb(cui_PanelPoolPlayer, del_component_child_event_cb, LV_EVENT_DELETE, children);
-    lv_obj_add_event_cb(cui_LabelPoolPlyName, ui_event_comp_PanelPoolPlayer_LabelPoolPlyName, LV_EVENT_ALL, children);
     lv_obj_add_event_cb(cui_LabelPlus, ui_event_comp_PanelPoolPlayer_LabelPlus, LV_EVENT_ALL, children);
     lv_obj_add_event_cb(cui_LabelMinus, ui_event_comp_PanelPoolPlayer_LabelMinus, LV_EVENT_ALL, children);
     lv_obj_add_event_cb(cui_PanelPoolPlayer, ui_event_comp_PanelPoolPlayer_PanelPoolPlayer, LV_EVENT_ALL, children);
@@ -234,7 +228,7 @@ static void ui_hide_component(lv_obj_t** comp)
 static void ui_event_comp_NameKeyboard_ButtonClose(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
+
     lv_obj_t** comp_KeyboardPanel = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
 
     if (event_code == LV_EVENT_CLICKED)
@@ -246,7 +240,7 @@ static void ui_event_comp_NameKeyboard_ButtonClose(lv_event_t* e)
 static void ui_event_comp_NameKeyboard_NameTextArea(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-//    lv_obj_t* target = lv_event_get_target(e);
+
     lv_obj_t** comp_KeyboardPanel = static_cast<lv_obj_t**>(lv_event_get_user_data(e));
     
     if (event_code == LV_EVENT_CANCEL)

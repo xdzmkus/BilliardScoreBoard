@@ -126,6 +126,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -740902762,
+                    "strtype": "LABEL/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -1947447687,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -177,6 +183,12 @@
                     "nid": 1289951018,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -629191843,
+                    "strtype": "LABEL/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -424,6 +436,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -1233810416,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": -1179600475,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -475,6 +493,12 @@
                         "nid": 857190368,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 167156474,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -696,6 +720,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -1756747424,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": 1679812360,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -747,6 +777,12 @@
                     "nid": 1398791488,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 118414861,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -1090,6 +1126,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -642630575,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": 978322235,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -1141,6 +1183,12 @@
                         "nid": 1422925699,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": -620162714,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -1362,6 +1410,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -153414119,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": 512842917,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -1413,6 +1467,12 @@
                     "nid": 1701704369,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -338575702,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -1750,6 +1810,12 @@
                 "InheritedType": 2
               },
               {
+                "nid": -349762473,
+                "strtype": "PANEL/Overflow_visible",
+                "strval": "False",
+                "InheritedType": 2
+              },
+              {
                 "nid": -1706714293,
                 "strtype": "OBJECT/Flex_in_new_track",
                 "strval": "False",
@@ -1801,6 +1867,12 @@
                 "nid": -760909293,
                 "strtype": "OBJECT/Scroll_chain",
                 "strval": "True",
+                "InheritedType": 2
+              },
+              {
+                "nid": 2094197224,
+                "strtype": "PANEL/Scroll_with_arrow",
+                "strval": "False",
                 "InheritedType": 2
               },
               {
@@ -2045,6 +2117,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 1891589423,
+                    "strtype": "LABEL/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -78208712,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -2096,6 +2174,12 @@
                     "nid": -712515700,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -1315913494,
+                    "strtype": "LABEL/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -2343,6 +2427,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -1567966179,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": -1027440184,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -2394,6 +2484,12 @@
                         "nid": -1799885563,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": -395135056,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -2615,6 +2711,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 1113104985,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -2005790327,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -2666,6 +2768,12 @@
                     "nid": -1859941808,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -900847193,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -2824,7 +2932,6 @@
                           {
                             "nid": 425133646,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -2868,7 +2975,6 @@
                           {
                             "nid": 1821730539,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -3011,6 +3117,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -1815405728,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": 122230562,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -3062,6 +3174,12 @@
                         "nid": 446640519,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 10882458,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -3283,6 +3401,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -210147999,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -104561303,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -3334,6 +3458,12 @@
                     "nid": 1420185555,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 2088091729,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -3492,7 +3622,6 @@
                           {
                             "nid": -111402879,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -3536,7 +3665,6 @@
                           {
                             "nid": -1208491573,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -3627,7 +3755,7 @@
               {
                 "nid": 1739893452,
                 "strtype": "OBJECT/Hidden",
-                "strval": "False",
+                "strval": "True",
                 "InheritedType": 2
               },
               {
@@ -3669,6 +3797,12 @@
               {
                 "nid": 1743483643,
                 "strtype": "OBJECT/Floating",
+                "strval": "False",
+                "InheritedType": 2
+              },
+              {
+                "nid": -1357547425,
+                "strtype": "PANEL/Overflow_visible",
                 "strval": "False",
                 "InheritedType": 2
               },
@@ -3724,6 +3858,12 @@
                 "nid": 933759463,
                 "strtype": "OBJECT/Scroll_chain",
                 "strval": "True",
+                "InheritedType": 2
+              },
+              {
+                "nid": 1181191123,
+                "strtype": "PANEL/Scroll_with_arrow",
+                "strval": "False",
                 "InheritedType": 2
               },
               {
@@ -3968,6 +4108,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 296789165,
+                    "strtype": "LABEL/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -2124176477,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -4019,6 +4165,12 @@
                     "nid": -98071845,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -472895500,
+                    "strtype": "LABEL/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -4266,6 +4418,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": 1808250193,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": -884604451,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -4317,6 +4475,12 @@
                         "nid": -312963806,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 2028240941,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -4538,6 +4702,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 567749805,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": 1234173571,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -4589,6 +4759,12 @@
                     "nid": -1879961135,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 2090780404,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -4747,7 +4923,6 @@
                           {
                             "nid": -1785828277,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -4791,7 +4966,6 @@
                           {
                             "nid": -2047559956,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -4934,6 +5108,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": 301821909,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": -41957157,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -4985,6 +5165,12 @@
                         "nid": 206389969,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 1149685755,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -5206,6 +5392,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -444103080,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -1429709968,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -5257,6 +5449,12 @@
                     "nid": -204565935,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 370173016,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -5415,7 +5613,6 @@
                           {
                             "nid": -1550497690,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -5459,7 +5656,6 @@
                           {
                             "nid": 51326614,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -5596,6 +5792,12 @@
                 "InheritedType": 2
               },
               {
+                "nid": 503983909,
+                "strtype": "PANEL/Overflow_visible",
+                "strval": "False",
+                "InheritedType": 2
+              },
+              {
                 "nid": 2138099466,
                 "strtype": "OBJECT/Flex_in_new_track",
                 "strval": "False",
@@ -5647,6 +5849,12 @@
                 "nid": -759405291,
                 "strtype": "OBJECT/Scroll_chain",
                 "strval": "True",
+                "InheritedType": 2
+              },
+              {
+                "nid": -1662001820,
+                "strtype": "PANEL/Scroll_with_arrow",
+                "strval": "False",
                 "InheritedType": 2
               },
               {
@@ -5891,6 +6099,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 401866150,
+                    "strtype": "LABEL/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -1323343001,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -5942,6 +6156,12 @@
                     "nid": -144586045,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -449375875,
+                    "strtype": "LABEL/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -6189,6 +6409,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -1276422499,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": 515301539,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -6240,6 +6466,12 @@
                         "nid": -1379693654,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 1228401164,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -6461,6 +6693,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": 968237718,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -436295748,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -6512,6 +6750,12 @@
                     "nid": 1268121843,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 522549429,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -6670,7 +6914,6 @@
                           {
                             "nid": 1216698497,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -6714,7 +6957,6 @@
                           {
                             "nid": 1641751248,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -6857,6 +7099,12 @@
                         "InheritedType": 2
                       },
                       {
+                        "nid": -833741771,
+                        "strtype": "LABEL/Overflow_visible",
+                        "strval": "False",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": -1348920137,
                         "strtype": "OBJECT/Flex_in_new_track",
                         "strval": "False",
@@ -6908,6 +7156,12 @@
                         "nid": -1040336931,
                         "strtype": "OBJECT/Scroll_chain",
                         "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
+                        "nid": 49470089,
+                        "strtype": "LABEL/Scroll_with_arrow",
+                        "strval": "False",
                         "InheritedType": 2
                       },
                       {
@@ -7129,6 +7383,12 @@
                     "InheritedType": 2
                   },
                   {
+                    "nid": -1114276758,
+                    "strtype": "BUTTON/Overflow_visible",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
                     "nid": -1950800392,
                     "strtype": "OBJECT/Flex_in_new_track",
                     "strval": "False",
@@ -7180,6 +7440,12 @@
                     "nid": 1181845446,
                     "strtype": "OBJECT/Scroll_chain",
                     "strval": "True",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": -1975198777,
+                    "strtype": "BUTTON/Scroll_with_arrow",
+                    "strval": "False",
                     "InheritedType": 2
                   },
                   {
@@ -7338,7 +7604,6 @@
                           {
                             "nid": -2092837457,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -7382,7 +7647,6 @@
                           {
                             "nid": -1512766685,
                             "strtype": "MODIFY FLAG/Object",
-                            "strval": "-",
                             "InheritedType": 9
                           },
                           {
@@ -7519,6 +7783,12 @@
                 "InheritedType": 2
               },
               {
+                "nid": -1151139529,
+                "strtype": "PANEL/Overflow_visible",
+                "strval": "False",
+                "InheritedType": 2
+              },
+              {
                 "nid": 687653926,
                 "strtype": "OBJECT/Flex_in_new_track",
                 "strval": "False",
@@ -7570,6 +7840,12 @@
                 "nid": -738948755,
                 "strtype": "OBJECT/Scroll_chain",
                 "strval": "True",
+                "InheritedType": 2
+              },
+              {
+                "nid": 1916016534,
+                "strtype": "PANEL/Scroll_with_arrow",
+                "strval": "False",
                 "InheritedType": 2
               },
               {
@@ -7771,6 +8047,12 @@
             "InheritedType": 2
           },
           {
+            "nid": -106402316,
+            "strtype": "SCREEN/Overflow_visible",
+            "strval": "False",
+            "InheritedType": 2
+          },
+          {
             "nid": -889406036,
             "strtype": "OBJECT/Flex_in_new_track",
             "strval": "False",
@@ -7792,6 +8074,12 @@
             "nid": 52865900,
             "strtype": "OBJECT/Scroll_momentum",
             "strval": "True",
+            "InheritedType": 2
+          },
+          {
+            "nid": -1838740715,
+            "strtype": "SCREEN/Scroll_with_arrow",
+            "strval": "False",
             "InheritedType": 2
           },
           {
@@ -7856,6 +8144,17 @@
           {
             "nid": 714489249,
             "strtype": "SCREEN/User_4",
+            "strval": "False",
+            "InheritedType": 2
+          },
+          {
+            "nid": -833476180,
+            "strtype": "SCREEN/Screen",
+            "InheritedType": 1
+          },
+          {
+            "nid": -286952181,
+            "strtype": "SCREEN/Temporary",
             "strval": "False",
             "InheritedType": 2
           },
@@ -8086,7 +8385,7 @@
     "description": "",
     "board": "Arduino with TFT_eSPI",
     "board_version": "v1.0.0",
-    "editor_version": "1.3.0",
+    "editor_version": "1.3.1",
     "image": "",
     "force_export_images": false,
     "pointfilter": false,
@@ -8096,7 +8395,7 @@
     "theme_color2": 0,
     "exportFolderPath": "C:\\Users\\xdzmk\\Temp\\SquareLine",
     "projectExportFolderPath": "",
-    "backup_cnt": 47,
+    "backup_cnt": 49,
     "autosave_cnt": 0,
     "lvgl_version": "8.2.0",
     "callfuncsexport": "C_FILE",

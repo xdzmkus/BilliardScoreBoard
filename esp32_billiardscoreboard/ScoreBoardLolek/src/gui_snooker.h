@@ -19,6 +19,65 @@
 #include "lvgl.h"
 #endif
 
+// Balls part
+
+extern lv_obj_t* ui_BPanelBalls;
+extern lv_obj_t* ui_BButtonRed;
+extern lv_obj_t* ui_BLabel1;
+extern lv_obj_t* ui_BButtonBlack;
+extern lv_obj_t* ui_BLabel7;
+extern lv_obj_t* ui_BButtonPink;
+extern lv_obj_t* ui_BLabel6;
+extern lv_obj_t* ui_BButtonBlue;
+extern lv_obj_t* ui_BLabel5;
+extern lv_obj_t* ui_BButtonBrown;
+extern lv_obj_t* ui_BLabel4;
+extern lv_obj_t* ui_BButtonGreen;
+extern lv_obj_t* ui_BLabel3;
+extern lv_obj_t* ui_BButtonYellow;
+extern lv_obj_t* ui_BLabel2;
+extern lv_obj_t* ui_BButtonMiss;
+extern lv_obj_t* ui_BLabel0;
+extern lv_obj_t* ui_BButtonFoul;
+extern lv_obj_t* ui_BLabelFoul;
+extern lv_obj_t* ui_BButtonFreeBall;
+extern lv_obj_t* ui_BLabelFreeBall;
+extern lv_obj_t* ui_BButtonCancel;
+extern lv_obj_t* ui_BLabelCancel;
+extern lv_obj_t* ui_BPanelFree;
+extern lv_obj_t* ui_BButtonRedF;
+extern lv_obj_t* ui_BLabelFB1;
+extern lv_obj_t* ui_BButtonYellowF;
+extern lv_obj_t* ui_BLabelFB2;
+extern lv_obj_t* ui_BButtonGreenF;
+extern lv_obj_t* ui_BLabelFB3;
+extern lv_obj_t* ui_BButtonBrownF;
+extern lv_obj_t* ui_BLabelFB4;
+extern lv_obj_t* ui_BButtonBlueF;
+extern lv_obj_t* ui_BLabelFB5;
+extern lv_obj_t* ui_BButtonPinkF;
+extern lv_obj_t* ui_BLabelFB6;
+extern lv_obj_t* ui_BPanelFoul;
+extern lv_obj_t* ui_BButtonF4;
+extern lv_obj_t* ui_BLabelF4;
+extern lv_obj_t* ui_BButtonF5;
+extern lv_obj_t* ui_BLabelF5;
+extern lv_obj_t* ui_BButtonF6;
+extern lv_obj_t* ui_BLabelF6;
+extern lv_obj_t* ui_BButtonF7;
+extern lv_obj_t* ui_BLabelF7;
+extern lv_obj_t* ui_BButtonF1;
+extern lv_obj_t* ui_BLabelF1;
+
+extern lv_obj_t* ui_MBPanelSnookerYellow;
+extern lv_obj_t* ui_MBLabelSnookerYellowQ;
+extern lv_obj_t* ui_MBBtnSnookerYellowYes;
+extern lv_obj_t* ui_MBLabelSnookerYellowYes;
+extern lv_obj_t* ui_MBBtnSnookerYellowNo;
+extern lv_obj_t* ui_MBLabelSnookerYellowNo;
+
+// Snooker part
+
 extern lv_obj_t* ui_ScreenSnooker;
 extern lv_obj_t* ui_NLabelHome;
 extern lv_obj_t* ui_NLabelRefresh;
@@ -45,7 +104,6 @@ extern lv_obj_t* ui_NPlyLabelMaxScore2;
 extern lv_obj_t* ui_NPlyLabelDiff2;
 extern lv_obj_t* ui_NButtonCancel;
 extern lv_obj_t* ui_NLabelCancel;
-extern lv_obj_t* ui_NNameKeyboard;
 
 extern lv_obj_t* ui_MBPanelSnookerReset;
 extern lv_obj_t* ui_MBLabelSnookerResetQ;
@@ -60,79 +118,11 @@ extern lv_obj_t* ui_MBLabelSnookerPoolYes;
 extern lv_obj_t* ui_MBBtnSnookerPoolNo;
 extern lv_obj_t* ui_MBLabelSnookerPoolNo;
 
-typedef	enum
-{
-    PLAYER1,
-    PLAYER2
-} SNOOKER_PLAYER;
 
-typedef	enum
-{
-    P1_MISS,
-    P1_RED,
-    P1_BLACK,
-    P1_PINK,
-    P1_BLUE,
-    P1_BROWN,
-    P1_GREEN,
-    P1_YELLOW,
-    P1_F_RED,
-    P1_F_PINK,
-    P1_F_BLUE,
-    P1_F_BROWN,
-    P1_F_GREEN,
-    P1_F_YELLOW,
-    P1_FOUL_4,
-    P1_FOUL_5,
-    P1_FOUL_6,
-    P1_FOUL_7,
-    P2_MISS,
-    P2_RED,
-    P2_BLACK,
-    P2_PINK,
-    P2_BLUE,
-    P2_BROWN,
-    P2_GREEN,
-    P2_YELLOW,
-    P2_F_RED,
-    P2_F_PINK,
-    P2_F_BLUE,
-    P2_F_BROWN,
-    P2_F_GREEN,
-    P2_F_YELLOW,
-    P2_FOUL_4,
-    P2_FOUL_5,
-    P2_FOUL_6,
-    P2_FOUL_7,
-    P_FLUKE_RED
-}
-SNOOKER_ACTION;
-
-void gui_snooker_init();
+void gui_snooker_create();
+void gui_snooker_delete();
 
 String gui_snooker_getScoreMessage();
-
-String gui_snooker_getHistory();
-void gui_snooker_restoreHistory(String& value, uint8_t idx);
-
-SNOOKER_PLAYER gui_snooker_get_activePlayer();
-
-void gui_snooker_pushAction(SNOOKER_ACTION sAction);
-
-bool gui_snooker_isFreeBallPossible();
-bool gui_snooker_isRedBallPossible();
-bool gui_snooker_isBlackBallPossible();
-bool gui_snooker_isPinkBallPossible();
-bool gui_snooker_isBlueBallPossible();
-bool gui_snooker_isBrownBallPossible();
-bool gui_snooker_isGreenBallPossible();
-bool gui_snooker_isYellowBallPossible();
-bool gui_snooker_isLastRed();
-
-void gui_snooker_setHandicapP1(uint16_t handicap);
-void gui_snooker_setHandicapP2(uint16_t handicap);
-void gui_snooker_set6Red(bool is6Red);
-void gui_snooker_setControl(bool isControl);
 
 #endif
 
