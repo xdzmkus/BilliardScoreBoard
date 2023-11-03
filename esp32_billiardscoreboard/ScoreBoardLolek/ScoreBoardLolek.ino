@@ -28,14 +28,15 @@ Arduino_DataBus* bus = new Arduino_ESP32SPI(TFT_DC /* DC */, TFT_CS /* CS */, TF
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 Arduino_GFX* gfx = new Arduino_ST7796(bus, TFT_RST, rotation /* rotation */, false /* IPS */);
 
-#include <ClockTimer.hpp>
-MillisTimer waterMarkTimer(60000);
-
 #include "src/SerialDebug.h"
 #include "src/EEPROMHelper.h"
 #include "src/TaskTouch.h"
+#include "src/TaskAudio.h"
 #include "src/TaskNetwork.h"
 #include "src/gui.h"
+
+SemaphoreHandle_t gui_mutex = NULL;
+SemaphoreHandle_t mem_mutex = NULL;
 
 /* Read the touchpad */
 void lcd_touchpad_read(lv_indev_drv_t* indev_driver, lv_indev_data_t* data)
@@ -108,11 +109,31 @@ void setup()
 
 	loadEEPROM();
 
+	setup_Touch(rotation);
+
 	setup_LCD();
 
 	delay(2000); // time to show "DK" Logo
 
-	gui_init();
+	mem_mutex = xSemaphoreCreateMutex(); // Create the mutex
+
+	if (mem_mutex == NULL)
+	{
+		SerialDebug.log(LOG_LEVEL::ERROR, String(F("Cannot create Mutex")));
+
+		ESP.restart();
+	}
+
+	if (setup_SDCARD())
+	{
+		setup_Audio();
+	}
+	else
+	{
+		gui_disableAudio();
+	}
+
+	setup_Network();
 
 	gui_mutex = xSemaphoreCreateMutex(); // Create the mutex
 
@@ -123,18 +144,11 @@ void setup()
 		ESP.restart();
 	}
 
-	setup_Touch(rotation);
-
-	setup_Network();
-
-	waterMarkTimer.start();
+	gui_init();
 }
 
 void loop()
 {
-	if (waterMarkTimer.isReady())
-		SerialDebug.log(LOG_LEVEL::INFO, String(F("GUI Stack water mark: ")) + uxTaskGetStackHighWaterMark(NULL));
-
 	// Try to take the mutex
 	if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
 	{
@@ -145,5 +159,4 @@ void loop()
 
 	vTaskDelay(5);
 }
-
 

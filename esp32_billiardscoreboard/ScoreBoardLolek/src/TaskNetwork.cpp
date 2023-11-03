@@ -2,6 +2,10 @@
 #include "SerialDebug.h"
 #include "EEPROMHelper.h"
 #include "gui.h"
+#include "gui_main.h"
+
+extern SemaphoreHandle_t gui_mutex;
+extern SemaphoreHandle_t mem_mutex;
 
 #define WLAN_HOSTNAME "LOLEK"
 const char* const MQTT_TOPIC = "diamond/lolek/history";
@@ -33,85 +37,14 @@ MillisTimer wifiTimer(300000); // 5 minutes
 
 static SemaphoreHandle_t wm_mutex = NULL;
 
-QueueHandle_t scoreQueueHandle = NULL;
-const int scoreQueueElementSize = 2;
+static QueueHandle_t scoreQueueHandle = NULL;
+static const int scoreQueueElementSize = 2;
 
-#define MAX_LINE_LENGTH (255)
+static volatile bool v_publishHistory = false;
+static volatile bool v_waitingHistory = false;
+static volatile bool v_subscribeHistory = false;
 
-typedef struct
-{
-	telegramMsgType_t type;
-	char line[MAX_LINE_LENGTH + 1];
-} scoreMessage_t;
-
-volatile bool publishHistory = false;
-volatile bool subscribeHistory = false;
-volatile bool waitingHistory = false;
-volatile bool isTelegram = false;
-
-static void WiFiEvent(WiFiEvent_t event)
-{
-	String wifiEvent("[WiFi-event] : ");
-
-	switch (event)
-	{
-	case ARDUINO_EVENT_WIFI_READY:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi interface ready");
-		break;
-	case ARDUINO_EVENT_WIFI_SCAN_DONE:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Completed scan for access points");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_START:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi client started");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_STOP:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi clients stopped");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_CONNECTED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Connected to access point");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Disconnected from WiFi access point");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Authentication mode of access point has changed");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_GOT_IP:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Obtained IP address: ");
-		SerialDebug.log(LOG_LEVEL::DEBUG, WiFi.localIP().toString());
-		break;
-	case ARDUINO_EVENT_WIFI_STA_GOT_IP6:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "STA IPv6 is preferred");
-		break;
-	case ARDUINO_EVENT_WIFI_STA_LOST_IP:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Lost IP address and IP address is reset to 0");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_START:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi access point started");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_STOP:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "WiFi access point  stopped");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Client connected");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Client disconnected");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Assigned IP address to client");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_PROBEREQRECVED:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "Received probe request");
-		break;
-	case ARDUINO_EVENT_WIFI_AP_GOT_IP6:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + "AP IPv6 is preferred");
-		break;
-	default:
-		SerialDebug.log(LOG_LEVEL::DEBUG, wifiEvent + event);
-		break;
-	}
-}
+////////////// 
 
 static void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int length)
 {
@@ -121,7 +54,7 @@ static void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int leng
 
 	String payloadTocken;
 
-	if (waitingHistory)
+	if (v_waitingHistory)
 	{
 		// Try to take the mutex
 		if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
@@ -149,7 +82,7 @@ static void receiveMQTTmesssage(char* topic, uint8_t* payload, unsigned int leng
 			xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
 		}
 
-		waitingHistory = false;
+		v_waitingHistory = false;
 	}
 
 	mqtt.unsubscribe(MQTT_TOPIC);
@@ -170,45 +103,56 @@ static void handleNET(void* pvParameters)
 			{
 				mqtt.connect(WLAN_HOSTNAME, mqtt_user, mqtt_pass);
 			}
-
-			if (subscribeHistory && mqtt.connected())
+			else
 			{
-				mqtt.subscribe(MQTT_TOPIC);
-
-				subscribeHistory = false;
-
-				SerialDebug.log(LOG_LEVEL::INFO, String(F("Sent medical request")));
-			}
-
-			if (publishHistory && mqtt.connected())
-			{
-				String history;
-				
-				// Try to take the mutex
-				if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
+				if (v_subscribeHistory)
 				{
+					mqtt.subscribe(MQTT_TOPIC);
 
-					history = gui_getState();
+					v_waitingHistory = true;
 
-					xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
+					v_subscribeHistory = false;
+
+					SerialDebug.log(LOG_LEVEL::INFO, String(F("Sent medical request")));
 				}
 
-				if (mqtt.beginPublish(MQTT_TOPIC, history.length(), true))
+				if (v_publishHistory)
 				{
-					mqtt.print(history);
+					SerialDebug.log(LOG_LEVEL::INFO, String(F("Sending history...")));
 
-					if (mqtt.endPublish())
-						publishHistory = false;
+					String history;
+
+					// Try to take the mutex
+					if (xSemaphoreTake(gui_mutex, portMAX_DELAY) == pdTRUE)
+					{
+						history = gui_getState();
+
+						xSemaphoreGive(gui_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
+					}
+
+					if (mqtt.beginPublish(MQTT_TOPIC, history.length(), true))
+					{
+						mqtt.print(history);
+
+						if (mqtt.endPublish())
+							SerialDebug.log(LOG_LEVEL::DEBUG, String(F("SUCCESS")));
+						else
+							SerialDebug.log(LOG_LEVEL::ERROR, String(F("FAILED")));
+					}
+					else
+					{
+						SerialDebug.log(LOG_LEVEL::ERROR, String(F("Sending history FAILED")));
+					}
+
+					v_publishHistory = false;
 				}
 
-				SerialDebug.log(LOG_LEVEL::INFO, String(F("Sent history")));
+				mqtt.loop();
 			}
-
-			mqtt.loop();
 
 			scoreMessage_t message;
 
-			if (isTelegram && xQueueReceive(scoreQueueHandle, &message, 0) == pdPASS)
+			if (isTelegram && xQueueReceive(scoreQueueHandle, &message, 0) == pdPASS && xSemaphoreTake(mem_mutex, portMAX_DELAY) == pdTRUE)
 			{
 				static int32_t lastBotMsgId = 0;
 
@@ -256,6 +200,8 @@ static void handleNET(void* pvParameters)
 				default:
 					break;
 				}
+
+				xSemaphoreGive(mem_mutex); // After accessing the shared resource give the mutex and allow other processes to access it
 			}
 		}
 		else
@@ -310,6 +256,8 @@ static void saveWifi()
 	saveEEPROMWifi();
 }
 
+///////////// 
+
 void setup_Network()
 {
 	SerialDebug.log(LOG_LEVEL::INFO, F("Setup Network Task"));
@@ -318,7 +266,6 @@ void setup_Network()
 	WiFi.setHostname(WLAN_HOSTNAME);
 	WiFi.setAutoConnect(true);
 	WiFi.setAutoReconnect(true);
-	WiFi.onEvent(WiFiEvent);
 	WiFi.setTxPower(WIFI_POWER_19_5dBm);    // Set WiFi RF power output to highest level
 
 	startWiFi();
@@ -378,7 +325,7 @@ void setup_Network()
 	xTaskCreatePinnedToCore(
 		handleNET
 		, "Network handler"
-		, 18000 // Stack size
+		, 10000 // Stack size
 		, NULL  // Pass reference to a variable
 		, 1     // Priority
 		, NULL  // Task handle is not used here - simply pass NULL
@@ -460,31 +407,25 @@ void stopWiFi()
 	wifiTimer.stop();
 }
 
-bool isWaitMedicalResponse()
+bool isWaitingHistory()
 {
-	return waitingHistory;
+	return v_waitingHistory || v_subscribeHistory;
 }
 
-void sendMedicalRequest()
+void subscribeHistory()
 {
-	subscribeHistory = true;
-	waitingHistory = true;
+	v_subscribeHistory = true;
 }
 
-void revokeMedicalRequest()
+void revokeHistory()
 {
-	subscribeHistory = false;
-	waitingHistory = false;
+	v_subscribeHistory = false;
+	v_waitingHistory = false;
 }
 
-void activateTelegram()
+void publishCurrentState()
 {
-	isTelegram = true;
-}
-
-void deactivateTelegram()
-{
-	isTelegram = false;
+	v_publishHistory = true;
 }
 
 void sendTelegaMessage(telegramMsgType_t type, String msg)
