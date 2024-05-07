@@ -1,0 +1,16 @@
+{
+  "codename": "UbuntuDigits92",
+  "ttf_path": "\\assets\\Ubuntu-M.ttf",
+  "bin_path": "\\assets\\ui_font_UbuntuDigits92.bin",
+  "c_path": "\\assets\\ui_font_UbuntuDigits92.c",
+  "cfg_path": "\\assets\\ui_font_UbuntuDigits92.fcfg",
+  "size": 92,
+  "bpp": 1,
+  "letters": 0,
+  "ranges": [
+    "0x30-0x39"
+  ],
+  "symbols": "0123456789-+",
+  "customparams": "--no-prefilter",
+  "uploaded": false
+}
