@@ -11,7 +11,7 @@
 ![Screenshot](board-lvgl/board_kb.jpg)
 ![Screenshot](board-lvgl/board_game.jpg)
 ![Screenshot](board-lvgl/board_snooker.jpg)
-![Screenshot](board-lvgl/board_streams.jpg)
+![Screenshot](board-lvgl/board_stream.jpg)
 ![Screenshot](board-lvgl/board_darts.jpg)
 
 ## STM32F103 board with 2.8 LCD and touch
