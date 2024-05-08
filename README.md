@@ -17,7 +17,7 @@
 ## STM32F103 board with 2.8 LCD and touch
 
 ![Screenshot](board-stm32/PETKA.jpg)
-![Screenshot](board-stm32/appScreen.jpg)
+![Screenshot](board-stm32/appScreen.png)
 
 ## ARDUINO board with 2.4 LCD
 
