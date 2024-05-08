@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BALABOLEK</title>
+  <link rel="stylesheet" href="css/blue.gray.style.css">
+</head>
+<body>
+  <div class="column-container">
+  
+    <div class="column-left-player">
+		<div class="column-player column-player-name">
+			<h2 id="ply1-name" style="padding-left: 20px;">Болек</h2>
+		</div>
+		<div class="column-player column-frame-score">
+			<h2 id="ply1-frame-score">0</h2>
+		</div>
+		<div class="column-player column-break" id="ply1-break">
+			<img src="images/cueball-24.png" alt="break">
+		</div>
+    </div>
+    
+    <div class="column-total-score">
+		<div class="column-container">
+			<div class="column-score">
+			  <h2 id="ply1-match-score">0</h2>
+			</div>
+			<div class="column-score">
+			  <h2 id="total-score">(0)</h2>
+			</div>
+			<div class="column-score">
+			  <h2 id="ply2-match-score">0</h2>
+			</div>
+		</div>
+    </div>
+    
+    <div class="column-right-player">
+		<div class="column-player column-break" id="ply2-break">
+			<img src="images/cueball-24.png" alt="break">
+		</div>
+		<div class="column-player column-frame-score">
+			<h2 id="ply2-frame-score">0</h2>
+		</div>
+		<div class="column-player column-player-name">
+			<h2 id="ply2-name" style="padding-right: 20px;">Лёлек</h2>
+		</div>
+    </div>
+  
+  </div>
+  <script src="js/mqtt.min.js"></script>
+  <script src="js/balabolek.js"></script>
+  <script src="js/stream.js"></script>
+</body>
+</html>

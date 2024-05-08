@@ -1,0 +1,81 @@
+    /* Общие стили для всей страницы */
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        color: white;
+      }
+   
+      /* Контейнер для колонок */
+      .column-container {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        align-items: center;
+      }
+      
+      /* Стили для первой колонки */
+      .column-left-player {
+        flex: 3;
+        background: linear-gradient(to bottom, #105908, #000000);
+        text-align: left;
+        border-top-left-radius: 20px;
+         border-bottom-left-radius: 20px;
+     }
+      
+      /* Стили для второй колонки */
+      .column-total-score {
+        flex: 1;
+        background: linear-gradient(to bottom, #6A5529, #240606de);
+        border-radius: 10px;
+        padding: 10px;
+      }
+      
+      /* Стили для третьей колонки */
+      .column-right-player {
+        flex: 3;
+        background: linear-gradient(to bottom, #105908, #000000);
+        text-align: right;
+          border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+      
+      /* Стили для колонок общего счета матча*/
+      .column-score {
+        flex: 1;
+        text-align: center;
+     }
+      
+      /* Стили для колонок игрока*/
+      .column-player {
+        float: left;
+        box-sizing: border-box;
+      }
+      
+      /* Стили для имени игрока */
+      .column-player-name {
+        width: 70%;
+      }
+      
+      /* Стили для счета во фрейме */
+      .column-frame-score {
+        width: 25%;
+         text-align: center;
+     }
+      
+      /* Стили для указателя разбоя */
+      .column-break {
+        width: 5%;
+        text-align: center;
+        visibility: hidden;
+        height: 65px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       }
+
+       .column-break img {
+        max-height: 100%;
+        max-width: 100%;
+      }
+  
