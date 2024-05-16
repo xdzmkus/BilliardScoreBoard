@@ -229,6 +229,50 @@ static void msg_init()
 	lv_obj_add_event_cb(ui_Label5M, label_event_cb, LV_EVENT_ALL, NULL);
 }
 
+void lvgl_ui_init()
+{
+	Touch_Init();
+
+	LCD_Init();
+
+	LCD_SetRotation(1);
+
+	lv_init();
+
+	/* Initialize `disp_buf` with the buffer(s). With only one buffer use NULL instead buf_2 */
+	lv_disp_draw_buf_init(&disp_buf, buf_1, NULL, DISP_HOR_RES * 10);
+
+	lv_disp_drv_init(&disp_drv); /*Basic initialization*/
+	disp_drv.draw_buf = &disp_buf; /*Set an initialized buffer*/
+	disp_drv.flush_cb = lcd_flush_cb; /*Set a flush callback to draw to the display*/
+	disp_drv.hor_res = DISP_HOR_RES; /*Set the horizontal resolution in pixels*/
+	disp_drv.ver_res = DISP_VER_RES; /*Set the vertical resolution in pixels*/
+	disp_drv.rotated = LV_DISP_ROT_90;
+
+	lv_disp_drv_register(&disp_drv); /*Register the driver in LVGL*/
+
+	/* Register an input device */
+	lv_indev_drv_init(&indev_drv); /*Basic initialization*/
+	indev_drv.type = LV_INDEV_TYPE_POINTER; /*Touchpad or mouse*/
+	indev_drv.read_cb = touch_input_read; /*Pointer callback to report the current state of an input device*/
+
+	lv_indev_drv_register(&indev_drv); /*Register the driver in LVGL*/
+
+	ui_init();
+
+	msg_init();
+}
+
+void lvgl_ui_handle()
+{
+	lv_timer_handler();
+}
+
+void lvgl_ui_change_time(const char *newTime)
+{
+	lv_msg_send(MSG_TIME_CHANGED, newTime);
+}
+
 void handleRandomBall(lv_event_t *e)
 {
 	lv_obj_t *target = lv_event_get_target(e);
@@ -289,49 +333,5 @@ void handleRandomBall(lv_event_t *e)
 	{
 		lv_label_set_text(ui_LabelRandom, "");
 	}
-}
-
-void lvgl_ui_init()
-{
-	Touch_Init();
-
-	LCD_Init();
-
-	LCD_SetRotation(1);
-
-	lv_init();
-
-	/* Initialize `disp_buf` with the buffer(s). With only one buffer use NULL instead buf_2 */
-	lv_disp_draw_buf_init(&disp_buf, buf_1, NULL, DISP_HOR_RES * 10);
-
-	lv_disp_drv_init(&disp_drv); /*Basic initialization*/
-	disp_drv.draw_buf = &disp_buf; /*Set an initialized buffer*/
-	disp_drv.flush_cb = lcd_flush_cb; /*Set a flush callback to draw to the display*/
-	disp_drv.hor_res = DISP_HOR_RES; /*Set the horizontal resolution in pixels*/
-	disp_drv.ver_res = DISP_VER_RES; /*Set the vertical resolution in pixels*/
-	disp_drv.rotated = LV_DISP_ROT_90;
-
-	lv_disp_drv_register(&disp_drv); /*Register the driver in LVGL*/
-
-	/* Register an input device */
-	lv_indev_drv_init(&indev_drv); /*Basic initialization*/
-	indev_drv.type = LV_INDEV_TYPE_POINTER; /*Touchpad or mouse*/
-	indev_drv.read_cb = touch_input_read; /*Pointer callback to report the current state of an input device*/
-
-	lv_indev_drv_register(&indev_drv); /*Register the driver in LVGL*/
-
-	ui_init();
-
-	msg_init();
-}
-
-void lvgl_ui_handle()
-{
-	lv_timer_handler();
-}
-
-void lvgl_ui_change_time(const char *newTime)
-{
-	lv_msg_send(MSG_TIME_CHANGED, newTime);
 }
 

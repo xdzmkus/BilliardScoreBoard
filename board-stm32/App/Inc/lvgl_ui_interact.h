@@ -18,6 +18,7 @@ void lvgl_ui_handle();
 
 void lvgl_ui_change_time(const char* newTime);
 
+
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif

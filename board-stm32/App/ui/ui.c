@@ -63,13 +63,14 @@ lv_obj_t * ui_Label5M;
     #error "LV_COLOR_16_SWAP should be 0 to match SquareLine Studio's settings"
 #endif
 
-///////////////////// ANIMATIONS ////////////////////
-
 ///////////////////// FUNCTIONS ////////////////////
+
+///////////////////// EVENTS ////////////////////
+
 void ui_event_Screen0(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_GESTURE &&  lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_LEFT) {
         _ui_screen_change(ui_Screen1, LV_SCR_LOAD_ANIM_NONE, 100, 0);
     }
@@ -80,7 +81,7 @@ void ui_event_Screen0(lv_event_t * e)
 void ui_event_ball1(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball1, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -89,7 +90,7 @@ void ui_event_ball1(lv_event_t * e)
 void ui_event_ball2(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball2, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -98,7 +99,7 @@ void ui_event_ball2(lv_event_t * e)
 void ui_event_ball3(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball3, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -107,7 +108,7 @@ void ui_event_ball3(lv_event_t * e)
 void ui_event_ball4(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball4, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -116,7 +117,7 @@ void ui_event_ball4(lv_event_t * e)
 void ui_event_ball5(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball5, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -125,7 +126,7 @@ void ui_event_ball5(lv_event_t * e)
 void ui_event_ball6(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_ball6, LV_STATE_CHECKED, _UI_MODIFY_STATE_TOGGLE);
         handleRandomBall(e);
@@ -134,7 +135,7 @@ void ui_event_ball6(lv_event_t * e)
 void ui_event_PanelRand(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         handleRandomBall(e);
     }
@@ -142,7 +143,7 @@ void ui_event_PanelRand(lv_event_t * e)
 void ui_event_LabelLeft(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(ui_Screen2, LV_SCR_LOAD_ANIM_NONE, 100, 0);
     }
@@ -150,7 +151,7 @@ void ui_event_LabelLeft(lv_event_t * e)
 void ui_event_LabelRight(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(ui_Screen1, LV_SCR_LOAD_ANIM_NONE, 100, 0);
     }
@@ -158,7 +159,7 @@ void ui_event_LabelRight(lv_event_t * e)
 void ui_event_Screen1(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_GESTURE &&  lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_LEFT) {
         _ui_screen_change(ui_Screen2, LV_SCR_LOAD_ANIM_NONE, 100, 0);
     }
@@ -169,7 +170,7 @@ void ui_event_Screen1(lv_event_t * e)
 void ui_event_Screen2(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_GESTURE &&  lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_RIGHT) {
         _ui_screen_change(ui_Screen1, LV_SCR_LOAD_ANIM_NONE, 100, 0);
     }
