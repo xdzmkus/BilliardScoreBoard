@@ -67,7 +67,7 @@ void setup_LVGL()
     lv_display_set_flush_cb(disp, lcd_disp_flush);
     lv_display_set_buffers(disp, disp_draw_buf1, NULL, LVGL_BUF_SIZE * (LV_COLOR_DEPTH / 8), LV_DISPLAY_RENDER_MODE_PARTIAL);
 
-    /*Initialize the (dummy) input device driver*/
+    /*Initialize the input device driver*/
     lv_indev_t * indev = lv_indev_create();
     lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
     lv_indev_set_read_cb(indev, lcd_touchpad_read);

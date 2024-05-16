@@ -239,6 +239,8 @@ static void ui_event_MB_ResetYes(lv_event_t* e)
 			lv_label_set_text(scoreLabel, "0");
 		}
 
+		gameHasSatrted = true;
+
 		gui_publishCurrentState();
 
 		gui_sendTelegaGameScoreMessage(boardPublishing.gamePlyCount);
@@ -568,6 +570,12 @@ void changeName(lv_event_t* e)
 void changeScore(lv_event_t* e)
 {
 	if (scoreTimer != NULL) return;
+
+	if(gameHasSatrted == false)
+	{
+		_ui_flag_modify(ui_MBPanelPool, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+		return;
+	}
 
 	lv_obj_t** comp_PanelPoolPlayer = (lv_obj_t**)lv_event_get_user_data(e);
 

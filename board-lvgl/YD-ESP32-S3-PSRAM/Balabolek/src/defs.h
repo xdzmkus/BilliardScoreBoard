@@ -37,13 +37,13 @@
 
 #define SAY_LOLEK 1000
 #define SAY_BOLEK 1001
-#define SAY_BYE 1002
+#define SAY_BALABOLEK 1002
 #define SAY_GAME 1003
 #define SAY_FRAME 1004
 #define SAY_MIN -255
 #define SAY_MAX 255
 
-#define SAY_HELLO SAY_BOLEK
+#define SAY_HELLO SAY_BALABOLEK
 
 typedef struct _BOARD_OPTIONS
 {
@@ -55,6 +55,11 @@ typedef struct _BOARD_OPTIONS
 	char mqtt_user[33];
 	char mqtt_pass[33];
 	char greeting[129];
+	bool isAPEnabled;
+	bool isWifiEnabled;
+	bool isTelegaEnabled;
+	bool isAudioEnabled;
+	uint8_t audioVolume;
 } BOARD_EEPROM_DATA;
 
 extern BOARD_EEPROM_DATA boardEEPROMdata;
@@ -62,6 +67,7 @@ extern BOARD_EEPROM_DATA boardEEPROMdata;
 extern const char* const WLAN_HOSTNAME;
 extern const char* const MQTT_TOPIC;
 extern const char bot_token[];
+extern const char* const AP_SITE;
 
 // Load DigiCert Global Root CA ca_cert, which is used by EMQX Cloud Serverless Deployment
 extern const char ca_cert[];

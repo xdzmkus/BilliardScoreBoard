@@ -19,6 +19,7 @@ extern "C" {
 #include "ui_comp_namekeyboard.h"
 #include "ui_comp_panelpoolplayer.h"
 #include "ui_comp_optionskeyboard.h"
+#include "ui_comp_scorekeyboard.h"
 
 typedef void (*ui_comp_cb_t)(lv_obj_t* obj);
 
@@ -58,6 +59,7 @@ extern const lv_buttonmatrix_ctrl_t score_kb_ctrl_num_map[];
 
 void ui_event_KeyboardButtons(lv_event_t* e);
 void ui_event_ScoreKeyboardButtons(lv_event_t* e);
+bool ui_normalize_score(const char* newVal, int16_t* score);
 
 LV_IMG_DECLARE(ui_img_snooker_table_480x320_png);
 LV_IMG_DECLARE(ui_img_break_png);

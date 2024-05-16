@@ -109,10 +109,10 @@ static void ui_event_ScreenMain(lv_event_t* e)
 		lv_label_set_text(ui_MLabelLogo, boardEEPROMdata.greeting); // show greeting message
 
 		// set state of telegram
-		boardSettings.isTelegaEnabled ? lv_obj_clear_state(ui_MLabelTelega, LV_STATE_DISABLED) : lv_obj_add_state(ui_MLabelTelega, LV_STATE_DISABLED);
+		boardEEPROMdata.isTelegaEnabled ? lv_obj_clear_state(ui_MLabelTelega, LV_STATE_DISABLED) : lv_obj_add_state(ui_MLabelTelega, LV_STATE_DISABLED);
 
 		// set state of audio
-		boardSettings.isAudioEnabled ? lv_obj_clear_state(ui_MLabelAudio, LV_STATE_DISABLED) : lv_obj_add_state(ui_MLabelAudio, LV_STATE_DISABLED);
+		boardEEPROMdata.isAudioEnabled ? lv_obj_clear_state(ui_MLabelAudio, LV_STATE_DISABLED) : lv_obj_add_state(ui_MLabelAudio, LV_STATE_DISABLED);
 
 		// set state of wifi
 		gui_wifiIsEnabledAndConnected() ? lv_obj_clear_state(ui_MLabelWifi, LV_STATE_DISABLED) : lv_obj_add_state(ui_MLabelWifi, LV_STATE_DISABLED);
@@ -199,7 +199,7 @@ static void ui_ScreenMain_screen_init(void)
     lv_obj_set_width(ui_MBtnLabelGame, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_MBtnLabelGame, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_MBtnLabelGame, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_MBtnLabelGame, "Игра");
+    lv_label_set_text(ui_MBtnLabelGame, "Матч");
 
     ui_MBtnStream = lv_btn_create(ui_ScreenMain);
     lv_obj_set_width(ui_MBtnStream, 50);

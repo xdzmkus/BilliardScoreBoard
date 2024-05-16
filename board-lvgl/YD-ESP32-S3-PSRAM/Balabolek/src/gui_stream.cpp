@@ -31,28 +31,125 @@ static lv_obj_t* ui_TVBtnFrameResetYes;
 static lv_obj_t* ui_TVLabelFrameResetYes;
 static lv_obj_t* ui_TVBtnFrameResetNo;
 static lv_obj_t* ui_TVLabelFrameResetNo;
-static lv_obj_t* ui_TVPanelKB;
-static lv_obj_t* ui_TVLabelUpdatedScore;
-static lv_obj_t* ui_TVTextAreaNewScore;
 static lv_obj_t* ui_TVKeyboardScore;
 static lv_obj_t* ui_TVNameKeyboard;
 
 static lv_obj_t* labelToUpdate = NULL;
 
-///////////////////// FUNCTIONS ////////////////////
+///////////////////// CALLBACKS ////////////////////
 
 static void ui_event_updatePly1Name(lv_obj_t* obj)
 {
 	const char* newName = lv_textarea_get_text(obj);
 	gui_setPlayerName(PLAYER1, newName);
 	lv_label_set_text(ui_TVLabelPly1, newName);
+	
+	gui_publishCurrentState();
 }
 static void ui_event_updatePly2Name(lv_obj_t* obj)
 {
 	const char* newName = lv_textarea_get_text(obj);
 	gui_setPlayerName(PLAYER2, newName);
 	lv_label_set_text(ui_TVLabelPly2, newName);
+
+	gui_publishCurrentState();
 }
+
+static void ui_event_updateGameScore1(lv_obj_t* obj)
+{
+	int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.tvGameScorePly1 = score;
+    }
+    else
+    {
+        boardPublishing.tvGameScorePly1 += score;
+    }
+
+    lv_label_set_text_fmt(ui_TVLabelGameScore1, "%d", boardPublishing.tvGameScorePly1);
+
+	gui_publishCurrentState();
+	gui_sendTelegaTVGameScoreMessage();
+	gui_sayTVGameResult();
+}
+static void ui_event_updateGameScore2(lv_obj_t* obj)
+{
+	int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.tvGameScorePly2 = score;
+    }
+    else
+    {
+        boardPublishing.tvGameScorePly2 += score;
+    }
+
+    lv_label_set_text_fmt(ui_TVLabelGameScore2, "%d", boardPublishing.tvGameScorePly2);
+
+	gui_publishCurrentState();
+	gui_sendTelegaTVGameScoreMessage();
+	gui_sayTVGameResult();
+}
+static void ui_event_updateGameScoreMax(lv_obj_t* obj)
+{
+	int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.tvGameScoreMax = score;
+    }
+    else
+    {
+        boardPublishing.tvGameScoreMax += score;
+    }
+
+	lv_label_set_text_fmt(ui_TVLabelGameScoreMax, "(%d)", boardPublishing.tvGameScoreMax);
+
+	gui_publishCurrentState();
+}
+static void ui_event_updateFrameScore1(lv_obj_t* obj)
+{
+	int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.tvFrameScorePly1 = score;
+    }
+    else
+    {
+        boardPublishing.tvFrameScorePly1 += score;
+    }
+
+    lv_label_set_text_fmt(ui_TVLabelFrameScore1, "%d", boardPublishing.tvFrameScorePly1);
+
+	gui_publishCurrentState();
+	gui_sendTelegaTVFrameScoreMessage();
+	gui_sayTVFrameResult();
+}
+static void ui_event_updateFrameScore2(lv_obj_t* obj)
+{
+	int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.tvFrameScorePly2 = score;
+    }
+    else
+    {
+        boardPublishing.tvFrameScorePly2 += score;
+    }
+
+    lv_label_set_text_fmt(ui_TVLabelFrameScore2, "%d", boardPublishing.tvFrameScorePly2);
+
+	gui_publishCurrentState();
+	gui_sendTelegaTVFrameScoreMessage();
+	gui_sayTVFrameResult();
+}
+
+///////////////////// FUNCTIONS ////////////////////
 
 static void ui_event_onLabelHome(lv_event_t* e)
 {
@@ -64,7 +161,7 @@ static void ui_event_onLabelHome(lv_event_t* e)
 	}
 }
 
-static void ui_event_TVLabelPlyUpdate(lv_event_t * e)
+static void ui_event_onTVLabelPlyUpdate(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 	lv_obj_t* target = static_cast<lv_obj_t*>(lv_event_get_target(e));
@@ -90,30 +187,52 @@ static void ui_event_TVLabelPlyUpdate(lv_event_t * e)
     }
 }
 
-static void ui_event_onLabelUpdateKB(lv_event_t* e)
+static void ui_event_onTVLabelScoreUpdate(lv_event_t* e)
 {
 	lv_event_code_t event_code = lv_event_get_code(e);
+	lv_obj_t* labelToUpdate = static_cast<lv_obj_t*>(lv_event_get_target(e));
 
 	if (event_code == LV_EVENT_CLICKED)
 	{
-		labelToUpdate = static_cast<lv_obj_t*>(lv_event_get_target(e));
+		ui_comp_set_callback(ui_TVKeyboardScore, NULL);
 
 		if (labelToUpdate == ui_TVLabelGameScoreMax)
 		{
-			lv_label_set_text_fmt(ui_TVLabelUpdatedScore, "%d", boardPublishing.tvGameScoreMax);
-
-			lv_textarea_set_text(ui_TVTextAreaNewScore, "=");
+            lv_textarea_set_text(ui_comp_get_child(ui_TVKeyboardScore, UI_COMP_SCOREKEYBOARD_TEXTAREANEWSCORE), "=");
+    	    lv_label_set_text(ui_comp_get_child(ui_TVKeyboardScore, UI_COMP_SCOREKEYBOARD_LABELUPDATEDSCORE), lv_label_get_text(labelToUpdate));
+			
+			ui_comp_set_callback(ui_TVKeyboardScore, ui_event_updateGameScoreMax);
 		}
 		else
 		{
-			lv_label_set_text(ui_TVLabelUpdatedScore, lv_label_get_text(labelToUpdate));
+			if(gameHasSatrted == false)
+			{
+				_ui_flag_modify(ui_TVPanelGameReset, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+				return;
+			}
 
-			lv_textarea_set_text(ui_TVTextAreaNewScore, "+");
+            lv_textarea_set_text(ui_comp_get_child(ui_TVKeyboardScore, UI_COMP_SCOREKEYBOARD_TEXTAREANEWSCORE), "+");
+    		lv_label_set_text(ui_comp_get_child(ui_TVKeyboardScore, UI_COMP_SCOREKEYBOARD_LABELUPDATEDSCORE), lv_label_get_text(labelToUpdate));
+
+			if (labelToUpdate == ui_TVLabelGameScore1)
+			{
+				ui_comp_set_callback(ui_TVKeyboardScore, ui_event_updateGameScore1);
+			}
+			else if (labelToUpdate == ui_TVLabelGameScore2)
+			{
+				ui_comp_set_callback(ui_TVKeyboardScore, ui_event_updateGameScore2);
+			}
+			else if (labelToUpdate == ui_TVLabelFrameScore1)
+			{
+				ui_comp_set_callback(ui_TVKeyboardScore, ui_event_updateFrameScore1);
+			}
+			else if (labelToUpdate == ui_TVLabelFrameScore2)
+			{
+				ui_comp_set_callback(ui_TVKeyboardScore, ui_event_updateFrameScore2);
+			}
 		}
-
-		lv_textarea_set_cursor_pos(ui_TVTextAreaNewScore, 1);
-
-		_ui_flag_modify(ui_TVPanelKB, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        
+        _ui_flag_modify(ui_TVKeyboardScore, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
 	}
 }
 
@@ -152,6 +271,8 @@ static void ui_event_Game_ResetYes(lv_event_t* e)
 
 		lv_label_set_text_fmt(ui_TVLabelFrameScore1, "%d", boardPublishing.tvFrameScorePly1);
 		lv_label_set_text_fmt(ui_TVLabelFrameScore2, "%d", boardPublishing.tvFrameScorePly2);
+
+		gameHasSatrted = true;
 
 		gui_publishCurrentState();
 
@@ -202,78 +323,6 @@ static void ui_event_Frame_ResetYes(lv_event_t* e)
 		gui_sayTVFrameResult();
 
 		_ui_flag_modify(ui_TVPanelFrameReset, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-	}
-}
-
-static void ui_event_TVTextAreaNewScore(lv_event_t* e)
-{
-	lv_event_code_t event_code = lv_event_get_code(e);
-
-	if (event_code == LV_EVENT_READY)
-	{
-		_ui_flag_modify(ui_TVPanelKB, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-
-		bool replaceScore = false;
-
-		int16_t score;
-
-		const char* text = lv_textarea_get_text(ui_TVTextAreaNewScore);
-
-		if (strlen(text) <= 1) return; // empty text or +/-/= only
-
-		if (text[0] == '=')
-		{
-			score = atoi(++text); // skip '=' char 
-
-			replaceScore = true;
-		}
-		else
-		{
-			score = atoi(text);
-		}
-
-		if (labelToUpdate == ui_TVLabelGameScore1)
-		{
-			if (replaceScore == true) boardPublishing.tvGameScorePly1 = score; else boardPublishing.tvGameScorePly1 += score;
-			lv_label_set_text_fmt(ui_TVLabelGameScore1, "%d", boardPublishing.tvGameScorePly1);
-		}
-		else if (labelToUpdate == ui_TVLabelGameScore2)
-		{
-			if (replaceScore == true) boardPublishing.tvGameScorePly2 = score; else boardPublishing.tvGameScorePly2 += score;
-			lv_label_set_text_fmt(ui_TVLabelGameScore2, "%d", boardPublishing.tvGameScorePly2);
-		}
-		else if (labelToUpdate == ui_TVLabelGameScoreMax)
-		{
-			if (replaceScore == true) boardPublishing.tvGameScoreMax = score; else boardPublishing.tvGameScoreMax += score;
-			lv_label_set_text_fmt(ui_TVLabelGameScoreMax, "(%d)", boardPublishing.tvGameScoreMax);
-		}
-		else if (labelToUpdate == ui_TVLabelFrameScore1)
-		{
-			if (replaceScore == true) boardPublishing.tvFrameScorePly1 = score; else boardPublishing.tvFrameScorePly1 += score;
-			lv_label_set_text_fmt(ui_TVLabelFrameScore1, "%d", boardPublishing.tvFrameScorePly1);
-		}
-		else if (labelToUpdate == ui_TVLabelFrameScore2)
-		{
-			if (replaceScore == true) boardPublishing.tvFrameScorePly2 = score; else boardPublishing.tvFrameScorePly2 += score;
-			lv_label_set_text_fmt(ui_TVLabelFrameScore2, "%d", boardPublishing.tvFrameScorePly2);
-		}
-
-		gui_publishCurrentState();
-
-		if (labelToUpdate == ui_TVLabelGameScore1 || labelToUpdate == ui_TVLabelGameScore2)
-		{
-			gui_sendTelegaTVGameScoreMessage();
-			gui_sayTVGameResult();
-		}
-		else if (labelToUpdate == ui_TVLabelFrameScore1 || labelToUpdate == ui_TVLabelFrameScore2)
-		{
-			gui_sendTelegaTVFrameScoreMessage();
-			gui_sayTVFrameResult();
-		}
-	}
-	else if (event_code == LV_EVENT_CANCEL)
-	{
-		_ui_flag_modify(ui_TVPanelKB, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 	}
 }
 
@@ -558,55 +607,9 @@ static void ui_ScreenStream_screen_init(void)
 	lv_obj_set_align(ui_TVLabelFrameResetNo, LV_ALIGN_CENTER);
 	lv_label_set_text(ui_TVLabelFrameResetNo, "НЕТ");
 
-	ui_TVPanelKB = lv_obj_create(ui_ScreenStream);
-	lv_obj_set_width(ui_TVPanelKB, lv_pct(100));
-	lv_obj_set_height(ui_TVPanelKB, lv_pct(100));
-	lv_obj_set_align(ui_TVPanelKB, LV_ALIGN_TOP_MID);
-	lv_obj_add_flag(ui_TVPanelKB, LV_OBJ_FLAG_HIDDEN);     /// Flags
-	lv_obj_clear_flag(ui_TVPanelKB, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-	lv_obj_set_style_radius(ui_TVPanelKB, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_color(ui_TVPanelKB, lv_color_hex(0x1E5016), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_opa(ui_TVPanelKB, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_border_color(ui_TVPanelKB, lv_color_hex(0x6A5529), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_border_opa(ui_TVPanelKB, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_text_color(ui_TVPanelKB, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_text_opa(ui_TVPanelKB, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_text_align(ui_TVPanelKB, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-	ui_TVLabelUpdatedScore = lv_label_create(ui_TVPanelKB);
-	lv_obj_set_width(ui_TVLabelUpdatedScore, lv_pct(45));
-	lv_obj_set_height(ui_TVLabelUpdatedScore, LV_SIZE_CONTENT);    /// 90
-	lv_obj_set_x(ui_TVLabelUpdatedScore, 0);
-	lv_obj_set_y(ui_TVLabelUpdatedScore, 5);
-	lv_label_set_long_mode(ui_TVLabelUpdatedScore, LV_LABEL_LONG_SCROLL);
-	lv_obj_set_style_text_font(ui_TVLabelUpdatedScore, &ui_font_UbuntuDigits92, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-	ui_TVTextAreaNewScore = lv_textarea_create(ui_TVPanelKB);
-	lv_obj_set_width(ui_TVTextAreaNewScore, lv_pct(55));
-	lv_obj_set_height(ui_TVTextAreaNewScore, LV_SIZE_CONTENT);    /// 70
-	lv_obj_set_x(ui_TVTextAreaNewScore, 10);
-	lv_obj_set_y(ui_TVTextAreaNewScore, -5);
-	lv_obj_set_align(ui_TVTextAreaNewScore, LV_ALIGN_TOP_RIGHT);
-	lv_textarea_set_max_length(ui_TVTextAreaNewScore, 5);
-	lv_textarea_set_one_line(ui_TVTextAreaNewScore, true);
-	lv_obj_set_style_text_align(ui_TVTextAreaNewScore, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_text_font(ui_TVTextAreaNewScore, &ui_font_UbuntuDigits92, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_border_color(ui_TVTextAreaNewScore, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_border_opa(ui_TVTextAreaNewScore, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-	ui_TVKeyboardScore = lv_keyboard_create(ui_TVPanelKB);
-	lv_obj_set_width(ui_TVKeyboardScore, lv_pct(105));
-	lv_obj_set_height(ui_TVKeyboardScore, lv_pct(70));
-	lv_obj_set_x(ui_TVKeyboardScore, 0);
-	lv_obj_set_y(ui_TVKeyboardScore, 12);
-	lv_obj_set_align(ui_TVKeyboardScore, LV_ALIGN_BOTTOM_MID);
-	lv_obj_set_style_radius(ui_TVKeyboardScore, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_color(ui_TVKeyboardScore, lv_color_hex(0x6A5529), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_opa(ui_TVKeyboardScore, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_TVKeyboardScore, &ui_font_UbuntuCyrillic25, LV_PART_ITEMS | LV_STATE_DEFAULT);
-	lv_keyboard_set_textarea(ui_TVKeyboardScore, ui_TVTextAreaNewScore);
-	lv_keyboard_set_map(ui_TVKeyboardScore, LV_KEYBOARD_MODE_USER_1, score_kb_map_num, score_kb_ctrl_num_map);
-	lv_keyboard_set_mode(ui_TVKeyboardScore, LV_KEYBOARD_MODE_USER_1);
+	ui_TVKeyboardScore = ui_ScoreKeyboard_create(ui_ScreenStream);
+    lv_obj_set_x(ui_TVKeyboardScore, 0);
+    lv_obj_set_y(ui_TVKeyboardScore, 0);
 
 	ui_TVNameKeyboard = ui_NameKeyboard_create(ui_ScreenStream);
     lv_obj_set_x(ui_TVNameKeyboard, 0);
@@ -623,12 +626,15 @@ void gui_stream_create()
 
 	lv_obj_add_event_cb(ui_TVLabelHome, ui_event_onLabelHome, LV_EVENT_ALL, NULL);
 
-	lv_obj_add_event_cb(ui_TVLabelGameScore1, ui_event_onLabelUpdateKB, LV_EVENT_ALL, NULL);
-	lv_obj_add_event_cb(ui_TVLabelGameScore2, ui_event_onLabelUpdateKB, LV_EVENT_ALL, NULL);
-	lv_obj_add_event_cb(ui_TVLabelGameScoreMax, ui_event_onLabelUpdateKB, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelPly1, ui_event_onTVLabelPlyUpdate, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelPly2, ui_event_onTVLabelPlyUpdate, LV_EVENT_ALL, NULL);
 
-	lv_obj_add_event_cb(ui_TVLabelFrameScore1, ui_event_onLabelUpdateKB, LV_EVENT_ALL, NULL);
-	lv_obj_add_event_cb(ui_TVLabelFrameScore2, ui_event_onLabelUpdateKB, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelGameScore1, ui_event_onTVLabelScoreUpdate, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelGameScore2, ui_event_onTVLabelScoreUpdate, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelGameScoreMax, ui_event_onTVLabelScoreUpdate, LV_EVENT_ALL, NULL);
+
+	lv_obj_add_event_cb(ui_TVLabelFrameScore1, ui_event_onTVLabelScoreUpdate, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui_TVLabelFrameScore2, ui_event_onTVLabelScoreUpdate, LV_EVENT_ALL, NULL);
 
 	lv_obj_add_event_cb(ui_TVLabelReset, ui_event_onLabelGameReset, LV_EVENT_ALL, NULL);
 	lv_obj_add_event_cb(ui_TVBtnGameResetYes, ui_event_Game_ResetYes, LV_EVENT_ALL, NULL);
@@ -637,13 +643,5 @@ void gui_stream_create()
 	lv_obj_add_event_cb(ui_TVLabelFrameScoreReset, ui_event_onLabelFrameReset, LV_EVENT_ALL, NULL);
 	lv_obj_add_event_cb(ui_TVBtnFrameResetYes, ui_event_Frame_ResetYes, LV_EVENT_ALL, NULL);
 	lv_obj_add_event_cb(ui_TVBtnFrameResetNo, ui_event_Frame_ResetNo, LV_EVENT_ALL, NULL);
-
-	lv_obj_add_event_cb(ui_TVTextAreaNewScore, ui_event_TVTextAreaNewScore, LV_EVENT_ALL, NULL);
-
-	lv_obj_remove_event_cb(ui_TVKeyboardScore, lv_keyboard_def_event_cb);
-	lv_obj_add_event_cb(ui_TVKeyboardScore, ui_event_ScoreKeyboardButtons, LV_EVENT_ALL, NULL);
-
-	lv_obj_add_event_cb(ui_TVLabelPly1, ui_event_TVLabelPlyUpdate, LV_EVENT_ALL, NULL);
-	lv_obj_add_event_cb(ui_TVLabelPly2, ui_event_TVLabelPlyUpdate, LV_EVENT_ALL, NULL);
 }
 

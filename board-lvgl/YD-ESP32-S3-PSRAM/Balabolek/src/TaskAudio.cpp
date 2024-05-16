@@ -48,6 +48,7 @@ static void playMP3(const char* filename)
 		while (mp3.isRunning())
 		{
 			if(!mp3.loop()) mp3.stop();
+			vTaskDelay(1);
 		}
 	}
 }
@@ -62,7 +63,7 @@ static void handleAudio(void* pvParameters)
 		sayMessage_t message;
 
 		int ret = xQueueReceive(audioQueueHandle, &message, 0);
-		if (ret == pdPASS)
+		if (ret == pdTRUE)
 		{
 			String fileName = "/";
 
@@ -73,6 +74,10 @@ static void handleAudio(void* pvParameters)
 			else if (message.say == SAY_BOLEK)
 			{
 				fileName += "bolek.mp3";
+			}
+			else if (message.say == SAY_BALABOLEK)
+			{
+				fileName += "balabolek.mp3";
 			}
 			else if (message.say == SAY_GAME)
 			{

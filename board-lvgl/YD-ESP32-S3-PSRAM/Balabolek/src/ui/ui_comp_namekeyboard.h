@@ -1,11 +1,11 @@
 #ifndef _UI_COMP_NAMEKEYBOARD_H
 #define _UI_COMP_NAMEKEYBOARD_H
 
+#include "ui.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "ui.h"
 
 #define UI_COMP_NAMEKEYBOARD_NAMEKEYBOARD 0
 #define UI_COMP_NAMEKEYBOARD_NAMELIST 1

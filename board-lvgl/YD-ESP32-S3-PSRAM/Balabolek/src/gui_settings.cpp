@@ -7,82 +7,83 @@
 ///////////////////// VARIABLES ////////////////////
 
 // SCREEN: ui_ScreenSettings
-lv_obj_t * ui_ScreenSettings;
-lv_obj_t * ui_SLabelHome;
-lv_obj_t * ui_SPanelSettings;
-lv_obj_t * ui_SButtonRestore;
-lv_obj_t * ui_SLabelRestore;
-lv_obj_t * ui_SPanelGeneral;
-lv_obj_t * ui_SLabelWifi;
-lv_obj_t * ui_SSwitchWifi;
-lv_obj_t * ui_SLabelTelega;
-lv_obj_t * ui_SSwitchTelega;
-lv_obj_t * ui_SLabelAudio;
-lv_obj_t * ui_SSwitchAudio;
-lv_obj_t * ui_SLabelVolume;
-lv_obj_t * ui_SSliderVolume;
-lv_obj_t * ui_SLabelAP;
-lv_obj_t * ui_SSwitchAP;
-lv_obj_t * ui_SPanelSnooker;
-lv_obj_t * ui_SLabelSnooker;
-lv_obj_t * ui_SLabel6Red;
-lv_obj_t * ui_SSwitch6Red;
-lv_obj_t * ui_SLabelControlBalls;
-lv_obj_t * ui_SSwitchControlBalls;
-lv_obj_t * ui_SLabekHandicap1;
-lv_obj_t * ui_STextAreaHandicap1;
-lv_obj_t * ui_SButtonEditHandicap1;
-lv_obj_t * ui_SLabelEditHandicap1;
-lv_obj_t * ui_SLabekHandicap2;
-lv_obj_t * ui_STextAreaHandicap2;
-lv_obj_t * ui_SButtonEditHandicap2;
-lv_obj_t * ui_SLabelEditHandicap2;
-lv_obj_t * ui_SPanelOptions;
-lv_obj_t * ui_SLabelOptions;
-lv_obj_t * ui_SPanelOptions1;
-lv_obj_t * ui_STextAreaGreeting;
-lv_obj_t * ui_SButtonEditGreeting;
-lv_obj_t * ui_SLabelEditGreeting;
-lv_obj_t * ui_SPanelOptions2;
-lv_obj_t * ui_STextAreaSSID;
-lv_obj_t * ui_SButtonEditSSID;
-lv_obj_t * ui_SLabelEditSSID;
-lv_obj_t * ui_SPanelOptions3;
-lv_obj_t * ui_STextAreaWifiPass;
-lv_obj_t * ui_SButtonEditWifiPass;
-lv_obj_t * ui_SLabelEditWifiPass;
-lv_obj_t * ui_SPanelOptions4;
-lv_obj_t * ui_STextAreaTelegaChannel;
-lv_obj_t * ui_SButtonEditTelegaChannel;
-lv_obj_t * ui_SLabelEditTelegaChannel;
-lv_obj_t * ui_SPanelOptions5;
-lv_obj_t * ui_STextAreaMqttHost;
-lv_obj_t * ui_SButtonEditMqttHost;
-lv_obj_t * ui_SLabelEditMqttHost;
-lv_obj_t * ui_SPanelOptions6;
-lv_obj_t * ui_STextAreaMqttPort;
-lv_obj_t * ui_SButtonEditMqttPort;
-lv_obj_t * ui_SLabelEditMqttPort;
-lv_obj_t * ui_SPanelOptions7;
-lv_obj_t * ui_STextAreaMqttUser;
-lv_obj_t * ui_SButtonEditMqttUser;
-lv_obj_t * ui_SLabelEditMqttUser;
-lv_obj_t * ui_SPanelOptions8;
-lv_obj_t * ui_STextAreaMqttPass;
-lv_obj_t * ui_SButtonEditMqttPass;
-lv_obj_t * ui_SLabelEditMqttPass;
-lv_obj_t * ui_SButtonSaveAll;
-lv_obj_t * ui_SLabelSaveAll;
-lv_obj_t * ui_SOptionKeyboard;
+lv_obj_t* ui_ScreenSettings;
+static lv_obj_t* ui_SLabelHome;
+static lv_obj_t* ui_SPanelSettings;
+static lv_obj_t* ui_SButtonRestore;
+static lv_obj_t* ui_SLabelRestore;
+static lv_obj_t* ui_SPanelGeneral;
+static lv_obj_t* ui_SLabelWifi;
+static lv_obj_t* ui_SSwitchWifi;
+static lv_obj_t* ui_SLabelTelega;
+static lv_obj_t* ui_SSwitchTelega;
+static lv_obj_t* ui_SLabelAudio;
+static lv_obj_t* ui_SSwitchAudio;
+static lv_obj_t* ui_SLabelVolume;
+static lv_obj_t* ui_SSliderVolume;
+static lv_obj_t* ui_SLabelAP;
+static lv_obj_t* ui_SSwitchAP;
+static lv_obj_t* ui_SPanelSnooker;
+static lv_obj_t* ui_SLabelSnooker;
+static lv_obj_t* ui_SLabel6Red;
+static lv_obj_t* ui_SSwitch6Red;
+static lv_obj_t* ui_SLabelControlBalls;
+static lv_obj_t* ui_SSwitchControlBalls;
+static lv_obj_t* ui_SLabelHandicap1;
+static lv_obj_t* ui_SLabelHandicapValue1;
+static lv_obj_t* ui_SButtonEditHandicap1;
+static lv_obj_t* ui_SLabelEditHandicap1;
+static lv_obj_t* ui_SLabelHandicap2;
+static lv_obj_t* ui_SLabelHandicapValue2;
+static lv_obj_t* ui_SButtonEditHandicap2;
+static lv_obj_t* ui_SLabelEditHandicap2;
+static lv_obj_t* ui_SPanelOptions;
+static lv_obj_t* ui_SLabelOptions;
+static lv_obj_t* ui_SPanelOptions1;
+static lv_obj_t* ui_Label1;
+static lv_obj_t* ui_SButtonEditGreeting;
+static lv_obj_t* ui_SLabelEditGreeting;
+static lv_obj_t* ui_SPanelOptions2;
+static lv_obj_t* ui_Label2;
+static lv_obj_t* ui_SButtonEditSSID;
+static lv_obj_t* ui_SLabelEditSSID;
+static lv_obj_t* ui_SPanelOptions3;
+static lv_obj_t* ui_Label3;
+static lv_obj_t* ui_SButtonEditWifiPass;
+static lv_obj_t* ui_SLabelEditWifiPass;
+static lv_obj_t* ui_SPanelOptions4;
+static lv_obj_t* ui_Label4;
+static lv_obj_t* ui_SButtonEditTelegaChannel;
+static lv_obj_t* ui_SLabelEditTelegaChannel;
+static lv_obj_t* ui_SPanelOptions5;
+static lv_obj_t* ui_Label5;
+static lv_obj_t* ui_SButtonEditMqttHost;
+static lv_obj_t* ui_SLabelEditMqttHost;
+static lv_obj_t* ui_SPanelOptions6;
+static lv_obj_t* ui_Label6;
+static lv_obj_t* ui_SButtonEditMqttPort;
+static lv_obj_t* ui_SLabelEditMqttPort;
+static lv_obj_t* ui_SPanelOptions7;
+static lv_obj_t* ui_Label7;
+static lv_obj_t* ui_SButtonEditMqttUser;
+static lv_obj_t* ui_SLabelEditMqttUser;
+static lv_obj_t* ui_SPanelOptions8;
+static lv_obj_t* ui_Label8;
+static lv_obj_t* ui_SButtonEditMqttPass;
+static lv_obj_t* ui_SLabelEditMqttPass;
+static lv_obj_t* ui_SButtonSaveAll;
+static lv_obj_t* ui_SLabelSaveAll;
+static lv_obj_t* ui_SOptionKeyboard;
+static lv_obj_t* ui_ScoreKeyboard;
 
 // SCREEN: ui_ScreenRestore
-lv_obj_t* ui_ScreenRestore;
-lv_obj_t* ui_RLabelQuestion;
-lv_obj_t* ui_RLabelWait;
-lv_obj_t* ui_RButtonYes;
-lv_obj_t* ui_RLabelYes;
-lv_obj_t* ui_RButtonCancel;
-lv_obj_t* ui_RLabelCancel;
+static lv_obj_t* ui_ScreenRestore;
+static lv_obj_t* ui_RLabelQuestion;
+static lv_obj_t* ui_RLabelWait;
+static lv_obj_t* ui_RButtonYes;
+static lv_obj_t* ui_RLabelYes;
+static lv_obj_t* ui_RButtonCancel;
+static lv_obj_t* ui_RLabelCancel;
 
 static lv_timer_t* restoreTimer;
 
@@ -99,6 +100,72 @@ static void ui_hideRestoreScreen(lv_timer_t* timer)
     }
 }
 
+///////////////////// CALLBACKS ////////////////////
+
+static void ui_event_updateHandicap1(lv_obj_t* obj)
+{
+    int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.snookerPly1Handicap = score;
+    }
+    else
+    {
+        boardPublishing.snookerPly1Handicap += score;
+    }
+
+    lv_label_set_text_fmt(ui_SLabelHandicapValue1, "%d", boardPublishing.snookerPly1Handicap);
+}
+static void ui_event_updateHandicap2(lv_obj_t* obj)
+{
+    int16_t score;
+
+    if (ui_normalize_score(lv_textarea_get_text(obj), &score) == true)
+    {
+        boardPublishing.snookerPly2Handicap = score;
+    }
+    else
+    {
+        boardPublishing.snookerPly2Handicap += score;
+    }
+        
+    lv_label_set_text_fmt(ui_SLabelHandicapValue2, "%d", boardPublishing.snookerPly2Handicap);
+}
+
+static void ui_event_updateOpt_GREETING(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.greeting, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.greeting) - 1);
+}
+static void ui_event_updateOpt_STASSID(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.sta_ssid, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.sta_ssid) - 1);
+}
+static void ui_event_updateOpt_STAPASS(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.sta_pass, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.sta_pass) - 1);
+}
+static void ui_event_updateOpt_CHANNEL(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.bot_channel, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.bot_channel) - 1);
+}
+static void ui_event_updateOpt_MQTTHOST(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.mqtt_host, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.mqtt_host) - 1);
+}
+static void ui_event_updateOpt_MQTTPORT(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.mqtt_port, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.mqtt_port) - 1);
+}
+static void ui_event_updateOpt_MQTTUSER(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.mqtt_user, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.mqtt_user) - 1);
+}
+static void ui_event_updateOpt_MQTTPASS(lv_obj_t* obj)
+{
+    strncpy(boardEEPROMdata.mqtt_pass, lv_textarea_get_text(obj), sizeof(boardEEPROMdata.mqtt_pass) - 1);
+}
+
 ///////////////////// EVENTS ////////////////////
 
 static void ui_event_ScreenSettings(lv_event_t* e)
@@ -108,21 +175,11 @@ static void ui_event_ScreenSettings(lv_event_t* e)
     if (event_code == LV_EVENT_SCREEN_LOAD_START)
     {
         // set board state
-        _ui_state_modify(ui_SSwitchAP, LV_STATE_CHECKED, boardSettings.isAPEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
-        _ui_state_modify(ui_SSwitchWifi, LV_STATE_CHECKED, boardSettings.isWifiEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
-        _ui_state_modify(ui_SSwitchTelega, LV_STATE_CHECKED, boardSettings.isTelegaEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
-        _ui_state_modify(ui_SSwitchAudio, LV_STATE_CHECKED, boardSettings.isAudioEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
-        lv_slider_set_value(ui_SSliderVolume, boardSettings.audioVolume, LV_ANIM_OFF);
-
-        // set eeprom data
-        lv_textarea_set_text(ui_STextAreaGreeting, boardEEPROMdata.greeting);
-        lv_textarea_set_text(ui_STextAreaSSID, boardEEPROMdata.sta_ssid);
-        lv_textarea_set_text(ui_STextAreaWifiPass, boardEEPROMdata.sta_pass);
-        lv_textarea_set_text(ui_STextAreaTelegaChannel, boardEEPROMdata.bot_channel);
-        lv_textarea_set_text(ui_STextAreaMqttHost, boardEEPROMdata.mqtt_host);
-        lv_textarea_set_text(ui_STextAreaMqttPort, boardEEPROMdata.mqtt_port);
-        lv_textarea_set_text(ui_STextAreaMqttUser, boardEEPROMdata.mqtt_user);
-        lv_textarea_set_text(ui_STextAreaMqttPass, boardEEPROMdata.mqtt_pass);
+        _ui_state_modify(ui_SSwitchAP, LV_STATE_CHECKED, boardEEPROMdata.isAPEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
+        _ui_state_modify(ui_SSwitchWifi, LV_STATE_CHECKED, boardEEPROMdata.isWifiEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
+        _ui_state_modify(ui_SSwitchTelega, LV_STATE_CHECKED, boardEEPROMdata.isTelegaEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
+        _ui_state_modify(ui_SSwitchAudio, LV_STATE_CHECKED, boardEEPROMdata.isAudioEnabled ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
+        lv_slider_set_value(ui_SSliderVolume, boardEEPROMdata.audioVolume, LV_ANIM_OFF);
 
         // set snooker options
         _ui_state_modify(ui_SSwitch6Red, LV_STATE_CHECKED, boardPublishing.snooker6Red ? _UI_MODIFY_STATE_ADD : _UI_MODIFY_STATE_REMOVE);
@@ -130,16 +187,14 @@ static void ui_event_ScreenSettings(lv_event_t* e)
         
         char handicap[4];
         sprintf(handicap, "%d", boardPublishing.snookerPly1Handicap);
-        lv_textarea_set_text(ui_STextAreaHandicap1, handicap);
+        lv_label_set_text(ui_SLabelHandicapValue1, handicap);
         sprintf(handicap, "%d", boardPublishing.snookerPly2Handicap);
-        lv_textarea_set_text(ui_STextAreaHandicap2, handicap);
+        lv_label_set_text(ui_SLabelHandicapValue2, handicap);
     }
     if (event_code == LV_EVENT_SCREEN_UNLOAD_START)
     {
         boardPublishing.snooker6Red = lv_obj_has_state(ui_SSwitch6Red, LV_STATE_CHECKED);
         boardPublishing.snookerControlBalls = lv_obj_has_state(ui_SSwitchControlBalls, LV_STATE_CHECKED);
-        boardPublishing.snookerPly1Handicap = atoi(lv_textarea_get_text(ui_STextAreaHandicap1));
-        boardPublishing.snookerPly2Handicap = atoi(lv_textarea_get_text(ui_STextAreaHandicap2));
     }
 }
 
@@ -208,20 +263,156 @@ static void ui_event_SSliderVolume(lv_event_t* e)
     }
 }
 
-static void ui_event_onOptionEdit(lv_event_t* e)
+static void ui_event_onHandicapEdit(lv_event_t* e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t* lb = static_cast<lv_obj_t*>(lv_event_get_user_data(e));
+    lv_obj_t* target = static_cast<lv_obj_t*>(lv_event_get_target(e));
+
+    if(event_code == LV_EVENT_CLICKED)
+	{
+		if(target == ui_SButtonEditHandicap1)
+		{
+			ui_comp_set_callback(ui_ScoreKeyboard, ui_event_updateHandicap1);
+    		lv_label_set_text(ui_comp_get_child(ui_ScoreKeyboard, UI_COMP_SCOREKEYBOARD_LABELUPDATEDSCORE), lv_label_get_text(ui_SLabelHandicapValue1));
+		}
+		else if(target == ui_SButtonEditHandicap2)
+		{
+			ui_comp_set_callback(ui_ScoreKeyboard, ui_event_updateHandicap2);
+    		lv_label_set_text(ui_comp_get_child(ui_ScoreKeyboard, UI_COMP_SCOREKEYBOARD_LABELUPDATEDSCORE), lv_label_get_text(ui_SLabelHandicapValue2));
+		}
+		else
+		{
+			ui_comp_set_callback(ui_ScoreKeyboard, NULL);
+		}
+        
+        _ui_flag_modify(ui_ScoreKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+
+static void ui_event_onOptEdit_GREETING(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
 
     if (event_code == LV_EVENT_CLICKED)
     {
-   		ui_comp_set_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_EXPORTTEXTAREA, lb);
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_GREETING);
 
-        // copy settings of textarea
-        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), lv_textarea_get_max_length(lb));
-        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), lv_textarea_get_password_mode(lb));
-        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), lv_textarea_get_text(lb));
-        lv_textarea_set_placeholder_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), lv_textarea_get_placeholder_text(lb));
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.greeting) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.greeting);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_STASSID(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_STASSID);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.sta_ssid) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.sta_ssid);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_STAPASS(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_STAPASS);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.sta_pass) - 1);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.sta_pass);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), true);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_CHANNEL(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_CHANNEL);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.bot_channel) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.bot_channel);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_MQTTHOST(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_MQTTHOST);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.mqtt_host) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.mqtt_host);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_MQTTPORT(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_MQTTPORT);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.mqtt_port) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.mqtt_port);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_MQTTUSER(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_MQTTUSER);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.mqtt_user) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), false);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.mqtt_user);
+
+        _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    }
+}
+static void ui_event_onOptEdit_MQTTPASS(lv_event_t* e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+		ui_comp_set_callback(ui_SOptionKeyboard, ui_event_updateOpt_MQTTPASS);
+
+        // set settings of textarea
+        lv_textarea_set_max_length(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), sizeof(boardEEPROMdata.mqtt_pass) - 1);
+        lv_textarea_set_password_mode(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), true);
+        lv_textarea_set_text(ui_comp_get_child(ui_SOptionKeyboard, UI_COMP_OPTIONSKEYBOARD_OPTIONTEXTAREA), boardEEPROMdata.mqtt_pass);
 
         _ui_flag_modify(ui_SOptionKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
     }
@@ -233,15 +424,6 @@ static void ui_event_onOptionsSave(lv_event_t* e)
 
     if (event_code == LV_EVENT_CLICKED)
     {
-        strncpy(boardEEPROMdata.greeting, lv_textarea_get_text(ui_STextAreaGreeting), sizeof(boardEEPROMdata.greeting) - 1);
-        strncpy(boardEEPROMdata.sta_ssid, lv_textarea_get_text(ui_STextAreaSSID), sizeof(boardEEPROMdata.sta_ssid) - 1);
-        strncpy(boardEEPROMdata.sta_pass, lv_textarea_get_text(ui_STextAreaWifiPass), sizeof(boardEEPROMdata.sta_pass) - 1);
-        strncpy(boardEEPROMdata.bot_channel, lv_textarea_get_text(ui_STextAreaTelegaChannel), sizeof(boardEEPROMdata.bot_channel) - 1);
-        strncpy(boardEEPROMdata.mqtt_host, lv_textarea_get_text(ui_STextAreaMqttHost), sizeof(boardEEPROMdata.mqtt_host) - 1);
-        strncpy(boardEEPROMdata.mqtt_port, lv_textarea_get_text(ui_STextAreaMqttPort), sizeof(boardEEPROMdata.mqtt_port) - 1);
-        strncpy(boardEEPROMdata.mqtt_user, lv_textarea_get_text(ui_STextAreaMqttUser), sizeof(boardEEPROMdata.mqtt_user) - 1);
-        strncpy(boardEEPROMdata.mqtt_pass, lv_textarea_get_text(ui_STextAreaMqttPass), sizeof(boardEEPROMdata.mqtt_pass) - 1);
-
         saveEEPROMdata();
 
         ESP.restart();
@@ -415,13 +597,12 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_x(ui_SSliderVolume, 155);
     lv_obj_set_y(ui_SSliderVolume, 160);
 
-
     ui_SLabelAP = lv_label_create(ui_SPanelGeneral);
     lv_obj_set_width(ui_SLabelAP, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_SLabelAP, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_SLabelAP, 0);
     lv_obj_set_y(ui_SLabelAP, 200);
-    lv_label_set_text(ui_SLabelAP, "Точка доступа");
+    lv_label_set_text(ui_SLabelAP, AP_SITE);
 
     ui_SSwitchAP = lv_switch_create(ui_SPanelGeneral);
     lv_obj_set_width(ui_SSwitchAP, 50);
@@ -434,8 +615,8 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_opa(ui_SSwitchAP, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
     ui_SPanelSnooker = lv_obj_create(ui_SPanelSettings);
-    lv_obj_set_height(ui_SPanelSnooker, 270);
     lv_obj_set_width(ui_SPanelSnooker, lv_pct(100));
+    lv_obj_set_height(ui_SPanelSnooker, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_SPanelSnooker, 15);
     lv_obj_set_y(ui_SPanelSnooker, 66);
     lv_obj_set_align(ui_SPanelSnooker, LV_ALIGN_TOP_MID);
@@ -473,7 +654,7 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_height(ui_SLabelControlBalls, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_SLabelControlBalls, 0);
     lv_obj_set_y(ui_SLabelControlBalls, 80);
-    lv_label_set_text(ui_SLabelControlBalls, "Контроль шаров");
+    lv_label_set_text(ui_SLabelControlBalls, "Контролировать шары");
 
     ui_SSwitchControlBalls = lv_switch_create(ui_SPanelSnooker);
     lv_obj_set_width(ui_SSwitchControlBalls, 50);
@@ -485,33 +666,26 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SSwitchControlBalls, lv_color_hex(0x105908), LV_PART_INDICATOR | LV_STATE_CHECKED);
     lv_obj_set_style_bg_opa(ui_SSwitchControlBalls, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    ui_SLabekHandicap1 = lv_label_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_SLabekHandicap1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SLabekHandicap1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_SLabekHandicap1, 0);
-    lv_obj_set_y(ui_SLabekHandicap1, 130);
-    lv_label_set_text(ui_SLabekHandicap1, "Фора игрока 1");
+    ui_SLabelHandicap1 = lv_label_create(ui_SPanelSnooker);
+    lv_obj_set_width(ui_SLabelHandicap1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SLabelHandicap1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SLabelHandicap1, 0);
+    lv_obj_set_y(ui_SLabelHandicap1, 120);
+    lv_label_set_text(ui_SLabelHandicap1, "Фора игрока 1:");
 
-    ui_STextAreaHandicap1 = lv_textarea_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_STextAreaHandicap1, 107);
-    lv_obj_set_height(ui_STextAreaHandicap1, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_x(ui_STextAreaHandicap1, 65);
-    lv_obj_set_y(ui_STextAreaHandicap1, 120);
-    lv_obj_set_align(ui_STextAreaHandicap1, LV_ALIGN_TOP_MID);
-    lv_textarea_set_accepted_chars(ui_STextAreaHandicap1, "0123456789");
-    lv_textarea_set_max_length(ui_STextAreaHandicap1, 3);
-    lv_textarea_set_text(ui_STextAreaHandicap1, "0");
-    lv_textarea_set_placeholder_text(ui_STextAreaHandicap1, "Фора...");
-    lv_textarea_set_one_line(ui_STextAreaHandicap1, true);
-    lv_obj_set_style_text_align(ui_STextAreaHandicap1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-
+    ui_SLabelHandicapValue1 = lv_label_create(ui_SPanelSnooker);
+    lv_obj_set_width(ui_SLabelHandicapValue1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SLabelHandicapValue1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SLabelHandicapValue1, 70);
+    lv_obj_set_y(ui_SLabelHandicapValue1, 120);
+    lv_obj_set_align(ui_SLabelHandicapValue1, LV_ALIGN_TOP_MID);
+    lv_label_set_text(ui_SLabelHandicapValue1, "0");
 
     ui_SButtonEditHandicap1 = lv_btn_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_SButtonEditHandicap1, 50);
-    lv_obj_set_height(ui_SButtonEditHandicap1, 50);
-    lv_obj_set_x(ui_SButtonEditHandicap1, 0);
-    lv_obj_set_y(ui_SButtonEditHandicap1, 120);
+    lv_obj_set_width(ui_SButtonEditHandicap1, 40);
+    lv_obj_set_height(ui_SButtonEditHandicap1, 40);
+    lv_obj_set_x(ui_SButtonEditHandicap1, -5);
+    lv_obj_set_y(ui_SButtonEditHandicap1, 115);
     lv_obj_set_align(ui_SButtonEditHandicap1, LV_ALIGN_TOP_RIGHT);
     lv_obj_add_flag(ui_SButtonEditHandicap1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditHandicap1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -524,33 +698,26 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_align(ui_SLabelEditHandicap1, LV_ALIGN_CENTER);
     lv_label_set_text(ui_SLabelEditHandicap1, LV_SYMBOL_EDIT);
 
-    ui_SLabekHandicap2 = lv_label_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_SLabekHandicap2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SLabekHandicap2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_SLabekHandicap2, 1);
-    lv_obj_set_y(ui_SLabekHandicap2, 190);
-    lv_label_set_text(ui_SLabekHandicap2, "Фора игрока 2");
+    ui_SLabelHandicap2 = lv_label_create(ui_SPanelSnooker);
+    lv_obj_set_width(ui_SLabelHandicap2, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SLabelHandicap2, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SLabelHandicap2, 1);
+    lv_obj_set_y(ui_SLabelHandicap2, 165);
+    lv_label_set_text(ui_SLabelHandicap2, "Фора игрока 2:");
 
-    ui_STextAreaHandicap2 = lv_textarea_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_STextAreaHandicap2, 107);
-    lv_obj_set_height(ui_STextAreaHandicap2, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_x(ui_STextAreaHandicap2, 65);
-    lv_obj_set_y(ui_STextAreaHandicap2, 180);
-    lv_obj_set_align(ui_STextAreaHandicap2, LV_ALIGN_TOP_MID);
-    lv_textarea_set_accepted_chars(ui_STextAreaHandicap2, "0123456789");
-    lv_textarea_set_max_length(ui_STextAreaHandicap2, 3);
-    lv_textarea_set_text(ui_STextAreaHandicap2, "0");
-    lv_textarea_set_placeholder_text(ui_STextAreaHandicap2, "Фора...");
-    lv_textarea_set_one_line(ui_STextAreaHandicap2, true);
-    lv_obj_set_style_text_align(ui_STextAreaHandicap2, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-
+    ui_SLabelHandicapValue2 = lv_label_create(ui_SPanelSnooker);
+    lv_obj_set_width(ui_SLabelHandicapValue2, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SLabelHandicapValue2, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SLabelHandicapValue2, 70);
+    lv_obj_set_y(ui_SLabelHandicapValue2, 165);
+    lv_obj_set_align(ui_SLabelHandicapValue2, LV_ALIGN_TOP_MID);
+    lv_label_set_text(ui_SLabelHandicapValue2, "0");
 
     ui_SButtonEditHandicap2 = lv_btn_create(ui_SPanelSnooker);
-    lv_obj_set_width(ui_SButtonEditHandicap2, 50);
-    lv_obj_set_height(ui_SButtonEditHandicap2, 50);
-    lv_obj_set_x(ui_SButtonEditHandicap2, 0);
-    lv_obj_set_y(ui_SButtonEditHandicap2, 180);
+    lv_obj_set_width(ui_SButtonEditHandicap2, 40);
+    lv_obj_set_height(ui_SButtonEditHandicap2, 40);
+    lv_obj_set_x(ui_SButtonEditHandicap2, -5);
+    lv_obj_set_y(ui_SButtonEditHandicap2, 160);
     lv_obj_set_align(ui_SButtonEditHandicap2, LV_ALIGN_TOP_RIGHT);
     lv_obj_add_flag(ui_SButtonEditHandicap2, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditHandicap2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -562,7 +729,6 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_height(ui_SLabelEditHandicap2, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_SLabelEditHandicap2, LV_ALIGN_CENTER);
     lv_label_set_text(ui_SLabelEditHandicap2, LV_SYMBOL_EDIT);
-
 
     ui_SPanelOptions = lv_obj_create(ui_SPanelSettings);
     lv_obj_set_width(ui_SPanelOptions, lv_pct(100));
@@ -585,25 +751,23 @@ static void ui_ScreenSettings_screen_init(void)
 
     ui_SPanelOptions1 = lv_obj_create(ui_SPanelOptions);
     lv_obj_set_width(ui_SPanelOptions1, lv_pct(100));
-    lv_obj_set_height(ui_SPanelOptions1, LV_SIZE_CONTENT);    /// 50
+    lv_obj_set_height(ui_SPanelOptions1, LV_SIZE_CONTENT);    /// 100
     lv_obj_set_align(ui_SPanelOptions1, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_SPanelOptions1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(ui_SPanelOptions1, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaGreeting = lv_textarea_create(ui_SPanelOptions1);
-    lv_obj_set_width(ui_STextAreaGreeting, 265);
-    lv_obj_set_height(ui_STextAreaGreeting, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaGreeting, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaGreeting, 128);
-    lv_textarea_set_placeholder_text(ui_STextAreaGreeting, "Приветствие...");
-    lv_textarea_set_one_line(ui_STextAreaGreeting, true);
-
-
+    ui_Label1 = lv_label_create(ui_SPanelOptions1);
+    lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label1, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label1, "Приветствие...");
+    lv_obj_set_style_text_color(ui_Label1, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditGreeting = lv_btn_create(ui_SPanelOptions1);
-    lv_obj_set_width(ui_SButtonEditGreeting, 50);
-    lv_obj_set_height(ui_SButtonEditGreeting, 50);
+    lv_obj_set_width(ui_SButtonEditGreeting, 40);
+    lv_obj_set_height(ui_SButtonEditGreeting, 40);
     lv_obj_set_align(ui_SButtonEditGreeting, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditGreeting, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditGreeting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -618,25 +782,23 @@ static void ui_ScreenSettings_screen_init(void)
 
     ui_SPanelOptions2 = lv_obj_create(ui_SPanelOptions);
     lv_obj_set_width(ui_SPanelOptions2, lv_pct(100));
-    lv_obj_set_height(ui_SPanelOptions2, LV_SIZE_CONTENT);    /// 50
+    lv_obj_set_height(ui_SPanelOptions2, LV_SIZE_CONTENT);    /// 100
     lv_obj_set_align(ui_SPanelOptions2, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_SPanelOptions2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(ui_SPanelOptions2, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaSSID = lv_textarea_create(ui_SPanelOptions2);
-    lv_obj_set_width(ui_STextAreaSSID, 265);
-    lv_obj_set_height(ui_STextAreaSSID, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaSSID, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaSSID, 32);
-    lv_textarea_set_placeholder_text(ui_STextAreaSSID, "WiFi SSID...");
-    lv_textarea_set_one_line(ui_STextAreaSSID, true);
-
-
+    ui_Label2 = lv_label_create(ui_SPanelOptions2);
+    lv_obj_set_width(ui_Label2, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label2, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label2, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label2, "Wifi SSID...");
+    lv_obj_set_style_text_color(ui_Label2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditSSID = lv_btn_create(ui_SPanelOptions2);
-    lv_obj_set_width(ui_SButtonEditSSID, 50);
-    lv_obj_set_height(ui_SButtonEditSSID, 50);
+    lv_obj_set_width(ui_SButtonEditSSID, 40);
+    lv_obj_set_height(ui_SButtonEditSSID, 40);
     lv_obj_set_align(ui_SButtonEditSSID, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditSSID, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditSSID, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -657,20 +819,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions3, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaWifiPass = lv_textarea_create(ui_SPanelOptions3);
-    lv_obj_set_width(ui_STextAreaWifiPass, 265);
-    lv_obj_set_height(ui_STextAreaWifiPass, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaWifiPass, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaWifiPass, 32);
-    lv_textarea_set_placeholder_text(ui_STextAreaWifiPass, "WiFi пароль...");
-    lv_textarea_set_one_line(ui_STextAreaWifiPass, true);
-    lv_textarea_set_password_mode(ui_STextAreaWifiPass, true);
-
-
+    ui_Label3 = lv_label_create(ui_SPanelOptions3);
+    lv_obj_set_width(ui_Label3, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label3, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label3, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label3, "Wifi пароль...");
+    lv_obj_set_style_text_color(ui_Label3, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditWifiPass = lv_btn_create(ui_SPanelOptions3);
-    lv_obj_set_width(ui_SButtonEditWifiPass, 50);
-    lv_obj_set_height(ui_SButtonEditWifiPass, 50);
+    lv_obj_set_width(ui_SButtonEditWifiPass, 40);
+    lv_obj_set_height(ui_SButtonEditWifiPass, 40);
     lv_obj_set_align(ui_SButtonEditWifiPass, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditWifiPass, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditWifiPass, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -691,19 +850,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions4, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions4, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaTelegaChannel = lv_textarea_create(ui_SPanelOptions4);
-    lv_obj_set_width(ui_STextAreaTelegaChannel, 265);
-    lv_obj_set_height(ui_STextAreaTelegaChannel, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaTelegaChannel, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaTelegaChannel, 32);
-    lv_textarea_set_placeholder_text(ui_STextAreaTelegaChannel, "Telegram канал...");
-    lv_textarea_set_one_line(ui_STextAreaTelegaChannel, true);
-
-
+    ui_Label4 = lv_label_create(ui_SPanelOptions4);
+    lv_obj_set_width(ui_Label4, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label4, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label4, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label4, "Телеграм канал...");
+    lv_obj_set_style_text_color(ui_Label4, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label4, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditTelegaChannel = lv_btn_create(ui_SPanelOptions4);
-    lv_obj_set_width(ui_SButtonEditTelegaChannel, 50);
-    lv_obj_set_height(ui_SButtonEditTelegaChannel, 50);
+    lv_obj_set_width(ui_SButtonEditTelegaChannel, 40);
+    lv_obj_set_height(ui_SButtonEditTelegaChannel, 40);
     lv_obj_set_align(ui_SButtonEditTelegaChannel, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditTelegaChannel, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditTelegaChannel, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -724,19 +881,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions5, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions5, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaMqttHost = lv_textarea_create(ui_SPanelOptions5);
-    lv_obj_set_width(ui_STextAreaMqttHost, 265);
-    lv_obj_set_height(ui_STextAreaMqttHost, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaMqttHost, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaMqttHost, 64);
-    lv_textarea_set_placeholder_text(ui_STextAreaMqttHost, "MQTT сервер...");
-    lv_textarea_set_one_line(ui_STextAreaMqttHost, true);
-
-
+    ui_Label5 = lv_label_create(ui_SPanelOptions5);
+    lv_obj_set_width(ui_Label5, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label5, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label5, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label5, "MQTT сервер...");
+    lv_obj_set_style_text_color(ui_Label5, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label5, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditMqttHost = lv_btn_create(ui_SPanelOptions5);
-    lv_obj_set_width(ui_SButtonEditMqttHost, 50);
-    lv_obj_set_height(ui_SButtonEditMqttHost, 50);
+    lv_obj_set_width(ui_SButtonEditMqttHost, 40);
+    lv_obj_set_height(ui_SButtonEditMqttHost, 40);
     lv_obj_set_align(ui_SButtonEditMqttHost, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditMqttHost, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditMqttHost, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -757,19 +912,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions6, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions6, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaMqttPort = lv_textarea_create(ui_SPanelOptions6);
-    lv_obj_set_width(ui_STextAreaMqttPort, 265);
-    lv_obj_set_height(ui_STextAreaMqttPort, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaMqttPort, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaMqttPort, 5);
-    lv_textarea_set_placeholder_text(ui_STextAreaMqttPort, "MQTT порт...");
-    lv_textarea_set_one_line(ui_STextAreaMqttPort, true);
-
-
+    ui_Label6 = lv_label_create(ui_SPanelOptions6);
+    lv_obj_set_width(ui_Label6, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label6, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label6, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label6, "MQTT порт...");
+    lv_obj_set_style_text_color(ui_Label6, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label6, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditMqttPort = lv_btn_create(ui_SPanelOptions6);
-    lv_obj_set_width(ui_SButtonEditMqttPort, 50);
-    lv_obj_set_height(ui_SButtonEditMqttPort, 50);
+    lv_obj_set_width(ui_SButtonEditMqttPort, 40);
+    lv_obj_set_height(ui_SButtonEditMqttPort, 40);
     lv_obj_set_align(ui_SButtonEditMqttPort, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditMqttPort, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditMqttPort, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -790,19 +943,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions7, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions7, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaMqttUser = lv_textarea_create(ui_SPanelOptions7);
-    lv_obj_set_width(ui_STextAreaMqttUser, 265);
-    lv_obj_set_height(ui_STextAreaMqttUser, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaMqttUser, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaMqttUser, 32);
-    lv_textarea_set_placeholder_text(ui_STextAreaMqttUser, "MQTT логин...");
-    lv_textarea_set_one_line(ui_STextAreaMqttUser, true);
-
-
+    ui_Label7 = lv_label_create(ui_SPanelOptions7);
+    lv_obj_set_width(ui_Label7, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label7, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label7, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label7, "MQTT логин...");
+    lv_obj_set_style_text_color(ui_Label7, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label7, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditMqttUser = lv_btn_create(ui_SPanelOptions7);
-    lv_obj_set_width(ui_SButtonEditMqttUser, 50);
-    lv_obj_set_height(ui_SButtonEditMqttUser, 50);
+    lv_obj_set_width(ui_SButtonEditMqttUser, 40);
+    lv_obj_set_height(ui_SButtonEditMqttUser, 40);
     lv_obj_set_align(ui_SButtonEditMqttUser, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditMqttUser, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditMqttUser, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -823,20 +974,17 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_style_bg_color(ui_SPanelOptions8, lv_color_hex(0x107B08), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_SPanelOptions8, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_STextAreaMqttPass = lv_textarea_create(ui_SPanelOptions8);
-    lv_obj_set_width(ui_STextAreaMqttPass, 265);
-    lv_obj_set_height(ui_STextAreaMqttPass, LV_SIZE_CONTENT);    /// 70
-    lv_obj_set_align(ui_STextAreaMqttPass, LV_ALIGN_LEFT_MID);
-    lv_textarea_set_max_length(ui_STextAreaMqttPass, 32);
-    lv_textarea_set_placeholder_text(ui_STextAreaMqttPass, "MQTT пароль...");
-    lv_textarea_set_one_line(ui_STextAreaMqttPass, true);
-    lv_textarea_set_password_mode(ui_STextAreaMqttPass, true);
-
-
+    ui_Label8 = lv_label_create(ui_SPanelOptions8);
+    lv_obj_set_width(ui_Label8, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label8, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label8, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_Label8, "MQTT пароль...");
+    lv_obj_set_style_text_color(ui_Label8, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label8, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_SButtonEditMqttPass = lv_btn_create(ui_SPanelOptions8);
-    lv_obj_set_width(ui_SButtonEditMqttPass, 50);
-    lv_obj_set_height(ui_SButtonEditMqttPass, 50);
+    lv_obj_set_width(ui_SButtonEditMqttPass, 40);
+    lv_obj_set_height(ui_SButtonEditMqttPass, 40);
     lv_obj_set_align(ui_SButtonEditMqttPass, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(ui_SButtonEditMqttPass, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SButtonEditMqttPass, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -868,6 +1016,9 @@ static void ui_ScreenSettings_screen_init(void)
     lv_obj_set_x(ui_SOptionKeyboard, 0);
     lv_obj_set_y(ui_SOptionKeyboard, 0);
 
+    ui_ScoreKeyboard = ui_ScoreKeyboard_create(ui_ScreenSettings);
+    lv_obj_set_x(ui_ScoreKeyboard, 0);
+    lv_obj_set_y(ui_ScoreKeyboard, 0);
 }
 
 static void ui_ScreenRestore_screen_init(void)
@@ -956,18 +1107,18 @@ void gui_settings_create()
     lv_obj_add_event_cb(ui_SLabelHome, ui_event_onLabelHome, LV_EVENT_ALL, NULL);
 
     // Edit Handicap
-    lv_obj_add_event_cb(ui_SButtonEditHandicap1, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaHandicap1);
-    lv_obj_add_event_cb(ui_SButtonEditHandicap2, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaHandicap2);
+    lv_obj_add_event_cb(ui_SButtonEditHandicap1, ui_event_onHandicapEdit, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditHandicap2, ui_event_onHandicapEdit, LV_EVENT_ALL, NULL);
 
     // Edit options
-    lv_obj_add_event_cb(ui_SButtonEditGreeting, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaGreeting);
-    lv_obj_add_event_cb(ui_SButtonEditMqttHost, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaMqttHost);
-    lv_obj_add_event_cb(ui_SButtonEditMqttPort, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaMqttPort);
-    lv_obj_add_event_cb(ui_SButtonEditMqttPass, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaMqttPass);
-    lv_obj_add_event_cb(ui_SButtonEditMqttUser, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaMqttUser);
-    lv_obj_add_event_cb(ui_SButtonEditSSID, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaSSID);
-    lv_obj_add_event_cb(ui_SButtonEditWifiPass, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaWifiPass);
-    lv_obj_add_event_cb(ui_SButtonEditTelegaChannel, ui_event_onOptionEdit, LV_EVENT_ALL, ui_STextAreaTelegaChannel);
+    lv_obj_add_event_cb(ui_SButtonEditGreeting, ui_event_onOptEdit_GREETING, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditMqttHost, ui_event_onOptEdit_MQTTHOST, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditMqttPort, ui_event_onOptEdit_MQTTPORT, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditMqttPass, ui_event_onOptEdit_MQTTPASS, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditMqttUser, ui_event_onOptEdit_MQTTUSER, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditSSID, ui_event_onOptEdit_STASSID, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditWifiPass, ui_event_onOptEdit_STAPASS, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_SButtonEditTelegaChannel, ui_event_onOptEdit_CHANNEL, LV_EVENT_ALL, NULL);
 
     // Save options
     lv_obj_add_event_cb(ui_SButtonSaveAll, ui_event_onOptionsSave, LV_EVENT_ALL, NULL);

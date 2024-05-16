@@ -4,7 +4,7 @@ static const char ply_names[] = "Александр\nАлексей\nАндре�
 
 static void ui_hide_component(lv_obj_t** comp)
 {
-    lv_textarea_set_text(comp[UI_COMP_NAMEKEYBOARD_NAMETEXTAREA], "");
+    lv_textarea_set_text(comp[UI_COMP_NAMEKEYBOARD_NAMETEXTAREA], ""); // clear textarea
 
     lv_keyboard_set_mode(comp[UI_COMP_NAMEKEYBOARD_KEYBOARDBUTTONS], LV_KEYBOARD_MODE_USER_2); // set ABC mode
 

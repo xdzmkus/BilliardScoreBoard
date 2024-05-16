@@ -346,3 +346,21 @@ void ui_event_ScoreKeyboardButtons(lv_event_t* e)
 	}
 }
 
+// Return:
+// true - value to be replaced
+// false - value to be added
+bool ui_normalize_score(const char* newVal, int16_t* score)
+{
+    if (strlen(newVal) <= 1) // empty text or +/-/= only
+    {
+        *score = 0;
+        return false;
+    }
+    if (newVal[0] == '=')
+    {
+        *score = atoi(++newVal); // skip '=' char 
+        return true;
+    }
+    *score = atoi(newVal);
+    return false;
+}

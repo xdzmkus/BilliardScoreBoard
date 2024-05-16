@@ -9,12 +9,18 @@ BOARD_EEPROM_DATA boardEEPROMdata =
 	"",
 	"",
 	"",
-	"БАЛАБОЛЕК"
+	"БАЛАБОЛЕК",
+	false,
+	false,
+	false,
+	false,
+	7
 };
 
 const char* const WLAN_HOSTNAME = "BALABOLEK";
 const char* const MQTT_TOPIC = "board/balabolek";
 const char bot_token[] = "bot:token";
+const char* const AP_SITE = "http://balabolek.local";
 
 // Load DigiCert Global Root CA ca_cert, which is used by EMQX Cloud Serverless Deployment
 const char ca_cert[] = R"EOF(

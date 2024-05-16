@@ -106,17 +106,9 @@ struct BoardState_Publishing
     uint16_t snookerPly2Scores;
 };
 
-struct BoardState_Settings
-{
-    bool isAPEnabled;
-    bool isWifiEnabled;
-    bool isTelegaEnabled;
-    bool isAudioEnabled;
-    uint8_t audioVolume;
-};
-
 extern BoardState_Publishing boardPublishing;
-extern BoardState_Settings boardSettings;
+
+extern bool gameHasSatrted;
 
 void gui_init();
 

@@ -41,14 +41,7 @@ BoardState_Publishing boardPublishing =
     .snookerPly2Scores= 0,
 };
 
-BoardState_Settings boardSettings =
-{
-	.isAPEnabled = false,
-	.isWifiEnabled = true,
-	.isTelegaEnabled = true,
-	.isAudioEnabled = true,
-	.audioVolume = 5
-};
+bool gameHasSatrted = false;
 
 void gui_init()
 {
@@ -76,7 +69,7 @@ void gui_init()
 
 	lv_screen_load(ui_ScreenMain);
 
-	if (boardSettings.isWifiEnabled)
+	if (boardEEPROMdata.isWifiEnabled)
 	{
 		interactMessage_t tMsg =
 		{
@@ -87,7 +80,7 @@ void gui_init()
 		sendInteractMessage(tMsg);
 	}
 	
-	if (boardSettings.isAudioEnabled)
+	if (boardEEPROMdata.isAudioEnabled)
 	{
 		audio_turnOn();
 		audio_say(SAY_HELLO);
@@ -187,12 +180,12 @@ void gui_setPlayerName(GAME_PLAYER_NAME dst, const char* src)
 
 void gui_turnAP(boolean state)
 {
-	boardSettings.isAPEnabled = state;
+	boardEEPROMdata.isAPEnabled = state;
 }
 
 void gui_turnWiFi(boolean state)
 {
-	boardSettings.isWifiEnabled = state;
+	boardEEPROMdata.isWifiEnabled = state;
 
 	if (state)
 	{
@@ -218,12 +211,12 @@ void gui_turnWiFi(boolean state)
 
 void gui_turnTelegram(boolean state)
 {
-	boardSettings.isTelegaEnabled = state;
+	boardEEPROMdata.isTelegaEnabled = state;
 }
 
 void gui_turnAudio(boolean state)
 {
-	boardSettings.isAudioEnabled = state;
+	boardEEPROMdata.isAudioEnabled = state;
 
 	if (state)
 	{
@@ -238,7 +231,7 @@ void gui_turnAudio(boolean state)
 
 void gui_setVolume(uint8_t volume)
 {
-	boardSettings.audioVolume = volume;
+	boardEEPROMdata.audioVolume = volume;
 	audio_reset();
 	audio_say(SAY_HELLO);
 }
@@ -249,7 +242,7 @@ float gui_getVolumeInRange(float out_min, float out_max)
 	uint8_t in_max = 10;
 
 	// Преобразуем значение из одного диапазона в нормализованное значение (от 0 до 1)
-	float normalized_value = (float)(boardSettings.audioVolume - in_min) / (in_max - in_min);
+	float normalized_value = (float)(boardEEPROMdata.audioVolume - in_min) / (in_max - in_min);
 
 	// Преобразуем нормализованное значение в новый диапазон
 	float mapped_value = (normalized_value * (out_max - out_min)) + out_min;
@@ -260,7 +253,7 @@ float gui_getVolumeInRange(float out_min, float out_max)
 
 bool gui_wifiIsEnabledAndConnected()
 {
-	return boardSettings.isWifiEnabled && isWifiConnected();
+	return boardEEPROMdata.isWifiEnabled && isWifiConnected();
 }
 
 bool gui_stateAwaiting()
@@ -476,12 +469,14 @@ void gui_restoreCurrentState(char* state)
 		++idx;
 		value = strtok (NULL, delimiter);
 	}
+
+	gameHasSatrted = true;
 }
 
 
 void gui_sendTelegaPollMessage(GAME_PLAYER_COUNT cnt)
 {
-	if (!boardSettings.isTelegaEnabled) return;
+	if (!boardEEPROMdata.isTelegaEnabled) return;
 
 	const char pollMsg[] = "И кто же победит?";
 
@@ -526,7 +521,7 @@ void gui_sendTelegaPollMessage(GAME_PLAYER_COUNT cnt)
 
 void gui_sendTelegaGameScoreMessage(GAME_PLAYER_COUNT cnt)
 {
-	if (!boardSettings.isTelegaEnabled) return;
+	if (!boardEEPROMdata.isTelegaEnabled) return;
 
 	interactMessage_t tMsg;
 
@@ -577,7 +572,7 @@ void gui_sendTelegaGameScoreMessage(GAME_PLAYER_COUNT cnt)
 
 void gui_sendTelegaFrameScoreMessage(bool update)
 {
-	if (!boardSettings.isTelegaEnabled) return;
+	if (!boardEEPROMdata.isTelegaEnabled) return;
 
 	interactMessage_t tMsg;
 	tMsg.type = update ? I_TELEGA_MSG_UPD : I_TELEGA_MSG_NEW;
@@ -606,7 +601,7 @@ void gui_sendTelegaFrameScoreMessage(bool update)
 
 void gui_sendTelegaTVGameScoreMessage()
 {
-	if (!boardSettings.isTelegaEnabled) return;
+	if (!boardEEPROMdata.isTelegaEnabled) return;
 
 	interactMessage_t tMsg;
 
@@ -636,7 +631,7 @@ void gui_sendTelegaTVGameScoreMessage()
 
 void gui_sendTelegaTVFrameScoreMessage(bool update)
 {
-	if (!boardSettings.isTelegaEnabled) return;
+	if (!boardEEPROMdata.isTelegaEnabled) return;
 
 	interactMessage_t tMsg;
 	tMsg.type = update ? I_TELEGA_MSG_UPD : I_TELEGA_MSG_NEW;
